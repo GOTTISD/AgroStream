@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AgroStream – Lote La Esperanza</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--side:#17432f;--side2:#24604a;--bg:#eef8f0;--card:#fff;--ink:#17432f;--mut:#7b8a82;--line:#e3ece6;--soft:#f6faf7;--green:#2f7d57;--blue:#2b78b5;--amber:#e69b1e;--purple:#7c4ddb;--wb:#fdf6dd;--wl:#f1e2a5;--wt:#7a3b0b;--ib:#e8f1fc;--il:#bcd5f2;--cb:#fdeaea;--cl:#f3bcbc;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1f18;--card:#18302a;--ink:#e6f2ea;--mut:#93a89c;--line:#26443a;--soft:#1d3830;--wb:#3a3315;--wl:#5c5223;--wt:#f3d98b;--ib:#16304a;--il:#27517c;--cb:#4a2224;--cl:#7a3a3d}}
+*{box-sizing:border-box;margin:0}
+body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex;min-height:100vh}
+aside{width:290px;background:var(--side);color:#fff;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
+.brand{display:flex;gap:14px;align-items:center;padding:28px 24px 22px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo{width:45px;height:45px;border-radius:12px;background:#3a9a6c;display:grid;place-items:center}
+.brand b{font-size:20px;display:block}.brand small{font-size:12px;letter-spacing:.12em;color:#6fd6a2}
+nav{padding:16px;flex:1}nav h6{font-size:12px;letter-spacing:.14em;color:#8fb3a1;margin:6px 6px 14px;font-weight:600}
+nav a{display:flex;align-items:center;gap:16px;padding:14px 20px;border-radius:12px;color:#cfe2d8;text-decoration:none;font-size:17px;font-weight:500;margin-bottom:4px}
+nav a:hover{background:rgba(255,255,255,.06)}nav a.on{background:var(--side2);color:#fff;font-weight:600}
+nav a:focus-visible,.btn:focus-visible,.chip:focus-visible{outline:2px solid #6fd6a2;outline-offset:2px}
+nav svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.badge{margin-left:auto;background:#e8821a;color:#fff;font-size:12px;font-weight:700;border-radius:99px;padding:3px 9px}
+.demo{margin:16px;padding:20px;border-radius:14px;background:var(--side2);font-size:14px;color:#cfe2d8}
+.demo p:first-child{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--amber);display:inline-block;flex-shrink:0}
+.demo a{margin-top:16px;width:100%;padding:12px;border-radius:10px;background:#3a9a6c;color:#fff;font-weight:600;font-size:15px;text-align:center;text-decoration:none;display:block}
+main{flex:1;min-width:0}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 30px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+h1{font-size:23px;font-weight:600}header p{color:var(--mut);font-size:15px;margin-top:2px}
+.btns{display:flex;gap:12px}
+.btn{padding:12px 18px;border-radius:10px;font:600 16px Outfit;cursor:pointer;border:1px solid #bfe3cd;background:#e5f6ea;color:var(--green);text-decoration:none;display:inline-flex;gap:8px;align-items:center}
+.btn.p{background:var(--side);color:#fff;border-color:var(--side)}
+.wrap{padding:30px}
+.alert{background:var(--wb);border:1px solid var(--wl);color:var(--wt);border-radius:12px;padding:16px 20px;display:flex;gap:14px;align-items:center;margin-bottom:30px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px;margin-bottom:30px}
+.card{background:var(--card);border-radius:18px;padding:28px;box-shadow:0 1px 3px rgba(23,67,47,.08)}
+.k{display:flex;justify-content:space-between;gap:10px}
+.k span{font-size:14px;letter-spacing:.07em;color:var(--mut);font-weight:500;text-transform:uppercase}
+.ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;flex-shrink:0}
+.ico svg{width:24px;height:24px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.v{font:700 40px 'JetBrains Mono',monospace;margin-top:4px;letter-spacing:-.03em}
+.v small{font:500 17px Outfit;color:var(--mut);letter-spacing:0;margin-left:3px}
+.s{color:var(--mut);font-size:15px;margin:2px 0 18px;min-height:22px}
+.bar{height:6px;border-radius:9px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;border-radius:9px;transition:width .4s}
+.two{display:grid;grid-template-columns:1.9fr 1fr;gap:26px;margin-bottom:26px}
+.two.b{grid-template-columns:1.2fr 1fr}
+.card h3{font-size:19px;font-weight:600}
+.row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:18px}
+.pill{font-size:13px;font-weight:600;padding:5px 12px;border-radius:8px;white-space:nowrap;border:1px solid transparent}
+.sub{color:var(--mut);font-size:15px;margin-top:4px}
+svg.chart{width:100%;height:auto;display:block}
+.srow{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:10px;background:var(--soft);margin-bottom:10px;font-weight:500}
+.srow small{display:block;font:400 13px 'JetBrains Mono',monospace;color:var(--mut);margin-top:3px}
+.srow em{margin-left:auto;font-style:normal;font-size:13px;color:var(--mut)}
+.srow.w{background:var(--wb);border:1px solid var(--wl)}
+.sd{width:10px;height:10px;border-radius:50%;background:#22b35e;flex-shrink:0}.srow.w .sd{background:var(--amber)}
+.al{display:flex;gap:14px;padding:16px;border-radius:12px;margin-bottom:12px;border:1px solid;align-items:flex-start;line-height:1.35}
+.al .dot{margin-top:7px}.al div{flex:1}.al small{display:block;color:var(--mut);margin-top:6px;font-size:14px}
+.al.adv{background:var(--wb);border-color:var(--wl)}.al.inf{background:var(--ib);border-color:var(--il)}.al.cri{background:var(--cb);border-color:var(--cl)}
+.al.inf .dot{background:#3b82f6}.al.cri .dot{background:#ef4444}.al.read{opacity:.55}
+.al .pill{background:var(--card);align-self:flex-start}
+.al.adv .pill{color:#b86e00;border-color:var(--wl)}.al.inf .pill{color:#2563c9;border-color:var(--il)}.al.cri .pill{color:#d12b2b;border-color:var(--cl)}
+.rec{background:#1f5340;color:#e6f2ea;border-color:transparent}
+.rec h3{display:flex;gap:12px;align-items:center;color:#fff}
+.rb{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-top:16px;font-size:17px;line-height:1.55}
+.rb h5{font-size:13px;letter-spacing:.12em;color:#6fd6a2;margin-bottom:8px}.rb b{color:#9ff0c0}
+.foot{margin-top:18px;font-size:14px;color:#9cc7b1}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{text-align:left;color:var(--mut);font-weight:500;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:0 12px 12px}
+td{padding:14px 12px;border-top:1px solid var(--line)}td code{font:14px 'JetBrains Mono',monospace;color:var(--mut)}
+.tw{overflow-x:auto}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.chip{padding:9px 16px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:500 15px Outfit;cursor:pointer}
+.chip.on{background:var(--side);color:#fff;border-color:var(--side)}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin:18px 0}
+label{display:block;font-size:14px;font-weight:500;color:var(--mut)}
+input,select{width:100%;margin-top:6px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font:16px Outfit;background:var(--soft);color:var(--ink)}
+.toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--side);color:#fff;padding:12px 22px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:20}
+.toast.on{opacity:1}
+.view{display:none}.view.on{display:block}
+.tabs{display:none}
+@media(max-width:900px){body{flex-direction:column}aside{display:none}.two,.two.b{grid-template-columns:1fr}.wrap{padding:18px}header{padding:14px 18px}
+.tabs{display:flex;gap:6px;overflow-x:auto;background:var(--side);padding:10px 12px;position:sticky;top:0;z-index:6}.tabs a{color:#cfe2d8;text-decoration:none;padding:9px 14px;border-radius:9px;white-space:nowrap;font-weight:500}.tabs a.on{background:var(--side2);color:#fff}header{top:auto;position:static}}
+.srow{color:inherit;text-decoration:none}a.srow:hover{filter:brightness(.97)}
+.st{padding:20px 24px}.st .v{font-size:28px}
+.pr{background:var(--soft);border-radius:10px;padding:12px 14px;font-size:15px;line-height:1.4;margin:12px 0 10px}.pr.w{background:var(--wb);color:var(--wt)}
+.sp{width:100%;height:auto;display:block;margin-top:8px}
+#lg{position:fixed;inset:0;z-index:50;background:var(--side);display:flex;align-items:center;justify-content:center;padding:20px}
+.lc{background:var(--card);border-radius:20px;padding:36px;width:100%;max-width:400px}.lc .logo{margin-bottom:18px}.lc h2{font-size:26px;font-weight:600;margin-bottom:6px}.lc .btn{width:100%;justify-content:center;margin-top:16px}
+.err{color:#d12b2b;font-size:14px;min-height:20px;margin-top:10px}.hint{font-size:13px;color:var(--mut);margin-top:14px;text-align:center}
+.user{margin:0 16px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;color:#cfe2d8;font-size:15px}
+.user button{background:none;border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:8px;padding:6px 12px;font:500 14px Outfit;cursor:pointer}
+.ntc{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));right:16px;z-index:40;display:flex;flex-direction:column;gap:10px;max-width:340px}
+.ni{display:block;background:var(--card);color:var(--ink);text-decoration:none;border-radius:12px;padding:14px 16px;box-shadow:0 6px 24px rgba(0,0,0,.25);border-left:5px solid #3b82f6;font-size:15px;line-height:1.35}.ni b{display:block;margin-bottom:3px}.ni.adv{border-color:var(--amber)}.ni.cri{border-color:#ef4444}
+:root[data-theme="dark"]{--bg:#0f1f18;--card:#18302a;--ink:#e6f2ea;--mut:#93a89c;--line:#26443a;--soft:#1d3830;--wb:#3a3315;--wl:#5c5223;--wt:#f3d98b;--ib:#16304a;--il:#27517c;--cb:#4a2224;--cl:#7a3a3d}
+.btns{flex-wrap:wrap}.card .btns{margin-top:6px}
+</style>
+</head>
+<body>
+<aside>
+  <div class="brand"><div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="#d8f5e4"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14l-1 1z"/></svg></div><div><b>AgroStream</b><small>SISTEMA MQTT</small></div></div>
+  <nav>
+    <h6>PRINCIPAL</h6>
+    <a href="#resumen" data-v="resumen"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>Resumen</a>
+    <a href="#sensores" data-v="sensores"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>Sensores</a>
+    <a href="#historial" data-v="historial"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M9 20v-6M14 20V9M19 20v-9"/></svg>Historial</a>
+    <a href="#alertas" data-v="alertas"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/></svg>Alertas<span class="badge" id="bd">4</span></a>
+    <a href="#configuracion" data-v="configuracion"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Configuración</a>
+  </nav>
+  <div class="user"><span>Usuario: <b id="un"></b></span><button onclick="logout()">Salir</button></div>
+  <div class="demo"><p><span class="dot"></span><span id="dm">MODO DEMO</span></p><p id="dt">Sin conexión MQTT activa. Datos simulados.</p><a href="#configuracion">Conectar broker</a></div>
+</aside>
+<main>
+  <div class="tabs" id="tabs"></div>
+  <header>
+    <div><h1 id="lote">Lote La Esperanza</h1><p>Última actualización: <span id="t"></span> · <span id="md">Modo demostración</span></p></div>
+    <div class="btns"><button class="btn" onclick="refresh()">↻ Actualizar</button><a class="btn p" href="#configuracion">Configurar conexión</a></div>
+  </header>
+  <div class="wrap">
+
+  <section class="view" id="resumen">
+    <div class="alert" id="banner"><span class="dot"></span><span><b>Modo demostración activo</b> — Datos simulados. Configura la conexión MQTT para recibir datos reales de tus sensores.</span></div>
+    <div class="grid" id="cards"></div>
+    <div class="two b">
+      <div class="card"><h3 style="margin-bottom:18px">Estado general</h3><div id="gen"></div></div>
+      <div class="card rec"><h3><span class="ico" style="width:40px;height:40px;background:rgba(255,255,255,.12)"><svg viewBox="0 0 24 24" style="fill:#d8f5e4;stroke:none"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14l-1 1z"/></svg></span>Recomendación del día</h3><div id="rec"></div><p class="foot">● Basado en datos de sensores · <span class="tm"></span></p></div>
+    </div>
+  </section>
+
+  <section class="view" id="sensores">
+    <p class="sub" style="margin:0 0 18px">Línea sólida: últimas 12 horas · línea punteada: predicción de las próximas 6 horas</p>
+    <div class="grid" id="sg" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))"></div>
+  </section>
+
+  <section class="view" id="historial">
+    <div class="chips" id="hm"></div><div class="chips" id="hr"></div>
+    <div class="grid" id="hst" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px"></div>
+    <div class="card"><div class="row"><div><h3 id="ht"></h3><p class="sub" id="hs"></p></div></div><div id="ch2"></div></div>
+    <div class="card" style="margin-top:26px"><h3 style="margin-bottom:16px">Eventos recientes</h3><div id="hev"></div></div>
+  </section>
+
+    <section class="view" id="alertas">
+    <div class="chips" id="af"></div>
+    <div class="card"><div class="row"><h3>Todas las alertas</h3><button class="btn" onclick="readAll()">Marcar todas como leídas</button></div><div id="al2"></div></div>
+  </section>
+
+<section class="view" id="configuracion">
+    <div class="card"><h3>Preferencias</h3><p class="sub">Cambia cómo se ve y se comporta el panel.</p>
+      <div class="form">
+        <label>Nombre del lote<input id="cl"></label>
+        <label>Tema<select id="ct"><option value="auto">Automático</option><option value="light">Claro</option><option value="dark">Oscuro</option></select></label>
+        <label>Unidad de temperatura<select id="cu"><option value="C">Celsius (°C)</option><option value="F">Fahrenheit (°F)</option></select></label>
+        <label>Actualizar datos cada<select id="ci"><option value="10">10 segundos</option><option value="30">30 segundos</option><option value="60">1 minuto</option><option value="0">Nunca (manual)</option></select></label>
+        <label>Avisos en pantalla<select id="cn"><option value="1">Activados</option><option value="0">Desactivados</option></select></label>
+      </div>
+      <h3 style="margin-top:24px">Umbrales de alerta</h3><p class="sub">Recibirás un aviso cuando un valor salga de estos límites.</p>
+      <div class="form"><label>Humedad del suelo mínima (%)<input id="c6" inputmode="decimal"></label><label>Temperatura máxima (°C)<input id="c7" inputmode="decimal"></label><label>Viento máximo (km/h)<input id="c8" inputmode="decimal"></label></div>
+      <div class="btns"><button class="btn p" onclick="saveCfg()">Guardar cambios</button><button class="btn" onclick="resetCfg()">Restablecer</button></div></div>
+    <div class="card" style="margin-top:26px"><h3>Conexión MQTT</h3><p class="sub">Conecta el broker para recibir datos reales de tus sensores.</p>
+      <div class="form"><label>Servidor (broker)<input id="c1" placeholder="broker.ejemplo.com"></label><label>Puerto<input id="c2" inputmode="numeric"></label><label>Tema (topic)<input id="c3"></label><label>Usuario<input id="c4"></label></div>
+      <div class="btns"><button class="btn p" onclick="saveConn()">Guardar y conectar</button><button class="btn" onclick="discConn()">Desconectar</button></div></div>
+  </section>
+    </div>
+</main>
+<div id="lg"><form class="lc" onsubmit="login();return false"><div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="#d8f5e4"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14l-1 1z"/></svg></div><h2>Iniciar sesión</h2><p class="sub" style="margin-bottom:18px">Entra para ver tu lote en AgroStream.</p>
+<label>Usuario<input id="lu" autocomplete="username"></label><label style="margin-top:14px">Contraseña<input id="lp" type="password" autocomplete="current-password"></label>
+<div class="err" id="le" role="alert"></div><button class="btn p" type="submit">Entrar</button><p class="hint">Demo: usuario <b>admin</b> · contraseña <b>agro123</b></p></form></div>
+<div class="ntc" id="ntc" aria-live="polite"></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+var $=function(i){return document.getElementById(i)};
+var M={suelo:{n:'Humedad del suelo',u:'%',c:'#2b78b5',a:36,b:50,d:1},temp:{n:'Temperatura ambiente',u:'°C',c:'#e69b1e',a:24,b:33,d:1},aire:{n:'Humedad del aire',u:'%',c:'#2f7d57',a:65,b:85,d:0},viento:{n:'Velocidad del viento',u:'km/h',c:'#7c4ddb',a:2,b:12,d:1}};
+var S=[['Suelo Norte','SOIL-01','Humedad del suelo','42.5 %','92 %','ahora',1],['Suelo Sur','SOIL-02','Humedad del suelo','44.8 %','87 %','hace 2 min',1],['Clima Central','CLIM-01','Temp. y humedad','28.1 °C · 76 %','78 %','ahora',1],['Viento','WIND-01','Velocidad del viento','4.2 km/h','64 %','hace 1 min',1],['Pluviómetro','RAIN-01','Lluvia acumulada','0.0 mm','23 %','hace 18 min',0]];
+var A=[{t:'Humedad del suelo por debajo del 45% en zona norte',k:'adv',l:'Advertencia',w:'hace 12 min',r:0},{t:'Sensor WIND-01 reconectado exitosamente',k:'inf',l:'Info',w:'hace 34 min',r:0},{t:'Temperatura ambiente superó 30°C durante 2 horas',k:'cri',l:'Crítica',w:'hace 1 h',r:0},{t:'Ciclo de riego programado completado',k:'inf',l:'Info',w:'hace 2 h',r:0}];
+var V={suelo:42.5,temp:28.1,aire:76,viento:4.2},filt='todas',hm='suelo',hr=7;
+function rnd(a,b,d){return +(a+Math.random()*(b-a)).toFixed(d)}
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on')},2200)}
+function line(d,lab,col,min,max){var W=600,H=250,L=44,R=14,T=14,B=34,n=d.length,x=function(i){return L+i*(W-L-R)/(n-1)},y=function(v){return T+(1-(v-min)/(max-min))*(H-T-B)},p=d.map(function(v,i){return[x(i),y(v)]}),s='M'+p[0][0]+' '+p[0][1];
+for(var i=0;i<n-1;i++){var a=p[i-1]||p[i],b=p[i],c=p[i+1],e=p[i+2]||c;s+=' C'+(b[0]+(c[0]-a[0])/6)+' '+(b[1]+(c[1]-a[1])/6)+','+(c[0]-(e[0]-b[0])/6)+' '+(c[1]-(e[1]-b[1])/6)+','+c[0]+' '+c[1]}
+var o='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Gráfica de tendencia"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+col+'" stop-opacity=".22"/><stop offset="1" stop-color="'+col+'" stop-opacity="0"/></linearGradient></defs>';
+for(i=0;i<=4;i++){var gv=min+(max-min)*i/4,gy=y(gv);o+='<path d="M'+L+' '+gy+'H'+(W-R)+'" stroke="var(--line)" stroke-dasharray="4 4"/><text x="4" y="'+(gy+4)+'" fill="var(--mut)" font-size="13" font-family="Outfit">'+Math.round(gv)+'</text>'}
+o+='<path d="'+s+' L'+p[n-1][0]+' '+(H-B)+' L'+p[0][0]+' '+(H-B)+'Z" fill="url(#g)"/><path d="'+s+'" fill="none" stroke="'+col+'" stroke-width="3"/>';
+p.forEach(function(q,i){if(n<=12)o+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="4" fill="'+col+'"/>';var st=Math.ceil(n/8);if(i%st==0||i==n-1)o+='<text x="'+q[0]+'" y="'+(H-10)+'" text-anchor="middle" fill="var(--mut)" font-size="13" font-family="Outfit">'+lab[i]+'</text>'});
+return o+'</svg>'}
+var DN=['Lun','Mar','Mié','Jue','Vie','Sáb','Hoy'];
+function series(k,n){var m=M[k],r=[],v=(m.a+m.b)/2;for(var i=0;i<n;i++){v+=rnd(-1,1,2)*(m.b-m.a)/5;v=Math.max(m.a,Math.min(m.b,v));r.push(+v.toFixed(1))}return r}
+function icon(k){return {suelo:['#e6f2fc','#1b7fc4','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#1b7fc4"/>'],temp:['#fdf3d9','#e69b1e','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#e4f6ea','#2f7d57','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#efe9fc','#7c4ddb','<path d="M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h7"/>']}[k]}
+var ST={lote:'Lote La Esperanza',tema:'auto',u:'C',int:30,notif:1,sMin:45,tMax:30,wMax:40,host:'',port:'1883',topic:'lote/esperanza/#',user:'',on:0},DEF=JSON.stringify(ST),act={suelo:1,temp:0,viento:0},tick=null,HC={};
+try{var sv=JSON.parse(localStorage.getItem('agro_cfg'));if(sv)for(var q in sv)ST[q]=sv[q]}catch(e){}
+function fv(k,v){return k=='temp'&&ST.u=='F'?+(v*9/5+32).toFixed(1):v}
+function un(k){return k=='temp'?'°'+ST.u:M[k].u}
+function pc(v){return Math.max(0,Math.min(100,v))}
+function cards(){var sub={suelo:'Óptimo: 50–70%',temp:ST.u=='F'?'Rango ideal: 77–95°F':'Rango ideal: 25–35°C',aire:'Buena ventilación',viento:'Brisa suave'},w={suelo:V.suelo,temp:(V.temp-15)/40*100,aire:V.aire,viento:V.viento/30*100},h='';
+for(var k in M){var i=icon(k);h+='<div class="card"><div class="k"><span>'+M[k].n+'</span><div class="ico" style="background:'+i[0]+'"><svg viewBox="0 0 24 24" style="stroke:'+i[1]+'">'+i[2]+'</svg></div></div><div class="v">'+fv(k,V[k])+'<small>'+un(k)+'</small></div><div class="s">'+sub[k]+'</div><div class="bar"><i style="width:'+pc(w[k])+'%;background:'+M[k].c+'"></i></div></div>'}
+h+='<div class="card"><div class="k"><span>Lluvia acumulada</span><div class="ico" style="background:#e6f2fc"><svg viewBox="0 0 24 24" style="stroke:#1b7fc4"><path d="M7 15a4 4 0 0 1 0-8 5 5 0 0 1 10 1 3.5 3.5 0 0 1 0 7M9 18v3M13 18v3M17 18v3"/></svg></div></div><div class="v">0.0<small>mm</small></div><div class="s">Sin precipitaciones hoy</div><div class="bar"><i style="width:0"></i></div></div>';$('cards').innerHTML=h}
+var RN={n:'Lluvia acumulada',u:'mm',c:'#1b7fc4',d:1};
+var SN=[['Suelo Norte','SOIL-01','suelo',0,92,'ahora',1],['Suelo Sur','SOIL-02','suelo',2,87,'hace 2 min',1],['Clima Central','CLIM-01','temp',0,78,'ahora',1],['Viento','WIND-01','viento',0,64,'hace 1 min',1],['Pluviómetro','RAIN-01','lluvia',0,23,'hace 18 min',0]].map(function(s){return {n:s[0],c:s[1],k:s[2],o:s[3],b:s[4],w:s[5],on:s[6],h:[]}});
+function sval(s){return s.k=='lluvia'?0:+(V[s.k]+s.o).toFixed(1)}
+SN.forEach(function(s){s.h=s.k=='lluvia'?[0,0,0,0,0,0,0,0,0,0,0,0]:series(s.k,11).map(function(v){return +(v+s.o).toFixed(1)});if(s.k!='lluvia')s.h.push(sval(s))});
+function pred(s){var h=s.h,n=h.length,mx=(n-1)/2,my=h.reduce(function(a,b){return a+b},0)/n,nu=0,de=0,p=[];h.forEach(function(y,i){nu+=(i-mx)*(y-my);de+=(i-mx)*(i-mx)});var m=de?nu/de:0;for(var i=1;i<=6;i++)p.push(+Math.max(0,Math.min(s.k=='lluvia'?0:100,h[n-1]+m*i)).toFixed(1));return {p:p,m:m}}
+function spark(s,p){var a=s.h.concat(p),mn=Math.min.apply(null,a),mx=Math.max.apply(null,a),W=300,H=84,n=a.length;if(mx==mn){mx+=1;mn-=1}
+var X=function(i){return 6+i*(W-12)/(n-1)},Y=function(v){return 8+(1-(v-mn)/(mx-mn))*(H-16)},d1='',d2='';
+s.h.forEach(function(v,i){d1+=(i?'L':'M')+X(i)+' '+Y(v)});d2='M'+X(s.h.length-1)+' '+Y(s.h[s.h.length-1]);p.forEach(function(v,i){d2+='L'+X(s.h.length+i)+' '+Y(v)});
+var c=s.k=='lluvia'?RN.c:M[s.k].c;return '<svg class="sp" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Historial y predicción de '+s.n+'"><path d="'+d1+'" fill="none" stroke="'+c+'" stroke-width="2.5"/><path d="'+d2+'" fill="none" stroke="'+c+'" stroke-width="2.5" stroke-dasharray="5 5" opacity=".7"/><circle cx="'+X(s.h.length-1)+'" cy="'+Y(s.h[s.h.length-1])+'" r="4" fill="'+c+'"/></svg>'}
+function sg(){$('sg').innerHTML=SN.map(function(s){var r=s.k=='lluvia',m=r?RN:M[s.k],v=sval(s),P=pred(s),l=P.p[5],t=(m.b-m.a)/40||0,tr=P.m>t?'subiendo':P.m<-t?'bajando':'estable',txt,w=0,u=r?'mm':un(s.k);
+if(r)txt='Sin lluvia prevista en las próximas 6 h.';else{txt='En 6 h: <b>≈ '+fv(s.k,l)+' '+u+'</b> · tendencia '+tr+'.';if(s.k=='suelo'&&l<ST.sMin){w=1;txt+=' Podría seguir bajo el umbral de '+ST.sMin+'%.'}if(s.k=='temp'&&l>ST.tMax){w=1;txt+=' Podría superar '+ST.tMax+'°C.'}if(s.k=='viento'&&l>ST.wMax){w=1;txt+=' Podría superar '+ST.wMax+' km/h.'}}
+if(!s.on){w=1;txt+=' Confianza baja: el sensor lleva '+s.w.replace('hace ','')+' sin reportar.'}
+return '<div class="card"><div class="row" style="margin-bottom:6px"><div><h3>'+s.n+'</h3><p class="sub" style="font:13px \'JetBrains Mono\',monospace">'+s.c+'</p></div><span class="pill" style="background:'+(s.on?'#e4f6ea;color:#2f7d57':'#fdf0c9;color:#9a6a00')+'">'+(s.on?'En línea':'Revisar')+'</span></div><p class="sub" style="margin:0">Mide: '+m.n+'</p><div class="v">'+fv(s.k,v)+'<small>'+u+'</small></div>'+spark(s,P.p)+'<div class="pr'+(w?' w':'')+'">'+txt+'</div><p class="sub" style="font-size:13px;margin:0">Batería '+s.b+'% · '+s.w+'</p></div>'}).join('')}
+function alh(list){return list.map(function(a){return '<div class="al '+a.k+(a.r?' read':'')+'"><span class="dot"></span><div>'+a.t+'<small>'+a.w+(a.r?' · leída':'')+'</small></div><span class="pill">'+a.l+'</span></div>'}).join('')||'<p class="sub">Sin alertas.</p>'}
+function gen(){var on=SN.filter(function(s){return s.on}).length,u=A.filter(function(a){return !a.r}).length;
+$('gen').innerHTML='<a class="srow'+(on<SN.length?' w':'')+'" href="#sensores"><span class="sd"></span><div>Sensores en línea<small>'+on+' de '+SN.length+' activos</small></div><em>Ver sensores</em></a><a class="srow'+(u?' w':'')+'" href="#alertas"><span class="sd"></span><div>Alertas sin leer<small>'+(u?u+' por revisar':'Todo al día')+'</small></div><em>Ver alertas</em></a><a class="srow" href="#historial"><span class="sd"></span><div>Última alerta<small>'+(A[0]?A[0].t:'Ninguna')+'</small></div><em>'+(A[0]?A[0].w:'')+'</em></a>'}
+function rec(){var s=V.suelo<ST.sMin?'La humedad del suelo ('+V.suelo+'%) está por debajo del umbral. Se recomienda <b>activar riego por goteo</b> durante 45 minutos en zona norte.':'La humedad del suelo ('+V.suelo+'%) es adecuada. <b>No hace falta regar</b> por ahora.',c=V.temp>ST.tMax?'Temperatura alta ('+fv('temp',V.temp)+'°'+ST.u+'). Evita fertilizar y <b>riega en las horas más frescas</b>.':'Temperatura ideal para el desarrollo de la yuca. Aprovechar para <b>fertilización foliar</b> en las próximas 2 horas.';
+$('rec').innerHTML='<div class="rb"><h5>RIEGO</h5>'+s+'</div><div class="rb"><h5>CLIMA</h5>'+c+'</div>'}
+function als(){var u=A.filter(function(a){return !a.r}).length;$('bd').textContent=u;$('bd').style.display=u?'':'none';
+var f={todas:'Todas',cri:'Críticas',adv:'Advertencias',inf:'Info'},h='';for(var k in f)h+='<button class="chip'+(k==filt?' on':'')+'" onclick="filt=\''+k+'\';als()">'+f[k]+'</button>';$('af').innerHTML=h;
+$('al2').innerHTML=alh(A.filter(function(a){return filt=='todas'||a.k==filt}));$('hev').innerHTML=alh(A.slice(0,4));gen()}
+function readAll(){A.forEach(function(a){a.r=1});als();toast('Alertas marcadas como leídas')}
+function hist(){var h='',k,m;for(k in M)h+='<button class="chip'+(k==hm?' on':'')+'" onclick="hm=\''+k+'\';hist()">'+M[k].n+'</button>';$('hm').innerHTML=h;
+h='';[[1,'24 horas'],[7,'7 días'],[30,'30 días']].forEach(function(r){h+='<button class="chip'+(r[0]==hr?' on':'')+'" onclick="hr='+r[0]+';hist()">'+r[1]+'</button>'});$('hr').innerHTML=h;
+m=M[hm];var n=hr==1?12:hr==7?7:15,key=hm+hr;if(!HC[key])HC[key]=series(hm,n);var d=HC[key].slice();d[n-1]=V[hm];d=d.map(function(v){return fv(hm,v)});var lab=[];for(var i=0;i<n;i++)lab.push(hr==1?(i*2)+'h':hr==7?DN[i]:'D'+(i*2+1));
+var u=un(hm),avg=d.reduce(function(a,b){return a+b},0)/n,st=[['Actual',d[n-1]],['Promedio',avg.toFixed(1)],['Mínimo',Math.min.apply(null,d)],['Máximo',Math.max.apply(null,d)]];
+$('hst').innerHTML=st.map(function(x){return '<div class="card st"><div class="k"><span>'+x[0]+'</span></div><div class="v">'+x[1]+'<small>'+u+'</small></div></div>'}).join('');
+$('ht').textContent=m.n;$('hs').textContent='Últimos '+(hr==1?'24 horas':hr+' días')+' · '+u;$('ch2').innerHTML=line(d,lab,m.c,fv(hm,m.a)-4,fv(hm,m.b)+4)}
+function notify(t,k){if(!ST.notif)return;var d=document.createElement('a');d.href='#alertas';d.className='ni '+k;d.innerHTML='<b>'+(k=='cri'?'Alerta crítica':k=='adv'?'Advertencia':'Aviso')+'</b>'+t;$('ntc').appendChild(d);setTimeout(function(){d.remove()},9000)}
+function check(){[['suelo',V.suelo<ST.sMin,'Humedad del suelo por debajo del '+ST.sMin+'% en zona norte','adv','Advertencia'],['temp',V.temp>ST.tMax,'Temperatura ambiente superó '+ST.tMax+'°C','cri','Crítica'],['viento',V.viento>ST.wMax,'Viento fuerte: '+V.viento+' km/h','cri','Crítica']].forEach(function(x){if(x[1]&&!act[x[0]]){act[x[0]]=1;A.unshift({t:x[2],k:x[3],l:x[4],w:'ahora',r:0});notify(x[2],x[3])}else if(!x[1])act[x[0]]=0});als()}
+function step(){for(var k in M){var m=M[k];V[k]=+Math.max(m.a-2,Math.min(m.b+2,V[k]+rnd(-1,1,2)*(m.b-m.a)/8)).toFixed(m.d)}
+SN.forEach(function(s){if(s.k!='lluvia'){s.h.shift();s.h.push(sval(s))}});cards();sg();rec();tm();check();if(location.hash=='#historial')hist()}
+function refresh(){step();toast('Datos actualizados')}
+function timer(){clearInterval(tick);if(+ST.int>0)tick=setInterval(step,ST.int*1000)}
+function tm(){var t=new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});$('t').textContent=t;document.querySelectorAll('.tm').forEach(function(e){e.textContent=t})}
+function conn(){$('dm').textContent=ST.on?'CONECTADO':'MODO DEMO';$('dt').textContent=ST.on?'Broker: '+ST.host:'Sin conexión MQTT activa. Datos simulados.';$('md').textContent=ST.on?'Modo en vivo':'Modo demostración';$('banner').style.display=ST.on?'none':''}
+function apply(){var d=document.documentElement;if(ST.tema=='auto')d.removeAttribute('data-theme');else d.setAttribute('data-theme',ST.tema);$('lote').textContent=ST.lote;conn();cards();sg();rec();check();hist();timer()}
+function cfgFill(){$('cl').value=ST.lote;$('ct').value=ST.tema;$('cu').value=ST.u;$('ci').value=ST.int;$('cn').value=ST.notif;$('c6').value=ST.sMin;$('c7').value=ST.tMax;$('c8').value=ST.wMax;$('c1').value=ST.host;$('c2').value=ST.port;$('c3').value=ST.topic;$('c4').value=ST.user}
+function persist(){try{localStorage.setItem('agro_cfg',JSON.stringify(ST))}catch(e){}}
+function saveCfg(){var a=parseFloat($('c6').value),b=parseFloat($('c7').value),c=parseFloat($('c8').value);if(isNaN(a)||isNaN(b)||isNaN(c)){toast('Revisa los umbrales: deben ser números');return}
+ST.lote=$('cl').value.trim()||'Lote La Esperanza';ST.tema=$('ct').value;ST.u=$('cu').value;ST.int=+$('ci').value;ST.notif=+$('cn').value;ST.sMin=a;ST.tMax=b;ST.wMax=c;persist();apply();toast('Cambios guardados')}
+function resetCfg(){var d=JSON.parse(DEF);d.on=ST.on;d.host=ST.host;d.user=ST.user;ST=d;persist();cfgFill();apply();toast('Valores restablecidos')}
+function saveConn(){if(!$('c1').value.trim()){toast('Escribe la dirección del servidor');$('c1').focus();return}ST.host=$('c1').value.trim();ST.port=$('c2').value;ST.topic=$('c3').value;ST.user=$('c4').value;ST.on=1;persist();conn();toast('Conexión guardada')}
+function discConn(){ST.on=0;persist();conn();toast('Broker desconectado')}
+function login(){var u=$('lu').value.trim();if(u.toLowerCase()=='admin'&&$('lp').value=='agro123')start('Admin');else{$('le').textContent='Usuario o contraseña incorrectos.';$('lp').value='';$('lp').focus()}}
+function start(u){try{sessionStorage.setItem('agro_s',u)}catch(e){}$('lg').style.display='none';$('un').textContent=u;$('le').textContent='';apply();als();tm();route();toast('Bienvenido, '+u)}
+function logout(){try{sessionStorage.removeItem('agro_s')}catch(e){}clearInterval(tick);$('lg').style.display='flex';$('lp').value='';$('lu').focus();location.hash='#resumen'}
+var P=['resumen','sensores','historial','alertas','configuracion'],N=['Resumen','Sensores','Historial','Alertas','Configuración'];
+$('tabs').innerHTML=P.map(function(p,i){return '<a href="#'+p+'" data-v="'+p+'">'+N[i]+'</a>'}).join('')+'<a href="#" onclick="logout();return false">Salir</a>';
+function route(){var h=location.hash.slice(1);if(P.indexOf(h)<0)h='resumen';P.forEach(function(p){$(p).classList.toggle('on',p==h)});document.querySelectorAll('[data-v]').forEach(function(a){a.classList.toggle('on',a.dataset.v==h);a.setAttribute('aria-current',a.dataset.v==h?'page':'false')});
+document.title=N[P.indexOf(h)]+' · AgroStream';if(h=='historial')hist();if(h=='configuracion')cfgFill();window.scrollTo(0,0)}
+window.addEventListener('hashchange',route);
+(function(){var u=null;try{u=sessionStorage.getItem('agro_s')}catch(e){}if(u)start(u);else{apply();als();tm();route();$('lu').focus()}})();
+</script>
+</body>
+</html>
