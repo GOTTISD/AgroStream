@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AgroStream – Monitoreo Agrosatelital</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<!-- Leaflet CSS para Mapa Satelital -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
 <style>
@@ -52,7 +53,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
 
-/* ANIMACIONES */
+/* ANIMACIONES DE ENTRADA Y SALIDA */
 @keyframes fadeInScale {
   from { opacity: 0; transform: scale(0.94) translateY(12px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
@@ -98,6 +99,44 @@ body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--in
 .brand b { font-size: 18px; color: #f8fafc; }
 .brand small { font-size: 10px; letter-spacing: .12em; color: #38bdf8; font-weight: 700; display: block; }
 
+/* MENÚ SOLO ÍCONOS EN ESCRITORIO CON HOVER TOOLTIP */
+nav.top-nav-links { display: flex; gap: 8px; align-items: center; }
+nav.top-nav-links a {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 10px;
+  color: #cbd5e1; text-decoration: none;
+  transition: all .2s;
+}
+nav.top-nav-links a:hover { background: rgba(255,255,255,.1); color: #fff; }
+nav.top-nav-links a.on { background: var(--brand-primary); color: #fff; }
+nav.top-nav-links svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Tooltip al pasar el mouse por encima */
+nav.top-nav-links a::after {
+  content: attr(data-title);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: #1e293b;
+  color: #fff;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 10;
+}
+nav.top-nav-links a:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(12px);
+}
+
 .menu-toggle {
   display: none;
   background: transparent;
@@ -108,17 +147,6 @@ body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--in
 }
 .menu-toggle svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; }
 
-nav.top-nav-links { display: flex; gap: 6px; align-items: center; }
-nav.top-nav-links a {
-  display: flex; align-items: center; gap: 8px;
-  padding: 8px 14px; border-radius: 8px;
-  color: #cbd5e1; text-decoration: none;
-  font-size: 14px; font-weight: 500; transition: all .2s;
-}
-nav.top-nav-links a:hover { background: rgba(255,255,255,.08); color: #fff; }
-nav.top-nav-links a.on { background: var(--brand-primary); color: #fff; font-weight: 600; }
-nav.top-nav-links svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
 .user-nav-actions { display: flex; align-items: center; gap: 14px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 16px; }
 .user-info { font-size: 13px; color: #cbd5e1; text-align: right; }
 .user-info b { color: #fff; display: block; }
@@ -126,10 +154,9 @@ nav.top-nav-links svg { width: 18px; height: 18px; stroke: currentColor; fill: n
 .btn-logout { background: transparent; border: 1px solid rgba(255,255,255,.25); color: #fff; border-radius: 8px; padding: 6px 12px; font: 500 13px Outfit; cursor: pointer; transition: background .2s; }
 .btn-logout:hover { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; }
 
-.badge { background: var(--amber); color: #fff; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 2px 7px; margin-left: 4px; }
+.badge { position: absolute; top: 4px; right: 4px; background: var(--amber); color: #fff; font-size: 10px; font-weight: 700; border-radius: 99px; padding: 2px 5px; line-height: 1; }
 
-/* MENÚ DESPLEGABLE EN PANTALLAS PEQUEÑAS */
-@media(max-width: 1024px) {
+@media(max-width: 900px) {
   .menu-toggle { display: block; }
   nav.top-nav-links {
     display: none;
@@ -142,6 +169,11 @@ nav.top-nav-links svg { width: 18px; height: 18px; stroke: currentColor; fill: n
     border-bottom: 1px solid rgba(255,255,255,0.1);
     box-shadow: 0 10px 25px rgba(0,0,0,0.3);
   }
+  nav.top-nav-links a {
+    width: 100%; height: auto; justify-content: flex-start; gap: 12px; padding: 12px 16px; border-radius: 8px;
+  }
+  nav.top-nav-links a::before { content: attr(data-title); font-size: 14px; font-weight: 500; }
+  nav.top-nav-links a::after { display: none; }
   nav.top-nav-links.open { display: flex; animation: fadeInView 0.2s ease-out; }
   .user-nav-actions { border-left: none; padding-left: 0; }
 }
@@ -159,7 +191,7 @@ header { display: flex; justify-content: space-between; align-items: center; gap
 
 .wrap { padding: 30px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(230px,1fr)); gap: 22px; margin-bottom: 30px; }
-.card { background: var(--card); border-radius: 18px; padding: 24px; box-shadow: 0 1px 4px rgba(15,23,42,.05); border: 1px solid var(--line); }
+.card { background: var(--card); border-radius: 18px; padding: 24px; box-shadow: 0 1px 4px rgba(15,23,42,.05); border: 1px solid var(--line); margin-bottom: 24px; }
 .k { display: flex; justify-content: space-between; gap: 10px; }
 .k span { font-size: 13px; letter-spacing: .07em; color: var(--mut); font-weight: 500; text-transform: uppercase; }
 .ico { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; flex-shrink: 0; }
@@ -175,13 +207,31 @@ header { display: flex; justify-content: space-between; align-items: center; gap
 .pill { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 8px; white-space: nowrap; border: 1px solid transparent; }
 .sub { color: var(--mut); font-size: 14px; margin-top: 4px; }
 
-/* RECOMENDACIÓN Y STATUS */
+svg.chart { width: 100%; height: auto; display: block; }
+.srow { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 10px; background: var(--soft); margin-bottom: 10px; font-weight: 500; font-size: 14px; color: inherit; text-decoration: none; }
+.srow small { display: block; font: 400 12px 'JetBrains Mono',monospace; color: var(--mut); margin-top: 2px; }
+.srow em { margin-left: auto; font-style: normal; font-size: 12px; color: var(--mut); }
+.srow.w { background: var(--wb); border: 1px solid var(--wl); }
+.sd { width: 10px; height: 10px; border-radius: 50%; background: #10b981; flex-shrink: 0; }
+.srow.w .sd { background: var(--amber); }
+
+.al { display: flex; gap: 14px; padding: 14px; border-radius: 12px; margin-bottom: 10px; border: 1px solid; align-items: flex-start; line-height: 1.35; font-size: 14px; }
+.al .dot { margin-top: 6px; width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.al div { flex: 1; }
+.al small { display: block; color: var(--mut); margin-top: 4px; font-size: 13px; }
+.al.adv { background: var(--wb); border-color: var(--wl); }
+.al.inf { background: var(--ib); border-color: var(--il); }
+.al.cri { background: var(--cb); border-color: var(--cl); }
+.al.inf .dot { background: #2563eb; }
+.al.cri .dot { background: #ef4444; }
+.al.adv .dot { background: var(--amber); }
+.al.read { opacity: .55; }
+
 .rec { background: var(--side2); color: #f1f5f9; border-color: transparent; }
 .rec h3 { display: flex; gap: 12px; align-items: center; color: #fff; }
 .rb { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 16px 18px; margin-top: 14px; font-size: 15px; line-height: 1.5; }
 .rb h5 { font-size: 12px; letter-spacing: .12em; color: #38bdf8; margin-bottom: 6px; }
 
-/* TABLAS Y FORMULARIOS */
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
 th { text-align: left; color: var(--mut); font-weight: 500; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; padding: 0 12px 10px; }
 td { padding: 12px; border-top: 1px solid var(--line); }
@@ -191,11 +241,13 @@ td code { font: 13px 'JetBrains Mono',monospace; color: var(--mut); }
 label { display: block; font-size: 13px; font-weight: 500; color: var(--mut); }
 input,select,textarea { width: 100%; margin-top: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font: 15px Outfit; background: var(--soft); color: var(--ink); }
 
-/* VISTAS */
+.chips { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.chip { padding: 8px 14px; border-radius: 99px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: 500 14px Outfit; cursor: pointer; }
+.chip.on { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
+
 .view { display: none; }
 .view.on { display: block; animation: fadeInView 0.3s ease-out; }
 
-/* LOGIN OVERLAY */
 #lg { position: fixed; inset: 0; z-index: 200; background: var(--side); display: flex; align-items: center; justify-content: center; padding: 20px; }
 .lc { background: var(--card); border-radius: 20px; padding: 36px; width: 100%; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
 .lc .logo-container { margin: 0 auto 18px; }
@@ -215,11 +267,16 @@ input,select,textarea { width: 100%; margin-top: 6px; padding: 10px 12px; border
 input:checked+.slider { background-color: var(--brand-primary); }
 input:checked+.slider:before { transform: translateX(22px); }
 .actuator-box { display: flex; align-items: center; justify-content: space-between; padding: 14px; border-radius: 12px; background: var(--soft); margin-top: 10px; }
+.st { padding: 18px 20px; }
+.st .v { font-size: 26px; }
+.pr { background: var(--soft); border-radius: 10px; padding: 12px 14px; font-size: 14px; line-height: 1.4; margin: 12px 0 10px; }
+.pr.w { background: var(--wb); color: var(--wt); }
+.sp { width: 100%; height: auto; display: block; margin-top: 8px; }
 </style>
 </head>
 <body>
 
-<!-- BARRA DE NAVEGACIÓN SUPERIOR CON DESPLEGABLE -->
+<!-- BARRA SUPERIOR CON SOLO ÍCONOS Y TOOLTIPS -->
 <header class="navbar-top">
   <div class="nav-container">
     <div class="brand">
@@ -238,14 +295,14 @@ input:checked+.slider:before { transform: translateX(22px); }
     </button>
 
     <nav class="top-nav-links" id="nav-links">
-      <a href="#mapa" data-v="mapa" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Mapa Satelital</a>
-      <a href="#resumen" data-v="resumen" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>Resumen</a>
-      <a href="#actuadores" data-v="actuadores" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Control Riego</a>
-      <a href="#sensores" data-v="sensores" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>Sensores</a>
-      <a href="#historial" data-v="historial" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M9 20v-6M14 20V9M19 20v-9"/></svg>Historial Real</a>
-      <a href="#alertas" data-v="alertas" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/></svg>Alertas<span class="badge" id="bd">4</span></a>
-      <a href="#usuarios" data-v="usuarios" id="nav-usuarios" style="display:none" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Usuarios</a>
-      <a href="#configuracion" data-v="configuracion" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Configuración</a>
+      <a href="#mapa" data-v="mapa" data-title="Mapa Satelital" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></a>
+      <a href="#resumen" data-v="resumen" data-title="Resumen" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></a>
+      <a href="#actuadores" data-v="actuadores" data-title="Control Riego" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></a>
+      <a href="#sensores" data-v="sensores" data-title="Sensores" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></a>
+      <a href="#historial" data-v="historial" data-title="Historial Real" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M9 20v-6M14 20V9M19 20v-9"/></svg></a>
+      <a href="#alertas" data-v="alertas" data-title="Alertas" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/></svg><span class="badge" id="bd">4</span></a>
+      <a href="#usuarios" data-v="usuarios" id="nav-usuarios" data-title="Usuarios" style="display:none" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></a>
+      <a href="#configuracion" data-v="configuracion" data-title="Configuración" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></a>
     </nav>
 
     <div class="user-nav-actions">
@@ -276,8 +333,8 @@ input:checked+.slider:before { transform: translateX(22px); }
       <div class="card">
         <div class="row">
           <div>
-            <h3>Geolocalización Satelital del Lote</h3>
-            <p class="sub">Vista satelital de alta resolución con delimitación perimetral y nodos de sensores IoT.</p>
+            <h3 id="map-title-head">Geolocalización Satelital del Lote</h3>
+            <p class="sub">Vista satelital de alta resolución con delimitación perimetral y nodos de sensores IoT en campo.</p>
           </div>
           <span class="pill" style="background:#e0f2fe;color:#0369a1">ESRI World Imagery</span>
         </div>
@@ -308,16 +365,20 @@ input:checked+.slider:before { transform: translateX(22px); }
 
     <!-- SENSORES -->
     <section class="view" id="sensores">
-      <div class="grid" id="sg"></div>
+      <p class="sub" style="margin:0 0 18px">Línea sólida: últimas 12 horas · línea punteada: predicción de las próximas 6 horas</p>
+      <div class="grid" id="sg" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))"></div>
     </section>
 
-    <!-- HISTORIAL -->
+    <!-- HISTORIAL REAL -->
     <section class="view" id="historial">
-      <div class="card"><h3 id="ht">Historial</h3><div id="ch2"></div></div>
+      <div class="chips" id="hm"></div><div class="chips" id="hr"></div>
+      <div class="grid" id="hst" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px"></div>
+      <div class="card"><div class="row"><div><h3 id="ht"></h3><p class="sub" id="hs"></p></div></div><div id="ch2"></div></div>
     </section>
 
     <!-- ALERTAS -->
     <section class="view" id="alertas">
+      <div class="chips" id="af"></div>
       <div class="card"><div class="row"><h3>Todas las Alertas</h3><button class="btn" onclick="readAll()">Marcar leídas</button></div><div id="al2"></div></div>
     </section>
 
@@ -335,10 +396,9 @@ input:checked+.slider:before { transform: translateX(22px); }
       </div>
     </section>
 
-    <!-- CONFIGURACIÓN (CON STATUS DE CONEXIÓN INCORPORADO) -->
+    <!-- CONFIGURACIÓN CON ESTADO DE DATABASE -->
     <section class="view" id="configuracion">
-      <!-- ESTADO DE CONEXIÓN / DEMO TRASLADADO AQUI -->
-      <div class="card" style="margin-bottom:24px;background:var(--side2);color:#fff">
+      <div class="card" style="background:var(--side2);color:#fff">
         <div class="row">
           <div>
             <h3 style="color:#fff">Estado de la Base de Datos</h3>
@@ -361,7 +421,7 @@ input:checked+.slider:before { transform: translateX(22px); }
   </div>
 </main>
 
-<!-- MODAL DE LOGIN CON ANIMACIÓN -->
+<!-- LOGIN OVERLAY -->
 <div id="lg">
   <form class="lc animate-login" id="login-card" onsubmit="login();return false">
     <div class="logo-container">
@@ -393,19 +453,40 @@ input:checked+.slider:before { transform: translateX(22px); }
 
 <script>
 var $=function(i){return document.getElementById(i)};
+var M={suelo:{n:'Humedad del suelo',u:'%',c:'#0284c7',a:36,b:50,d:1},temp:{n:'Temperatura ambiente',u:'°C',c:'#d97706',a:24,b:33,d:1},aire:{n:'Humedad del aire',u:'%',c:'#10b981',a:65,b:85,d:0},viento:{n:'Velocidad del viento',u:'km/h',c:'#7c3aed',a:2,b:12,d:1}};
+var A=[{t:'Humedad del suelo por debajo del 45% en zona norte',k:'adv',l:'Advertencia',w:'hace 12 min',r:0},{t:'Sensor WIND-01 reconectado exitosamente',k:'inf',l:'Info',w:'hace 34 min',r:0},{t:'Temperatura ambiente superó 30°C durante 2 horas',k:'cri',l:'Crítica',w:'hace 1 h',r:0}];
+var V={suelo:42.5,temp:28.1,aire:76,viento:4.2},filt='todas',hm='suelo',hr=7;
 var currentUser = { name: '', role: '' };
-var ST = { lote: 'Lote La Esperanza', tema: 'auto', u: 'C' };
+var mapInstance = null;
 
-function toggleMobileMenu(){
-  $('nav-links').classList.toggle('open');
-}
-function closeMobileMenu(){
-  $('nav-links').classList.remove('open');
+function toggleMobileMenu(){ $('nav-links').classList.toggle('open'); }
+function closeMobileMenu(){ $('nav-links').classList.remove('open'); }
+function toast(m){ var t=$('toast'); t.textContent=m; t.classList.add('on'); setTimeout(function(){t.classList.remove('on')},2200); }
+
+function rnd(a,b,d){return +(a+Math.random()*(b-a)).toFixed(d)}
+function fv(k,v){return v}
+function un(k){return M[k].u}
+function pc(v){return Math.max(0,Math.min(100,v))}
+
+function icon(k){return {suelo:['#e0f2fe','#0284c7','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#0284c7"/>'],temp:['#fef3c7','#d97706','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#d1fae5','#10b981','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#ede9fe','#7c3aed','<path d="M3 8h11a3 3 0 1 0-3-3M3 16h7"/>']}[k]}
+
+function cards(){
+  var sub={suelo:'Óptimo: 50–70%',temp:'Rango ideal: 25–35°C',aire:'Buena ventilación',viento:'Brisa suave'};
+  var h='';
+  for(var k in M){
+    var i=icon(k);
+    h+='<div class="card"><div class="k"><span>'+M[k].n+'</span><div class="ico" style="background:'+i[0]+'"><svg viewBox="0 0 24 24" style="stroke:'+i[1]+'">'+i[2]+'</svg></div></div><div class="v">'+V[k]+'<small>'+un(k)+'</small></div><div class="s">'+sub[k]+'</div></div>';
+  }
+  $('cards').innerHTML=h;
 }
 
-function toast(m){
-  var t=$('toast'); t.textContent=m; t.classList.add('on');
-  setTimeout(function(){t.classList.remove('on')},2200);
+function initSatelliteMap(){
+  if(mapInstance) return;
+  mapInstance = L.map('map-container').setView([9.2451, -75.4012], 15);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri'
+  }).addTo(mapInstance);
+  L.marker([9.2451, -75.4012]).addTo(mapInstance).bindPopup('<b>Lote La Esperanza</b><br>Nodo Central').openPopup();
 }
 
 function login(){
@@ -416,7 +497,6 @@ function login(){
     var role = user === 'admin' ? 'admin' : 'user';
     var name = user === 'admin' ? 'Admin Principal' : 'Operador Campo';
     
-    // Animación de salida en Login
     var card = $('login-card');
     card.classList.remove('animate-login');
     card.classList.add('animate-logout');
@@ -437,11 +517,11 @@ function startSession(sessionData){
   $('ur').textContent = sessionData.role === 'admin' ? 'Administrador' : 'Usuario';
   $('nav-usuarios').style.display = sessionData.role === 'admin' ? 'flex' : 'none';
   
-  // Animación de entrada al dashboard
   var main = $('main-content');
   main.classList.add('animate-enter');
   setTimeout(function(){ main.classList.remove('animate-enter'); }, 400);
 
+  cards();
   route();
   toast('Bienvenido, ' + sessionData.name);
 }
@@ -469,10 +549,11 @@ function route(){
   if(P.indexOf(h)<0) h = 'mapa';
   P.forEach(function(p){ $(p).classList.toggle('on', p == h); });
   document.querySelectorAll('[data-v]').forEach(function(a){ a.classList.toggle('on', a.dataset.v == h); });
+  if(h === 'mapa') setTimeout(initSatelliteMap, 100);
 }
 
 window.addEventListener('hashchange', route);
-window.onload = function(){ route(); };
+window.onload = function(){ cards(); route(); };
 </script>
 </body>
 </html>
