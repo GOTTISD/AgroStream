@@ -56,9 +56,9 @@
 body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex;min-height:100vh}
 aside{width:290px;background:var(--side);color:#fff;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
 .brand{display:flex;gap:14px;align-items:center;padding:24px 20px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
-.logo-container{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg, #0284c7, #0369a1);display:grid;place-items:center;box-shadow:0 4px 12px rgba(2,132,199,0.3)}
+.logo-container{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg, #0284c7, #0369a1);display:grid;place-items:center;box-shadow:0 4px 12px rgba(2,132,199,0.3)}
 .brand b{font-size:20px;display:block;color:#f8fafc}.brand small{font-size:11px;letter-spacing:.14em;color:#38bdf8;font-weight:700}
-nav{padding:16px;flex:1}nav h6{font-size:11px;letter-spacing:.14em;color:#94a3b8;margin:6px 6px 14px;font-weight:600}
+nav{padding:16px;flex:1;overflow-y:auto}nav h6{font-size:11px;letter-spacing:.14em;color:#94a3b8;margin:6px 6px 14px;font-weight:600}
 nav a{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:10px;color:#cbd5e1;text-decoration:none;font-size:16px;font-weight:500;margin-bottom:4px;transition:background .2s}
 nav a:hover{background:rgba(255,255,255,.06)}nav a.on{background:var(--brand-primary);color:#fff;font-weight:600}
 nav svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -120,7 +120,8 @@ td{padding:12px;border-top:1px solid var(--line)}td code{font:13px 'JetBrains Mo
 .chip.on{background:var(--brand-primary);color:#fff;border-color:var(--brand-primary)}
 .form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:16px 0}
 label{display:block;font-size:13px;font-weight:500;color:var(--mut)}
-input,select{width:100%;margin-top:6px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:15px Outfit;background:var(--soft);color:var(--ink)}
+input,select,textarea{width:100%;margin-top:6px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:15px Outfit;background:var(--soft);color:var(--ink)}
+textarea{resize:vertical;min-height:80px}
 .toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--side);color:#fff;padding:12px 22px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:20}
 .toast.on{opacity:1}
 .view{display:none}.view.on{display:block}
@@ -132,7 +133,7 @@ input,select{width:100%;margin-top:6px;padding:10px 12px;border:1px solid var(--
 .pr{background:var(--soft);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.4;margin:12px 0 10px}.pr.w{background:var(--wb);color:var(--wt)}
 .sp{width:100%;height:auto;display:block;margin-top:8px}
 #lg{position:fixed;inset:0;z-index:50;background:var(--side);display:flex;align-items:center;justify-content:center;padding:20px}
-.lc{background:var(--card);border-radius:20px;padding:36px;width:100%;max-width:400px}.lc .logo-container{margin-bottom:18px}.lc h2{font-size:24px;font-weight:600;margin-bottom:6px}.lc .btn{width:100%;justify-content:center;margin-top:16px}
+.lc{background:var(--card);border-radius:20px;padding:36px;width:100%;max-width:400px}.lc .logo-container{margin-bottom:18px;margin-left:auto;margin-right:auto}.lc h2{font-size:24px;font-weight:600;margin-bottom:6px;text-align:center}.lc .btn{width:100%;justify-content:center;margin-top:16px}
 .err{color:#dc2626;font-size:13px;min-height:20px;margin-top:8px}.hint{font-size:13px;color:var(--mut);margin-top:14px;text-align:center;line-height:1.4}
 .user{margin:0 16px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;color:#cbd5e1;font-size:14px;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
 .user button{background:none;border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:8px;padding:6px 12px;font:500 13px Outfit;cursor:pointer}
@@ -156,17 +157,18 @@ input:checked+.slider:before{transform:translateX(22px)}
 .map-stat-card{background:var(--soft);padding:14px 16px;border-radius:12px}
 .map-stat-card span{font-size:12px;color:var(--mut);display:block;text-transform:uppercase;font-weight:600}
 .map-stat-card b{font-size:18px;color:var(--ink);margin-top:2px;display:block}
+.note-item{background:var(--soft);border-radius:12px;padding:14px 16px;margin-bottom:12px;border-left:4px solid var(--brand-primary)}
 </style>
 </head>
 <body>
 <aside>
   <div class="brand">
     <div class="logo-container">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z" stroke-dasharray="2 2" stroke-opacity="0.6"/>
-        <path d="M12 6v12M6 12h12" stroke-opacity="0.3"/>
-        <path d="M7 16c3-1 6-5 6-10 0 5 3 9 6 10" stroke="#38bdf8" stroke-width="2.5"/>
-        <circle cx="12" cy="12" r="3" fill="#38bdf8"/>
+      <!-- LOGO VECTORIAL BASADO EN LA IMAGEN ADJUNTADA -->
+      <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="46" fill="#1e293b"/>
+        <path d="M 50 14 A 36 36 0 0 1 86 50 C 72 50 60 40 50 14 Z" fill="#ffffff"/>
+        <path d="M 50 86 A 36 36 0 0 1 14 50 C 28 50 40 60 50 86 Z" fill="#38bdf8"/>
       </svg>
     </div>
     <div><b>AgroStream</b><small>SATELITAL & IOT</small></div>
@@ -176,6 +178,7 @@ input:checked+.slider:before{transform:translateX(22px)}
     <a href="#mapa" data-v="mapa"><svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Mapa Satelital</a>
     <a href="#resumen" data-v="resumen"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>Resumen</a>
     <a href="#actuadores" data-v="actuadores"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Control Riego</a>
+    <a href="#bitacora" data-v="bitacora"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Bitácora Campo</a>
     <a href="#sensores" data-v="sensores"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>Sensores</a>
     <a href="#historial" data-v="historial"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M9 20v-6M14 20V9M19 20v-9"/></svg>Historial Real</a>
     <a href="#alertas" data-v="alertas"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/></svg>Alertas<span class="badge" id="bd">4</span></a>
@@ -286,12 +289,35 @@ input:checked+.slider:before{transform:translateX(22px)}
         </label>
       </div>
 
-      <div style="margin-top:20px;display:flex;gap:12px;align-items:center">
-        <label style="flex:1">Temporizador de Riego Automático (minutos):
+      <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <label>Motivo de activación (opcional):
+          <input type="text" id="irrigation-reason" placeholder="Ej. Riego de apoyo por alta evaporación">
+        </label>
+        <label>Temporizador (minutos):
           <input type="number" id="timer-min" value="30" min="1" max="120">
         </label>
-        <button class="btn p" style="margin-top:22px" onclick="startTimerRiego()">⏱️ Iniciar Riego Temporizado</button>
       </div>
+      <button class="btn p" style="margin-top:16px;width:100%;justify-content:center" onclick="startTimerRiego()">⏱️ Iniciar Riego Temporizado con Registro</button>
+    </div>
+  </section>
+
+  <!-- PESTAÑA BITÁCORA DE CAMPO -->
+  <section class="view" id="bitacora">
+    <div class="card">
+      <h3>Añadir Nota de Campo</h3>
+      <p class="sub" style="margin-bottom:14px">Registra eventos diarios, fertilizaciones o incidencias para el historial agronómico.</p>
+      <div class="form">
+        <label style="grid-column:1/-1">Observaciones / Detalles
+          <textarea id="note-text" placeholder="Ej. Se realizó poda fitosanitaria en zona este y mantenimiento al sensor SOIL-01..."></textarea>
+        </label>
+      </div>
+      <button class="btn p" onclick="saveFieldNote()">📝 Guardar Registro en Bitácora</button>
+    </div>
+
+    <div class="card" style="margin-top:24px">
+      <h3>Historial de Bitácora de Campo</h3>
+      <p class="sub" style="margin-bottom:16px">Registros realizados por operadores y administradores.</p>
+      <div id="notes-list-container"></div>
     </div>
   </section>
 
@@ -377,7 +403,28 @@ input:checked+.slider:before{transform:translateX(22px)}
       </div>
       <h3 style="margin-top:24px">Umbrales de alerta</h3><p class="sub">Recibirás un aviso cuando un valor salga de estos límites.</p>
       <div class="form"><label>Humedad del suelo mínima (%)<input id="c6" inputmode="decimal"></label><label>Temperatura máxima (°C)<input id="c7" inputmode="decimal"></label><label>Viento máximo (km/h)<input id="c8" inputmode="decimal"></label></div>
-      <div class="btns"><button class="btn p" id="btn-save-cfg" onclick="saveCfg()">Guardar cambios</button><button class="btn" id="btn-reset-cfg" onclick="resetCfg()">Restablecer</button></div></div>
+      <div class="btns"><button class="btn p" id="btn-save-cfg" onclick="saveCfg()">Guardar cambios</button><button class="btn" id="btn-reset-cfg" onclick="resetCfg()">Restablecer</button></div>
+    </div>
+
+    <!-- RESPALDO DE CONFIGURACIÓN Y AUDITORÍA ADMIN -->
+    <div class="card" id="admin-tools-card" style="margin-top:26px">
+      <h3>Herramientas de Administración y Respaldo</h3>
+      <p class="sub" style="margin-bottom:16px">Exportación de datos de sistema y auditoría de cambios.</p>
+      <div class="btns">
+        <button class="btn" onclick="exportSystemBackup()">💾 Exportar Copia de Seguridad (JSON)</button>
+        <button class="btn danger" onclick="clearAuditLogs()">🗑️ Limpiar Bitácora de Auditoría</button>
+      </div>
+      <h4 style="margin-top:20px;font-size:15px">Registro de Auditoría de Configuración</h4>
+      <div class="tw" style="margin-top:10px">
+        <table>
+          <thead>
+            <tr><th>Administrador</th><th>Acción Realizada</th><th>Fecha y Hora</th></tr>
+          </thead>
+          <tbody id="audit-log-table"></tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="card" style="margin-top:26px"><h3>Conexión Firebase</h3><p class="sub">Estado de conexión con Firebase Realtime Database.</p>
       <div class="form"><label>Project ID<input id="c1" readonly></label><label>Database URL<input id="c2" readonly></label></div>
     </div>
@@ -388,15 +435,14 @@ input:checked+.slider:before{transform:translateX(22px)}
 <div id="lg">
   <form class="lc" onsubmit="login();return false">
     <div class="logo-container">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z" stroke-dasharray="2 2" stroke-opacity="0.6"/>
-        <path d="M12 6v12M6 12h12" stroke-opacity="0.3"/>
-        <path d="M7 16c3-1 6-5 6-10 0 5 3 9 6 10" stroke="#38bdf8" stroke-width="2.5"/>
-        <circle cx="12" cy="12" r="3" fill="#38bdf8"/>
+      <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="46" fill="#1e293b"/>
+        <path d="M 50 14 A 36 36 0 0 1 86 50 C 72 50 60 40 50 14 Z" fill="#ffffff"/>
+        <path d="M 50 86 A 36 36 0 0 1 14 50 C 28 50 40 60 50 86 Z" fill="#38bdf8"/>
       </svg>
     </div>
     <h2>Iniciar sesión</h2>
-    <p class="sub" style="margin-bottom:18px">Ingresa tus credenciales para acceder a AgroStream.</p>
+    <p class="sub" style="margin-bottom:18px;text-align:center">Ingresa tus credenciales para acceder a AgroStream.</p>
     
     <label>Usuario<input id="lu" autocomplete="username" placeholder="Ingresa tu usuario"></label>
     <label style="margin-top:14px">Contraseña<input id="lp" type="password" autocomplete="current-password" placeholder="Ingresa tu contraseña"></label>
@@ -533,7 +579,7 @@ p.forEach(function(q,i){if(n<=12)o+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="4" f
 return o+'</svg>'}
 var DN=['Lun','Mar','Mié','Jue','Vie','Sáb','Hoy'];
 function series(k,n){var m=M[k],r=[],v=(m.a+m.b)/2;for(var i=0;i<n;i++){v+=rnd(-1,1,2)*(m.b-m.a)/5;v=Math.max(m.a,Math.min(m.b,v));r.push(+v.toFixed(1))}return r}
-function icon(k){return {suelo:['#e0f2fe','#0284c7','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#0284c7"/>'],temp:['#fef3c7','#d97706','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#d1fae5','#10b981','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#ede9fe','#7c3aed','<path d="M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h7"/>']}[k]}
+function icon(k){return {suelo:['#e0f2fe','#0284c7','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#0284c7"/>'],temp:['#fef3c7','#d97706','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#d1fae5','#10b981','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#ede9fe','#7c3aed','<path d="M3 8h11a3 3 0 1 0-3-3M3 16h7"/>']}[k]}
 var ST={lote:'Lote La Esperanza',tema:'auto',u:'C',int:30,notif:1,sMin:45,tMax:30,wMax:40,host:'agrostream-76ce0',port:'RTDB',topic:'lotes/esperanza/sensores',user:'',on:0},DEF=JSON.stringify(ST),act={suelo:1,temp:0,viento:0},tick=null,HC={};
 try{var sv=JSON.parse(localStorage.getItem('agro_cfg'));if(sv)for(var q in sv)ST[q]=sv[q]}catch(e){}
 function fv(k,v){return k=='temp'&&ST.u=='F'?+(v*9/5+32).toFixed(1):v}
@@ -634,12 +680,49 @@ function toggleValve(zona, val){
 
 function startTimerRiego(){
   var mins = parseInt($('timer-min').value) || 30;
+  var reason = $('irrigation-reason').value.trim() || 'Riego programado sin motivo especificado';
   togglePump(true);
+  
+  // Guardar en bitácora automáticamente
+  saveFieldNoteAutomatic('🤖 RIEGO AUTOMÁTICO INICIADO ('+mins+' min): ' + reason);
+
   toast('Riego iniciado por ' + mins + ' minutos');
   setTimeout(function(){
     togglePump(false);
     toast('Temporizador finalizado: Bomba apagada');
   }, mins * 60 * 1000);
+}
+
+// BITÁCORA DE CAMPO
+function saveFieldNote(){
+  var text = $('note-text').value.trim();
+  if(!text){ toast('Escribe alguna observación para la bitácora'); return; }
+  saveFieldNoteAutomatic(text);
+  $('note-text').value = '';
+  toast('Nota guardada en la bitácora');
+}
+
+function saveFieldNoteAutomatic(text){
+  var notes = [];
+  try{ notes = JSON.parse(localStorage.getItem('agro_field_notes') || '[]'); }catch(e){}
+  var dateStr = new Date().toLocaleString('es-CO');
+  notes.unshift({ author: currentUser.name || 'Operador', text: text, date: dateStr });
+  try{ localStorage.setItem('agro_field_notes', JSON.stringify(notes)); }catch(e){}
+  renderFieldNotes();
+}
+
+function renderFieldNotes(){
+  var notes = [];
+  try{ notes = JSON.parse(localStorage.getItem('agro_field_notes') || '[]'); }catch(e){}
+  var container = $('notes-list-container');
+  if(!container) return;
+  if(notes.length === 0){
+    container.innerHTML = '<p class="sub">No hay registros aún en la bitácora de campo.</p>';
+    return;
+  }
+  container.innerHTML = notes.map(function(n){
+    return '<div class="note-item"><b>'+n.author+'</b> <small style="color:var(--mut)">· '+n.date+'</small><p style="margin-top:6px;font-size:14px;color:var(--ink)">'+n.text+'</p></div>';
+  }).join('');
 }
 
 function exportCSV(){
@@ -685,6 +768,8 @@ function createUser(){
 
   accounts.push({ username: user, password: pass, name: name, role: role });
   localStorage.setItem('agro_accounts', JSON.stringify(accounts));
+  
+  logAuditAction('Registró al nuevo usuario: ' + user + ' (' + role + ')');
   toast('Usuario creado exitosamente');
   
   $('nu-name').value = ''; $('nu-user').value = ''; $('nu-pass').value = '';
@@ -693,8 +778,9 @@ function createUser(){
 
 function deleteUser(index){
   var accounts = getAccounts();
-  accounts.splice(index, 1);
+  var removed = accounts.splice(index, 1);
   localStorage.setItem('agro_accounts', JSON.stringify(accounts));
+  if(removed[0]) logAuditAction('Eliminó al usuario: ' + removed[0].username);
   toast('Usuario eliminado');
   renderRegisteredUsers();
 }
@@ -771,14 +857,67 @@ function clearUserLogs(){
   if(currentUser.role !== 'admin'){ toast('Acceso denegado'); return; }
   if(confirm('¿Estás seguro de que deseas eliminar todo el historial de inicios de sesión?')){
     localStorage.removeItem('agro_user_logs');
+    logAuditAction('Eliminó el historial de accesos');
     renderUserLogs();
     toast('Historial de accesos eliminado');
   }
 }
 
+// AUDITORÍA Y RESPALDO ADMIN
+function logAuditAction(action){
+  var logs = [];
+  try{ logs = JSON.parse(localStorage.getItem('agro_audit_logs') || '[]'); }catch(e){}
+  var dateStr = new Date().toLocaleString('es-CO');
+  logs.unshift({ admin: currentUser.name || 'Admin', action: action, date: dateStr });
+  if(logs.length > 20) logs.pop();
+  try{ localStorage.setItem('agro_audit_logs', JSON.stringify(logs)); }catch(e){}
+  renderAuditLogs();
+}
+
+function renderAuditLogs(){
+  var logs = [];
+  try{ logs = JSON.parse(localStorage.getItem('agro_audit_logs') || '[]'); }catch(e){}
+  var tbody = $('audit-log-table');
+  if(!tbody) return;
+  if(logs.length === 0){
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--mut)">No hay acciones registradas en auditoría.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = logs.map(function(l){
+    return '<tr><td><b>'+l.admin+'</b></td><td>'+l.action+'</td><td><code>'+l.date+'</code></td></tr>';
+  }).join('');
+}
+
+function clearAuditLogs(){
+  if(currentUser.role !== 'admin'){ toast('Acceso denegado'); return; }
+  localStorage.removeItem('agro_audit_logs');
+  renderAuditLogs();
+  toast('Registros de auditoría limpiados');
+}
+
+function exportSystemBackup(){
+  if(currentUser.role !== 'admin'){ toast('Acceso denegado'); return; }
+  var backupData = {
+    cfg: ST,
+    accounts: getAccounts(),
+    notes: JSON.parse(localStorage.getItem('agro_field_notes') || '[]'),
+    exportDate: new Date().toISOString()
+  };
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+  var downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", "Backup_AgroStream_" + new Date().toISOString().slice(0,10) + ".json");
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+  logAuditAction('Exportó una copia de respaldo del sistema');
+  toast('Respaldo descargado con éxito');
+}
+
 function applyPermissions(){
   var isAdmin = currentUser.role === 'admin';
   $('nav-usuarios').style.display = isAdmin ? 'flex' : 'none';
+  $('admin-tools-card').style.display = isAdmin ? 'block' : 'none';
 
   var inputs = document.querySelectorAll('#configuracion input, #configuracion select');
   inputs.forEach(function(el){
@@ -801,15 +940,19 @@ function saveCfg(){
   if(currentUser.role !== 'admin'){ toast('Acceso denegado'); return; }
   var a=parseFloat($('c6').value),b=parseFloat($('c7').value),c=parseFloat($('c8').value);
   if(isNaN(a)||isNaN(b)||isNaN(c)){toast('Revisa los umbrales');return}
-  ST.lote=$('cl').value.trim()||'Lote Seleccionado';ST.tema=$('ct').value;ST.u=$('cu').value;ST.int=+$('ci').value;ST.notif=+$('cn').value;ST.sMin=a;ST.tMax=b;ST.wMax=c;persist();apply();toast('Cambios guardados')
+  ST.lote=$('cl').value.trim()||'Lote Seleccionado';ST.tema=$('ct').value;ST.u=$('cu').value;ST.int=+$('ci').value;ST.notif=+$('cn').value;ST.sMin=a;ST.tMax=b;ST.wMax=c;persist();apply();
+  logAuditAction('Modificó umbrales y preferencias del lote');
+  toast('Cambios guardados');
 }
 
 function resetCfg(){
   if(currentUser.role !== 'admin'){ toast('Acceso denegado'); return; }
-  var d=JSON.parse(DEF);d.on=ST.on;ST=d;persist();cfgFill();apply();toast('Valores restablecidos')
+  var d=JSON.parse(DEF);d.on=ST.on;ST=d;persist();cfgFill();apply();
+  logAuditAction('Restableció los valores predeterminados de configuración');
+  toast('Valores restablecidos');
 }
 
-var P=['mapa','resumen','actuadores','sensores','historial','alertas','usuarios','configuracion'],N=['Mapa Satelital','Resumen','Control Riego','Sensores','Historial','Alertas','Gestión Usuarios','Configuración'];
+var P=['mapa','resumen','actuadores','bitacora','sensores','historial','alertas','usuarios','configuracion'],N=['Mapa Satelital','Resumen','Control Riego','Bitácora Campo','Sensores','Historial','Alertas','Gestión Usuarios','Configuración'];
 $('tabs').innerHTML=P.map(function(p,i){return '<a href="#'+p+'" data-v="'+p+'" id="tab-'+p+'">'+N[i]+'</a>'}).join('')+'<a href="#" onclick="logout();return false">Salir</a>';
 
 function route(){
@@ -824,7 +967,8 @@ function route(){
   document.title=N[P.indexOf(h)]+' · AgroStream';
   if(h=='historial')hist();
   if(h=='mapa'){ setTimeout(initSatelliteMap, 100); }
-  if(h=='configuracion')cfgFill();
+  if(h=='bitacora'){ renderFieldNotes(); }
+  if(h=='configuracion'){ cfgFill(); renderAuditLogs(); }
   if(h=='usuarios'){ renderUserLogs(); renderRegisteredUsers(); }
   window.scrollTo(0,0)
 }
