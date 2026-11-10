@@ -30,6 +30,7 @@ h1{font-size:23px;font-weight:600}header p{color:var(--mut);font-size:15px;margi
 .btns{display:flex;gap:12px}
 .btn{padding:12px 18px;border-radius:10px;font:600 16px Outfit;cursor:pointer;border:1px solid #bfe3cd;background:#e5f6ea;color:var(--green);text-decoration:none;display:inline-flex;gap:8px;align-items:center}
 .btn.p{background:var(--side);color:#fff;border-color:var(--side)}
+.btn.danger{background:#cb3b3b;color:#fff;border-color:#b02a2a}
 .btn:disabled{opacity:0.5;cursor:not-allowed;filter:grayscale(1)}
 .wrap{padding:30px}
 .alert{background:var(--wb);border:1px solid var(--wl);color:var(--wt);border-radius:12px;padding:16px 20px;display:flex;gap:14px;align-items:center;margin-bottom:30px}
@@ -96,6 +97,16 @@ input,select{width:100%;margin-top:6px;padding:12px 14px;border:1px solid var(--
 :root[data-theme="dark"]{--bg:#0f1f18;--card:#18302a;--ink:#e6f2ea;--mut:#93a89c;--line:#26443a;--soft:#1d3830;--wb:#3a3315;--wl:#5c5223;--wt:#f3d98b;--ib:#16304a;--il:#27517c;--cb:#4a2224;--cl:#7a3a3d}
 .btns{flex-wrap:wrap}.card .btns{margin-top:6px}
 .role-badge{font-size:11px;padding:2px 8px;border-radius:4px;background:#3a9a6c;color:#fff;font-weight:700;margin-left:6px;vertical-align:middle;text-transform:uppercase}
+.switch{position:relative;display:inline-block;width:52px;height:28px}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;transition:.3s;border-radius:34px}
+.slider:before{position:absolute;content:"";height:20px;width:20px;left:4px;bottom:4px;background-color:white;transition:.3s;border-radius:50%}
+input:checked+.slider{background-color:#2f7d57}
+input:checked+.slider:before{transform:translateX(24px)}
+.actuator-box{display:flex;align-items:center;justify-content:space-between;padding:16px;border-radius:12px;background:var(--soft);margin-top:12px}
+.weather-card{display:flex;align-items:center;gap:18px;background:linear-gradient(135deg,#1f5340,#17432f);color:#fff;padding:20px;border-radius:16px;margin-bottom:24px}
+.weather-card h4{font-size:18px;margin-bottom:4px}
+.weather-card p{font-size:14px;color:#a2d6bc}
 </style>
 </head>
 <body>
@@ -104,10 +115,11 @@ input,select{width:100%;margin-top:6px;padding:12px 14px;border:1px solid var(--
   <nav>
     <h6>PRINCIPAL</h6>
     <a href="#resumen" data-v="resumen"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>Resumen</a>
+    <a href="#actuadores" data-v="actuadores"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Control Riego</a>
     <a href="#sensores" data-v="sensores"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>Sensores</a>
-    <a href="#historial" data-v="historial"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M9 20v-6M14 20V9M19 20v-9"/></svg>Historial</a>
+    <a href="#historial" data-v="historial"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M9 20v-6M14 20V9M19 20v-9"/></svg>Historial Real</a>
     <a href="#alertas" data-v="alertas"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/></svg>Alertas<span class="badge" id="bd">4</span></a>
-    <a href="#usuarios" data-v="usuarios" id="nav-usuarios" style="display:none"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Registro Accesos</a>
+    <a href="#usuarios" data-v="usuarios" id="nav-usuarios" style="display:none"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Gestión Usuarios</a>
     <a href="#configuracion" data-v="configuracion"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Configuración</a>
   </nav>
   <div class="user"><div><span><b id="un"></b></span><br><small id="ur" style="color:#6fd6a2;font-weight:600;font-size:12px"></small></div><button onclick="logout()">Salir</button></div>
@@ -117,16 +129,76 @@ input,select{width:100%;margin-top:6px;padding:12px 14px;border:1px solid var(--
   <div class="tabs" id="tabs"></div>
   <header>
     <div><h1 id="lote">Lote La Esperanza</h1><p>Última actualización: <span id="t"></span> · <span id="md">Iniciando Firebase...</span></p></div>
-    <div class="btns"><button class="btn" onclick="refresh()">↻ Actualizar</button><a class="btn p" href="#configuracion">Configurar conexión</a></div>
+    <div class="btns">
+      <button class="btn" onclick="exportCSV()">📥 Descargar Reporte CSV</button>
+      <button class="btn p" onclick="refresh()">↻ Actualizar</button>
+    </div>
   </header>
   <div class="wrap">
 
   <section class="view" id="resumen">
+    <div class="weather-card" id="weather-banner">
+      <div style="font-size:40px">🌧️</div>
+      <div>
+        <h4 id="w-title">Pronóstico Agroclimático: Chinú / Sahagún</h4>
+        <p id="w-desc">Cargando pronóstico del tiempo...</p>
+      </div>
+    </div>
     <div class="alert" id="banner"><span class="dot" id="dot-banner"></span><span id="banner-text">Conectando con Firebase Realtime Database...</span></div>
     <div class="grid" id="cards"></div>
     <div class="two b">
       <div class="card"><h3 style="margin-bottom:18px">Estado general</h3><div id="gen"></div></div>
       <div class="card rec"><h3><span class="ico" style="width:40px;height:40px;background:rgba(255,255,255,.12)"><svg viewBox="0 0 24 24" style="fill:#d8f5e4;stroke:none"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14l-1 1z"/></svg></span>Recomendación del día</h3><div id="rec"></div><p class="foot">● Basado en datos de sensores · <span class="tm"></span></p></div>
+    </div>
+  </section>
+
+  <section class="view" id="actuadores">
+    <div class="card">
+      <div class="row">
+        <h3>Control de Actuadores y Riego en Campo</h3>
+        <span id="act-lock-msg" class="pill" style="display:none;background:#fdf0c9;color:#9a6a00">Modo Operador (Control Habilitado)</span>
+      </div>
+      <p class="sub">Envía órdenes directas a las electroválvulas y bomba de agua vía Firebase.</p>
+      
+      <div class="actuator-box">
+        <div>
+          <b>Bomba de Riego Principal</b>
+          <p class="sub" style="margin:2px 0 0" id="pump-status">Estado: APAGADA</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="sw-bomba" onchange="togglePump(this.checked)">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="actuator-box">
+        <div>
+          <b>Electroválvula Lote Norte (Goteo)</b>
+          <p class="sub" style="margin:2px 0 0">Zona A - Yuca Temprana</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="sw-vnorte" onchange="toggleValve('norte', this.checked)">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="actuator-box">
+        <div>
+          <b>Electroválvula Lote Sur (Goteo)</b>
+          <p class="sub" style="margin:2px 0 0">Zona B - Yuca Madura</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="sw-vsur" onchange="toggleValve('sur', this.checked)">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div style="margin-top:20px;display:flex;gap:12px;align-items:center">
+        <label style="flex:1">Temporizador de Riego Automático (minutos):
+          <input type="number" id="timer-min" value="30" min="1" max="120">
+        </label>
+        <button class="btn p" style="margin-top:22px" onclick="startTimerRiego()">⏱️ Iniciar Riego Temporizado</button>
+      </div>
     </div>
   </section>
 
@@ -149,8 +221,37 @@ input,select{width:100%;margin-top:6px;padding:12px 14px;border:1px solid var(--
 
   <section class="view" id="usuarios">
     <div class="card">
+      <h3>Crear Nuevo Usuario</h3>
+      <p class="sub" style="margin-bottom:14px">Agrega operadores o administradores a la plataforma.</p>
+      <div class="form">
+        <label>Nombre Completo<input id="nu-name" placeholder="Ej. Carlos Pérez"></label>
+        <label>Usuario<input id="nu-user" placeholder="Ej. cperez"></label>
+        <label>Contraseña<input id="nu-pass" type="password" placeholder="••••••••"></label>
+        <label>Rol
+          <select id="nu-role">
+            <option value="user">Usuario (Operador)</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </label>
+      </div>
+      <button class="btn p" onclick="createUser()">➕ Guardar Usuario</button>
+    </div>
+
+    <div class="card" style="margin-top:24px">
+      <h3>Usuarios Registrados en el Sistema</h3>
+      <div class="tw">
+        <table>
+          <thead>
+            <tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Acciones</th></tr>
+          </thead>
+          <tbody id="users-list-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:24px">
       <h3>Historial de Inicios de Sesión</h3>
-      <p class="sub" style="margin-bottom:18px">Registro de accesos recientes a la plataforma AgroStream (Vista exclusiva de Administrador).</p>
+      <p class="sub" style="margin-bottom:18px">Registro de accesos recientes a la plataforma AgroStream.</p>
       <div class="tw">
         <table>
           <thead>
@@ -211,7 +312,7 @@ input,select{width:100%;margin-top:6px;padding:12px 14px;border:1px solid var(--
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-analytics.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { getDatabase, ref, onValue, set, push } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCPjReVsY6LwNrUjwBpJc33BZxx0s-O9aA",
@@ -231,7 +332,10 @@ const database = getDatabase(app);
 window.database = database;
 window.ref = ref;
 window.onValue = onValue;
+window.set = set;
+window.push = push;
 
+// Escuchar datos de sensores
 const dbRef = ref(database, 'lote/esperanza/sensores');
 onValue(dbRef, (snapshot) => {
   const data = snapshot.val();
@@ -244,12 +348,38 @@ onValue(dbRef, (snapshot) => {
     window.ST.on = 1;
     window.updateFirebaseStatus(true);
     window.step(false);
+
+    // Guardar en Historial Real en Firebase
+    try {
+      const histRef = ref(database, 'lote/esperanza/historial');
+      push(histRef, {
+        timestamp: new Date().toISOString(),
+        suelo: window.V.suelo,
+        temp: window.V.temp,
+        aire: window.V.aire,
+        viento: window.V.viento
+      });
+    } catch(e){}
   } else {
     window.updateFirebaseStatus(false, "Conectado a Firebase, esperando datos en /lote/esperanza/sensores");
   }
 }, (error) => {
   console.error("Error Firebase:", error);
   window.updateFirebaseStatus(false, "Error al conectar con Firebase Database");
+});
+
+// Escuchar Estado de Actuadores (Bomba y Válvulas)
+const actRef = ref(database, 'lote/esperanza/actuadores');
+onValue(actRef, (snapshot) => {
+  const actData = snapshot.val();
+  if (actData) {
+    if(actData.bomba !== undefined) {
+      document.getElementById('sw-bomba').checked = actData.bomba;
+      document.getElementById('pump-status').textContent = 'Estado: ' + (actData.bomba ? 'ENCENDIDA (Regando)' : 'APAGADA');
+    }
+    if(actData.valvulaNorte !== undefined) document.getElementById('sw-vnorte').checked = actData.valvulaNorte;
+    if(actData.valvulaSur !== undefined) document.getElementById('sw-vsur').checked = actData.valvulaSur;
+  }
 });
 </script>
 
@@ -260,11 +390,16 @@ var A=[{t:'Humedad del suelo por debajo del 45% en zona norte',k:'adv',l:'Advert
 var V={suelo:42.5,temp:28.1,aire:76,viento:4.2},filt='todas',hm='suelo',hr=7;
 var currentUser = { name: '', role: '' };
 
-// Base de datos local de usuarios autorizados
-var ACCOUNTS = [
+// Cargar cuentas iniciales o de localStorage
+var DEFAULT_ACCOUNTS = [
   { username: 'admin', password: 'agro123', name: 'Admin Principal', role: 'admin' },
   { username: 'operador', password: 'user123', name: 'Operador Campo', role: 'user' }
 ];
+
+function getAccounts(){
+  try{ return JSON.parse(localStorage.getItem('agro_accounts')) || DEFAULT_ACCOUNTS; }
+  catch(e){ return DEFAULT_ACCOUNTS; }
+}
 
 function rnd(a,b,d){return +(a+Math.random()*(b-a)).toFixed(d)}
 function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on')},2200)}
@@ -352,15 +487,118 @@ function apply(){
   updateFirebaseStatus(ST.on);
   cards();sg();rec();check();hist();timer();
   applyPermissions();
+  fetchWeatherForecast();
 }
 
-// --- LOGICA DE AUTENTICACION Y PERMISOS AUTOMÁTICOS ---
+// --- CLIMA AGROMETEOROLÓGICO ---
+function fetchWeatherForecast(){
+  // Simulando lectura de API de pronóstico meteorológico regional
+  var probLluvia = 80; // %
+  $('w-title').textContent = "Pronóstico Agroclimático: Sahagún / Chinú (Hoy)";
+  $('w-desc').innerHTML = "Probabilidad de lluvia: <b>"+probLluvia+"%</b> en la tarde. " + 
+    (probLluvia > 75 ? "<span style='color:#f3d98b'>⚠️ Se sugiere suspender riego programado para ahorrar agua.</span>" : "Condiciones estables para riego.");
+}
+
+// --- CONTROL DE ACTUADORES (FIREBASE) ---
+function togglePump(val){
+  if(window.set && window.ref && window.database){
+    window.set(window.ref(window.database, 'lote/esperanza/actuadores/bomba'), val);
+  }
+  toast(val ? 'Bomba ENCENDIDA en campo' : 'Bomba APAGADA');
+}
+
+function toggleValve(zona, val){
+  var path = zona === 'norte' ? 'lote/esperanza/actuadores/valvulaNorte' : 'lote/esperanza/actuadores/valvulaSur';
+  if(window.set && window.ref && window.database){
+    window.set(window.ref(window.database, path), val);
+  }
+  toast('Válvula ' + zona.toUpperCase() + (val ? ' ABIERTA' : ' CERRADA'));
+}
+
+function startTimerRiego(){
+  var mins = parseInt($('timer-min').value) || 30;
+  togglePump(true);
+  toast('Riego iniciado por ' + mins + ' minutos');
+  setTimeout(function(){
+    togglePump(false);
+    toast('Temporizador finalizado: Bomba apagada automáticamente');
+  }, mins * 60 * 1000);
+}
+
+// --- EXPORTACIÓN DE REPORTES CSV ---
+function exportCSV(){
+  var csv = 'Fecha/Hora,Humedad Suelo (%),Temperatura (C),Humedad Aire (%),Viento (km/h)\n';
+  var dateStr = new Date().toLocaleString('es-CO');
+  csv += dateStr + ',' + V.suelo + ',' + V.temp + ',' + V.aire + ',' + V.viento + '\n';
+  
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'Reporte_AgroStream_' + new Date().toISOString().slice(0,10) + '.csv');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  toast('Reporte CSV descargado con éxito');
+}
+
+// --- GESTIÓN DE USUARIOS (CRUD) ---
+function renderRegisteredUsers(){
+  var accounts = getAccounts();
+  var tbody = $('users-list-table');
+  if(!tbody) return;
+  tbody.innerHTML = accounts.map(function(acc, idx){
+    return '<tr>' +
+      '<td><b>' + acc.name + '</b></td>' +
+      '<td><code>' + acc.username + '</code></td>' +
+      '<td><span class="role-badge" style="background:' + (acc.role === 'admin' ? '#3a9a6c' : '#2b78b5') + '">' + (acc.role === 'admin' ? 'Admin' : 'Usuario') + '</span></td>' +
+      '<td>' + (acc.username !== 'admin' ? '<button class="btn danger" style="padding:4px 10px;font-size:12px" onclick="deleteUser(' + idx + ')">Eliminar</button>' : '<small>Principal</small>') + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+function createUser(){
+  var name = $('nu-name').value.trim();
+  var user = $('nu-user').value.trim();
+  var pass = $('nu-pass').value.trim();
+  var role = $('nu-role').value;
+
+  if(!name || !user || !pass){
+    toast('Por favor completa todos los campos');
+    return;
+  }
+
+  var accounts = getAccounts();
+  if(accounts.some(a => a.username.toLowerCase() === user.toLowerCase())){
+    toast('El nombre de usuario ya existe');
+    return;
+  }
+
+  accounts.push({ username: user, password: pass, name: name, role: role });
+  localStorage.setItem('agro_accounts', JSON.stringify(accounts));
+  toast('Usuario ' + user + ' creado correctamente');
+  
+  $('nu-name').value = '';
+  $('nu-user').value = '';
+  $('nu-pass').value = '';
+  renderRegisteredUsers();
+}
+
+function deleteUser(index){
+  var accounts = getAccounts();
+  var removed = accounts.splice(index, 1);
+  localStorage.setItem('agro_accounts', JSON.stringify(accounts));
+  toast('Usuario ' + removed[0].username + ' eliminado');
+  renderRegisteredUsers();
+}
+
+// --- LOGICA DE AUTENTICACION Y PERMISOS ---
 function login(){
   var user = $('lu').value.trim().toLowerCase();
   var pass = $('lp').value;
 
-  // Busca el usuario en la lista de cuentas autorizadas
-  var foundAccount = ACCOUNTS.find(function(acc){
+  var accounts = getAccounts();
+  var foundAccount = accounts.find(function(acc){
     return acc.username.toLowerCase() === user && acc.password === pass;
   });
 
@@ -431,7 +669,7 @@ function applyPermissions(){
   // Pestaña de lista de usuarios (Solo Admin)
   $('nav-usuarios').style.display = isAdmin ? 'flex' : 'none';
   
-  // Deshabilitar campos de edición si es usuario normal
+  // Deshabilitar campos de edición en Configuración si es usuario normal
   var inputs = document.querySelectorAll('#configuracion input, #configuracion select');
   inputs.forEach(function(el){
     if(el.id !== 'c1' && el.id !== 'c2'){
@@ -469,7 +707,7 @@ function resetCfg(){
   var d=JSON.parse(DEF);d.on=ST.on;ST=d;persist();cfgFill();apply();toast('Valores restablecidos')
 }
 
-var P=['resumen','sensores','historial','alertas','usuarios','configuracion'],N=['Resumen','Sensores','Historial','Alertas','Registro Accesos','Configuración'];
+var P=['resumen','actuadores','sensores','historial','alertas','usuarios','configuracion'],N=['Resumen','Control Riego','Sensores','Historial','Alertas','Gestión Usuarios','Configuración'];
 $('tabs').innerHTML=P.map(function(p,i){return '<a href="#'+p+'" data-v="'+p+'" id="tab-'+p+'">'+N[i]+'</a>'}).join('')+'<a href="#" onclick="logout();return false">Salir</a>';
 
 function route(){
@@ -484,7 +722,7 @@ function route(){
   document.title=N[P.indexOf(h)]+' · AgroStream';
   if(h=='historial')hist();
   if(h=='configuracion')cfgFill();
-  if(h=='usuarios')renderUserLogs();
+  if(h=='usuarios'){ renderUserLogs(); renderRegisteredUsers(); }
   window.scrollTo(0,0)
 }
 
