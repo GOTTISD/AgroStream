@@ -86,7 +86,7 @@ body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--in
   position: fixed; inset: 0; z-index: 500;
   background: var(--side);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  transition: opacity 0.5s ease, visibility 0.5s;
+  transition: opacity 0.4s ease, visibility 0.4s;
 }
 #splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
@@ -94,14 +94,14 @@ body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--in
   width: 90px; height: 90px; border-radius: 50%;
   background: linear-gradient(135deg, #0284c7, #0369a1);
   display: grid; place-items: center;
-  animation: splashPulse 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: splashPulse 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   box-shadow: 0 8px 32px rgba(2, 132, 199, 0.4);
 }
 .splash-logo-box svg { animation: rotateLogo 8s linear infinite; }
 .splash-title { color: #fff; font-size: 26px; margin-top: 20px; font-weight: 700; letter-spacing: -0.02em; }
 .splash-subtitle { color: #38bdf8; font-size: 12px; letter-spacing: 0.2em; font-weight: 600; margin-top: 4px; }
 
-/* BARRA SUPERIOR (NAVBAR TOP) */
+/* BARRA SUPERIOR */
 .navbar-top {
   background: var(--side); color: #fff;
   position: sticky; top: 0; z-index: 100;
@@ -146,7 +146,7 @@ nav.top-nav-links a::after {
 }
 nav.top-nav-links a:hover::after { opacity: 1; transform: translateX(-50%) translateY(12px); }
 
-/* MENÚ DESPLEGABLE DE CONFIGURACIÓN Y USUARIO EN LA ESQUINA SUPERIOR DERECHA */
+/* MENÚ DESPLEGABLE EN LA ENGRANAJE */
 .user-settings-dropdown { position: relative; display: inline-block; }
 .gear-btn {
   width: 44px; height: 44px; border-radius: 10px;
@@ -167,9 +167,7 @@ nav.top-nav-links a:hover::after { opacity: 1; transform: translateX(-50%) trans
 }
 .dropdown-menu.show { display: flex; }
 
-.user-profile-box {
-  padding-bottom: 10px; border-bottom: 1px solid var(--line);
-}
+.user-profile-box { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
 .user-profile-box b { display: block; font-size: 14px; color: var(--ink); }
 .user-profile-box small { color: var(--brand-primary); font-size: 11px; font-weight: 700; text-transform: uppercase; }
 
@@ -225,7 +223,6 @@ header { display: flex; justify-content: space-between; align-items: center; gap
 .bar { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; }
 .bar i { display: block; height: 100%; border-radius: 99px; transition: width .4s; }
 
-/* CORRECCIÓN ESTRICTA DEL MAPA PARA QUE NO SE DESBORDE NI ROMPA */
 #map-wrapper { width: 100%; height: 500px; position: relative; border-radius: 14px; overflow: hidden; }
 #map-container { width: 100%; height: 100%; position: absolute; inset: 0; z-index: 1; }
 
@@ -317,10 +314,9 @@ input:checked+.slider:before { transform: translateX(22px); }
   <div class="splash-subtitle">MONITOREO AGROSATELITAL</div>
 </div>
 
-<!-- BARRA SUPERIOR REORGANIZADA -->
+<!-- BARRA SUPERIOR -->
 <header class="navbar-top">
   <div class="nav-container">
-    <!-- LOGO Y MARCA EN LA EXTREMA IZQUIERDA -->
     <div class="brand">
       <div class="logo-container">
         <svg width="26" height="26" viewBox="0 0 100 100" fill="none">
@@ -336,7 +332,6 @@ input:checked+.slider:before { transform: translateX(22px); }
       <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
 
-    <!-- NAVEGACIÓN PRINCIPAL (ÍCONOS CENTRADOS/SEPARADOS) -->
     <nav class="top-nav-links" id="nav-links">
       <a href="#mapa" data-v="mapa" data-title="Mapa Satelital" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></a>
       <a href="#resumen" data-v="resumen" data-title="Resumen" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></a>
@@ -349,7 +344,6 @@ input:checked+.slider:before { transform: translateX(22px); }
       <a href="#configuracion" data-v="configuracion" data-title="Configuración" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></a>
     </nav>
 
-    <!-- MENÚ DESPLEGABLE EN LA ENGRANAJE (SUPERIOR DERECHA) -->
     <div class="user-settings-dropdown">
       <button class="gear-btn" onclick="toggleDropdown()" title="Configuración de Cuenta">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -360,12 +354,8 @@ input:checked+.slider:before { transform: translateX(22px); }
           <b id="un">Admin Principal</b>
           <small id="ur">ADMINISTRADOR</small>
         </div>
-        <a class="dropdown-item" href="#configuracion" onclick="closeDropdown()">
-          ⚙️ Preferencias Sistema
-        </a>
-        <button class="dropdown-item logout" onclick="logout();closeDropdown()">
-          🚪 Cerrar Sesión
-        </button>
+        <a class="dropdown-item" href="#configuracion" onclick="closeDropdown()">⚙️ Preferencias Sistema</a>
+        <button class="dropdown-item logout" onclick="logout();closeDropdown()">🚪 Cerrar Sesión</button>
       </div>
     </div>
   </div>
@@ -384,7 +374,7 @@ input:checked+.slider:before { transform: translateX(22px); }
   </header>
 
   <div class="wrap">
-    <!-- MAPA SATELITAL (CONTENEDOR CORREGIDO) -->
+    <!-- MAPA SATELITAL -->
     <section class="view" id="mapa">
       <div class="card">
         <div class="row">
@@ -506,7 +496,7 @@ input:checked+.slider:before { transform: translateX(22px); }
       </div>
 
       <div class="card">
-        <div class="row"><h3>Preferencias del Lote Activo</h3><span id="cfg-lock-msg" class="pill" style="display:none;background:#fdf0c9;color:#9a6a00">Solo Lectura</span></div>
+        <div class="row"><h3>Preferencias del Lote Activo</h3></div>
         <div class="form">
           <label>Nombre del lote<input id="cl"></label>
           <label>Tema<select id="ct"><option value="auto">Automático</option><option value="light">Claro</option><option value="dark">Oscuro</option></select></label>
@@ -528,10 +518,7 @@ input:checked+.slider:before { transform: translateX(22px); }
         <h3>Herramientas de Administración y Respaldo</h3>
         <div class="btns" style="margin-top:12px">
           <button class="btn" onclick="exportSystemBackup()">💾 Exportar Copia de Seguridad (JSON)</button>
-          <button class="btn danger" onclick="clearAuditLogs()">🗑️ Limpiar Auditoría</button>
         </div>
-        <h4 style="margin-top:18px;font-size:14px">Bitácora de Auditoría de Configuración</h4>
-        <div class="tw"><table style="margin-top:10px"><thead><tr><th>Admin</th><th>Acción</th><th>Fecha y Hora</th></tr></thead><tbody id="audit-log-table"></tbody></table></div>
       </div>
     </section>
   </div>
@@ -575,7 +562,7 @@ var V={suelo:42.5,temp:28.1,aire:76,viento:4.2},filt='todas',hm='suelo',hr=7;
 var currentUser = { name: '', role: '' };
 var mapInstance = null;
 
-var ST={lote:'Lote La Esperanza',tema:'auto',u:'C',int:30,notif:1,sMin:45,tMax:30,wMax:40,on:0},DEF=JSON.stringify(ST),act={suelo:1,temp:0,viento:0},HC={};
+var ST={lote:'Lote La Esperanza',tema:'auto',u:'C',int:30,notif:1,sMin:45,tMax:30,wMax:40,on:0},DEF=JSON.stringify(ST),HC={};
 var DEFAULT_ACCOUNTS = [
   { username: 'admin', password: 'agro123', name: 'Admin Principal', role: 'admin' },
   { username: 'operador', password: 'user123', name: 'Operador Campo', role: 'user' }
@@ -586,7 +573,6 @@ function closeMobileMenu(){ $('nav-links').classList.remove('open'); }
 function toggleDropdown(){ $('user-dropdown').classList.toggle('show'); }
 function closeDropdown(){ $('user-dropdown').classList.remove('show'); }
 
-// Cerrar desplegable si se hace clic fuera
 window.onclick = function(e){
   if(!e.target.closest('.user-settings-dropdown')){
     closeDropdown();
@@ -675,18 +661,17 @@ function rec(){
 }
 
 function initSatelliteMap(){
-  if(!mapInstance){
-    mapInstance = L.map('map-container').setView([9.2451, -75.4012], 15);
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Esri World Imagery'
-    }).addTo(mapInstance);
-    L.polygon([[9.2470, -75.4030],[9.2475, -75.3990],[9.2430, -75.3995],[9.2435, -75.4035]], { color: '#38bdf8', fillColor: '#0284c7', fillOpacity: 0.35 }).addTo(mapInstance);
-    L.marker([9.2451, -75.4012]).addTo(mapInstance).bindPopup('<b>Lote La Esperanza</b><br>Estación Telemetría IoT Central').openPopup();
-  }
-  // FORZAR RECALCULO DE DIMENSIONES DEL MAPA PARA EVITAR ERRORES DE RENDERIZADO
-  setTimeout(function(){
-    if(mapInstance) mapInstance.invalidateSize();
-  }, 200);
+  try {
+    if(!mapInstance && typeof L !== 'undefined'){
+      mapInstance = L.map('map-container').setView([9.2451, -75.4012], 15);
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Esri World Imagery'
+      }).addTo(mapInstance);
+      L.polygon([[9.2470, -75.4030],[9.2475, -75.3990],[9.2430, -75.3995],[9.2435, -75.4035]], { color: '#38bdf8', fillColor: '#0284c7', fillOpacity: 0.35 }).addTo(mapInstance);
+      L.marker([9.2451, -75.4012]).addTo(mapInstance).bindPopup('<b>Lote La Esperanza</b><br>Estación Telemetría IoT Central').openPopup();
+    }
+    setTimeout(function(){ if(mapInstance) mapInstance.invalidateSize(); }, 200);
+  } catch(e) { console.log('Error map:', e); }
 }
 
 function renderRegisteredUsers(){
@@ -760,4 +745,92 @@ function startTimerRiego(){
 
 function exportCSV(){
   var csv = 'Lote,Fecha/Hora,Humedad Suelo (%),Temperatura (C),Humedad Aire (%),Viento (km/h)\n';
-  csv += ST.lote + ',' + new Date().toLocaleString('es-CO') + ',' + V.
+  csv += ST.lote + ',' + new Date().toLocaleString('es-CO') + ',' + V.suelo + ',' + V.temp + ',' + V.aire + ',' + V.viento + '\n';
+  var blob = new Blob([csv], { type: 'text/csv;' }), url = URL.createObjectURL(blob), link = document.createElement('a');
+  link.href = url; link.download = 'Reporte_AgroStream.csv'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  toast('Reporte CSV descargado');
+}
+
+function exportSystemBackup(){
+  var backupData = { cfg: ST, accounts: getAccounts(), notes: JSON.parse(localStorage.getItem('agro_field_notes') || '[]') };
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+  var a = document.createElement('a'); a.href = dataStr; a.download = "Backup_AgroStream.json"; document.body.appendChild(a); a.click(); a.remove();
+  toast('Respaldo JSON descargado');
+}
+
+function cfgFill(){
+  $('cl').value=ST.lote; $('ct').value=ST.tema; $('cu').value=ST.u; $('c6').value=ST.sMin; $('c7').value=ST.tMax; $('c8').value=ST.wMax;
+}
+function saveCfg(){
+  ST.lote=$('cl').value.trim()||'Lote Seleccionado'; ST.tema=$('ct').value; ST.u=$('cu').value;
+  ST.sMin=parseFloat($('c6').value)||45; ST.tMax=parseFloat($('c7').value)||30; ST.wMax=parseFloat($('c8').value)||40;
+  cards(); sg(); rec(); toast('Configuración guardada');
+}
+function resetCfg(){ ST=JSON.parse(DEF); cfgFill(); cards(); sg(); rec(); toast('Restablecido'); }
+
+function login(){
+  var user = $('lu').value.trim().toLowerCase(), pass = $('lp').value;
+  var accounts = getAccounts();
+  var foundAccount = accounts.find(a => a.username.toLowerCase() === user && a.password === pass);
+
+  if(foundAccount){
+    var card = $('login-card'); card.classList.remove('animate-login'); card.classList.add('animate-logout');
+    setTimeout(function(){ $('lg').style.display = 'none'; card.classList.remove('animate-logout'); startSession({ name: foundAccount.name, role: foundAccount.role }); }, 350);
+  } else { $('le').textContent = 'Usuario o contraseña incorrectos.'; }
+}
+
+function startSession(sessionData){
+  currentUser = sessionData;
+  $('un').textContent = sessionData.name; $('ur').textContent = sessionData.role === 'admin' ? 'ADMINISTRADOR' : 'OPERADOR';
+  $('nav-usuarios').style.display = sessionData.role === 'admin' ? 'flex' : 'none';
+  $('admin-tools-card').style.display = sessionData.role === 'admin' ? 'block' : 'none';
+  
+  var main = $('main-content'); main.classList.add('animate-enter'); setTimeout(function(){ main.classList.remove('animate-enter'); }, 400);
+  logUserAccess(sessionData); cards(); sg(); rec(); als(); route(); toast('Bienvenido, ' + sessionData.name);
+}
+
+function logout(){
+  var main = $('main-content'); main.classList.add('animate-logout');
+  setTimeout(function(){
+    main.classList.remove('animate-logout'); currentUser = { name: '', role: '' };
+    $('lg').style.display = 'flex'; var card = $('login-card'); card.classList.add('animate-login');
+    $('lu').value = ''; $('lp').value = ''; $('le').textContent = ''; location.hash = '#mapa';
+  }, 350);
+}
+
+var P=['mapa','resumen','actuadores','bitacora','sensores','historial','alertas','usuarios','configuracion'];
+function route(){
+  var h = location.hash.slice(1); if(P.indexOf(h)<0) h = 'mapa';
+  if(h==='usuarios' && currentUser.role !== 'admin'){ h='mapa'; toast('Sección restringida a Admins'); }
+  P.forEach(function(p){ $(p).classList.toggle('on', p == h); });
+  document.querySelectorAll('[data-v]').forEach(function(a){ a.classList.toggle('on', a.dataset.v == h); });
+  if(h === 'mapa') initSatelliteMap();
+  if(h === 'bitacora') renderFieldNotes();
+  if(h === 'historial') hist();
+  if(h === 'usuarios'){ renderRegisteredUsers(); renderUserLogs(); }
+  if(h === 'configuracion') cfgFill();
+}
+
+window.addEventListener('hashchange', route);
+
+// CONTROL DE SALIDA DEL SPLASH SCREEN
+window.addEventListener('DOMContentLoaded', function(){
+  try {
+    cards(); sg(); rec(); als(); cfgFill();
+    var t=new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}); $('t').textContent=t;
+  } catch(e) { console.log('Init err:', e); }
+
+  setTimeout(function(){
+    var splash = $('splash-screen');
+    if(splash) splash.classList.add('hidden');
+    setTimeout(function(){
+      var lg = $('lg');
+      if(lg) lg.style.display = 'flex';
+      var lu = $('lu');
+      if(lu) lu.focus();
+    }, 200);
+  }, 1200);
+});
+</script>
+</body>
+</html>
