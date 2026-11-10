@@ -5,10 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AgroStream – Monitoreo Agrosatelital</title>
 
-<!-- FAVICON CON EL LOGO PERSONALIZADO EN LA PESTAÑA -->
+<!-- FAVICON CON EL LOGO EN LA PESTAÑA -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%231e293b'/%3E%3Cpath d='M 50 14 A 36 36 0 0 1 86 50 C 72 50 60 40 50 14 Z' fill='%23ffffff'/%3E%3Cpath d='M 50 86 A 36 36 0 0 1 14 50 C 28 50 40 60 50 86 Z' fill='%2338bdf8'/%3E%3C/svg%3E">
 
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<!-- Leaflet CSS para Mapa Satelital -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
 <style>
 :root{
   --side:#0f172a;
@@ -107,20 +110,20 @@ body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--in
 }
 .nav-container {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 24px; max-width: 1400px; margin: 0 auto;
+  padding: 12px 28px; max-width: 1400px; margin: 0 auto;
 }
-.brand { display: flex; gap: 12px; align-items: center; }
+.brand { display: flex; gap: 14px; align-items: center; margin-right: 20px; }
 .logo-container {
   width: 42px; height: 42px; border-radius: 50%;
   background: linear-gradient(135deg, #0284c7, #0369a1);
   display: grid; place-items: center;
   box-shadow: 0 4px 12px rgba(2,132,199,0.3);
 }
-.brand b { font-size: 18px; color: #f8fafc; }
+.brand b { font-size: 19px; color: #f8fafc; }
 .brand small { font-size: 10px; letter-spacing: .12em; color: #38bdf8; font-weight: 700; display: block; }
 
-/* MENÚ DE ÍCONOS CON TOOLTIPS */
-nav.top-nav-links { display: flex; gap: 8px; align-items: center; }
+/* MENÚ DE ÍCONOS DE NAVEGACIÓN CON TOOLTIPS */
+nav.top-nav-links { display: flex; gap: 10px; align-items: center; margin-left: auto; margin-right: 20px; }
 nav.top-nav-links a {
   position: relative;
   display: flex; align-items: center; justify-content: center;
@@ -143,15 +146,45 @@ nav.top-nav-links a::after {
 }
 nav.top-nav-links a:hover::after { opacity: 1; transform: translateX(-50%) translateY(12px); }
 
+/* MENÚ DESPLEGABLE DE CONFIGURACIÓN Y USUARIO EN LA ESQUINA SUPERIOR DERECHA */
+.user-settings-dropdown { position: relative; display: inline-block; }
+.gear-btn {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: var(--side2); border: 1px solid rgba(255,255,255,0.1);
+  color: #fff; display: grid; place-items: center; cursor: pointer;
+  transition: all 0.2s ease;
+}
+.gear-btn:hover { background: var(--brand-primary); border-color: var(--brand-primary); }
+.gear-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s; }
+.gear-btn:hover svg { transform: rotate(45deg); }
+
+.dropdown-menu {
+  position: absolute; top: calc(100% + 10px); right: 0;
+  width: 240px; background: var(--card); border: 1px solid var(--line);
+  border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  padding: 14px; display: none; flex-direction: column; gap: 12px;
+  z-index: 200; animation: fadeInView 0.2s ease-out;
+}
+.dropdown-menu.show { display: flex; }
+
+.user-profile-box {
+  padding-bottom: 10px; border-bottom: 1px solid var(--line);
+}
+.user-profile-box b { display: block; font-size: 14px; color: var(--ink); }
+.user-profile-box small { color: var(--brand-primary); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+
+.dropdown-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  border-radius: 8px; color: var(--ink); text-decoration: none; font-size: 14px;
+  font-weight: 500; cursor: pointer; background: transparent; border: none; width: 100%; text-align: left;
+  transition: background 0.2s;
+}
+.dropdown-item:hover { background: var(--soft); }
+.dropdown-item.logout { color: #dc2626; }
+.dropdown-item.logout:hover { background: var(--cb); }
+
 .menu-toggle { display: none; background: transparent; border: none; color: #fff; cursor: pointer; padding: 6px; }
 .menu-toggle svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; }
-
-.user-nav-actions { display: flex; align-items: center; gap: 14px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 16px; }
-.user-info { font-size: 13px; color: #cbd5e1; text-align: right; }
-.user-info b { color: #fff; display: block; }
-.user-info small { color: #38bdf8; font-weight: 600; font-size: 10px; text-transform: uppercase; }
-.btn-logout { background: transparent; border: 1px solid rgba(255,255,255,.25); color: #fff; border-radius: 8px; padding: 6px 12px; font: 500 13px Outfit; cursor: pointer; transition: background .2s; }
-.btn-logout:hover { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; }
 
 .badge { position: absolute; top: 4px; right: 4px; background: var(--amber); color: #fff; font-size: 10px; font-weight: 700; border-radius: 99px; padding: 2px 5px; line-height: 1; }
 
@@ -160,13 +193,12 @@ nav.top-nav-links a:hover::after { opacity: 1; transform: translateX(-50%) trans
   nav.top-nav-links {
     display: none; position: absolute; top: 100%; left: 0; right: 0;
     background: var(--side); flex-direction: column; align-items: stretch;
-    padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); margin: 0;
   }
   nav.top-nav-links a { width: 100%; height: auto; justify-content: flex-start; gap: 12px; padding: 12px 16px; }
   nav.top-nav-links a::before { content: attr(data-title); font-size: 14px; font-weight: 500; }
   nav.top-nav-links a::after { display: none; }
   nav.top-nav-links.open { display: flex; animation: fadeInView 0.2s ease-out; }
-  .user-nav-actions { border-left: none; padding-left: 0; }
 }
 
 main { flex: 1; width: 100%; max-width: 1400px; margin: 0 auto; }
@@ -182,7 +214,7 @@ header { display: flex; justify-content: space-between; align-items: center; gap
 
 .wrap { padding: 30px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(230px,1fr)); gap: 22px; margin-bottom: 30px; }
-.card { background: var(--card); border-radius: 18px; padding: 24px; box-shadow: 0 1px 4px rgba(15,23,42,.05); border: 1px solid var(--line); margin-bottom: 24px; }
+.card { background: var(--card); border-radius: 18px; padding: 24px; box-shadow: 0 1px 4px rgba(15,23,42,.05); border: 1px solid var(--line); margin-bottom: 24px; position: relative; }
 .k { display: flex; justify-content: space-between; gap: 10px; }
 .k span { font-size: 13px; letter-spacing: .07em; color: var(--mut); font-weight: 500; text-transform: uppercase; }
 .ico { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; flex-shrink: 0; }
@@ -192,6 +224,10 @@ header { display: flex; justify-content: space-between; align-items: center; gap
 .s { color: var(--mut); font-size: 14px; margin: 2px 0 16px; min-height: 22px; }
 .bar { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; }
 .bar i { display: block; height: 100%; border-radius: 99px; transition: width .4s; }
+
+/* CORRECCIÓN ESTRICTA DEL MAPA PARA QUE NO SE DESBORDE NI ROMPA */
+#map-wrapper { width: 100%; height: 500px; position: relative; border-radius: 14px; overflow: hidden; }
+#map-container { width: 100%; height: 100%; position: absolute; inset: 0; z-index: 1; }
 
 .two { display: grid; grid-template-columns: 1.9fr 1fr; gap: 24px; margin-bottom: 24px; }
 .two.b { grid-template-columns: 1.2fr 1fr; }
@@ -250,7 +286,6 @@ input,select,textarea { width: 100%; margin-top: 6px; padding: 10px 12px; border
 
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--side); color: #fff; padding: 12px 22px; border-radius: 10px; opacity: 0; pointer-events: none; transition: opacity .3s; z-index: 300; }
 .toast.on { opacity: 1; }
-#map-container { width: 100%; height: 500px; border-radius: 16px; z-index: 1; }
 .role-badge { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: var(--brand-primary); color: #fff; font-weight: 700; margin-left: 6px; text-transform: uppercase; }
 .switch { position: relative; display: inline-block; width: 48px; height: 26px; }
 .switch input { opacity: 0; width: 0; height: 0; }
@@ -282,9 +317,10 @@ input:checked+.slider:before { transform: translateX(22px); }
   <div class="splash-subtitle">MONITOREO AGROSATELITAL</div>
 </div>
 
-<!-- BARRA SUPERIOR CON SOLO ÍCONOS Y TOOLTIPS -->
+<!-- BARRA SUPERIOR REORGANIZADA -->
 <header class="navbar-top">
   <div class="nav-container">
+    <!-- LOGO Y MARCA EN LA EXTREMA IZQUIERDA -->
     <div class="brand">
       <div class="logo-container">
         <svg width="26" height="26" viewBox="0 0 100 100" fill="none">
@@ -300,6 +336,7 @@ input:checked+.slider:before { transform: translateX(22px); }
       <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
 
+    <!-- NAVEGACIÓN PRINCIPAL (ÍCONOS CENTRADOS/SEPARADOS) -->
     <nav class="top-nav-links" id="nav-links">
       <a href="#mapa" data-v="mapa" data-title="Mapa Satelital" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></a>
       <a href="#resumen" data-v="resumen" data-title="Resumen" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></a>
@@ -312,12 +349,24 @@ input:checked+.slider:before { transform: translateX(22px); }
       <a href="#configuracion" data-v="configuracion" data-title="Configuración" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></a>
     </nav>
 
-    <div class="user-nav-actions">
-      <div class="user-info">
-        <span id="un">Admin Principal</span>
-        <small id="ur">Administrador</small>
+    <!-- MENÚ DESPLEGABLE EN LA ENGRANAJE (SUPERIOR DERECHA) -->
+    <div class="user-settings-dropdown">
+      <button class="gear-btn" onclick="toggleDropdown()" title="Configuración de Cuenta">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+
+      <div class="dropdown-menu" id="user-dropdown">
+        <div class="user-profile-box">
+          <b id="un">Admin Principal</b>
+          <small id="ur">ADMINISTRADOR</small>
+        </div>
+        <a class="dropdown-item" href="#configuracion" onclick="closeDropdown()">
+          ⚙️ Preferencias Sistema
+        </a>
+        <button class="dropdown-item logout" onclick="logout();closeDropdown()">
+          🚪 Cerrar Sesión
+        </button>
       </div>
-      <button class="btn-logout" onclick="logout()">Salir</button>
     </div>
   </div>
 </header>
@@ -335,7 +384,7 @@ input:checked+.slider:before { transform: translateX(22px); }
   </header>
 
   <div class="wrap">
-    <!-- MAPA SATELITAL -->
+    <!-- MAPA SATELITAL (CONTENEDOR CORREGIDO) -->
     <section class="view" id="mapa">
       <div class="card">
         <div class="row">
@@ -345,7 +394,9 @@ input:checked+.slider:before { transform: translateX(22px); }
           </div>
           <span class="pill" style="background:#e0f2fe;color:#0369a1">ESRI World Imagery</span>
         </div>
-        <div id="map-container"></div>
+        <div id="map-wrapper">
+          <div id="map-container"></div>
+        </div>
       </div>
     </section>
 
@@ -522,7 +573,7 @@ var M={suelo:{n:'Humedad del suelo',u:'%',c:'#0284c7',a:36,b:50,d:1},temp:{n:'Te
 var A=[{t:'Humedad del suelo por debajo del 45% en zona norte',k:'adv',l:'Advertencia',w:'hace 12 min',r:0},{t:'Sensor WIND-01 reconectado exitosamente',k:'inf',l:'Info',w:'hace 34 min',r:0},{t:'Temperatura ambiente superó 30°C durante 2 horas',k:'cri',l:'Crítica',w:'hace 1 h',r:0}];
 var V={suelo:42.5,temp:28.1,aire:76,viento:4.2},filt='todas',hm='suelo',hr=7;
 var currentUser = { name: '', role: '' };
-var mapInstance = null, polygonLayer = null, markerGroup = null;
+var mapInstance = null;
 
 var ST={lote:'Lote La Esperanza',tema:'auto',u:'C',int:30,notif:1,sMin:45,tMax:30,wMax:40,on:0},DEF=JSON.stringify(ST),act={suelo:1,temp:0,viento:0},HC={};
 var DEFAULT_ACCOUNTS = [
@@ -532,6 +583,16 @@ var DEFAULT_ACCOUNTS = [
 
 function toggleMobileMenu(){ $('nav-links').classList.toggle('open'); }
 function closeMobileMenu(){ $('nav-links').classList.remove('open'); }
+function toggleDropdown(){ $('user-dropdown').classList.toggle('show'); }
+function closeDropdown(){ $('user-dropdown').classList.remove('show'); }
+
+// Cerrar desplegable si se hace clic fuera
+window.onclick = function(e){
+  if(!e.target.closest('.user-settings-dropdown')){
+    closeDropdown();
+  }
+}
+
 function toast(m){ var t=$('toast'); t.textContent=m; t.classList.add('on'); setTimeout(function(){t.classList.remove('on')},2200); }
 
 function rnd(a,b,d){return +(a+Math.random()*(b-a)).toFixed(d)}
@@ -614,13 +675,18 @@ function rec(){
 }
 
 function initSatelliteMap(){
-  if(mapInstance) return;
-  mapInstance = L.map('map-container').setView([9.2451, -75.4012], 15);
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Esri World Imagery'
-  }).addTo(mapInstance);
-  L.polygon([[9.2470, -75.4030],[9.2475, -75.3990],[9.2430, -75.3995],[9.2435, -75.4035]], { color: '#38bdf8', fillColor: '#0284c7', fillOpacity: 0.35 }).addTo(mapInstance);
-  L.marker([9.2451, -75.4012]).addTo(mapInstance).bindPopup('<b>Lote La Esperanza</b><br>Estación Telemetría IoT Central').openPopup();
+  if(!mapInstance){
+    mapInstance = L.map('map-container').setView([9.2451, -75.4012], 15);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Esri World Imagery'
+    }).addTo(mapInstance);
+    L.polygon([[9.2470, -75.4030],[9.2475, -75.3990],[9.2430, -75.3995],[9.2435, -75.4035]], { color: '#38bdf8', fillColor: '#0284c7', fillOpacity: 0.35 }).addTo(mapInstance);
+    L.marker([9.2451, -75.4012]).addTo(mapInstance).bindPopup('<b>Lote La Esperanza</b><br>Estación Telemetría IoT Central').openPopup();
+  }
+  // FORZAR RECALCULO DE DIMENSIONES DEL MAPA PARA EVITAR ERRORES DE RENDERIZADO
+  setTimeout(function(){
+    if(mapInstance) mapInstance.invalidateSize();
+  }, 200);
 }
 
 function renderRegisteredUsers(){
@@ -694,82 +760,4 @@ function startTimerRiego(){
 
 function exportCSV(){
   var csv = 'Lote,Fecha/Hora,Humedad Suelo (%),Temperatura (C),Humedad Aire (%),Viento (km/h)\n';
-  csv += ST.lote + ',' + new Date().toLocaleString('es-CO') + ',' + V.suelo + ',' + V.temp + ',' + V.aire + ',' + V.viento + '\n';
-  var blob = new Blob([csv], { type: 'text/csv;' }), url = URL.createObjectURL(blob), link = document.createElement('a');
-  link.href = url; link.download = 'Reporte_AgroStream.csv'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
-  toast('Reporte CSV descargado');
-}
-
-function exportSystemBackup(){
-  var backupData = { cfg: ST, accounts: getAccounts(), notes: JSON.parse(localStorage.getItem('agro_field_notes') || '[]') };
-  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
-  var a = document.createElement('a'); a.href = dataStr; a.download = "Backup_AgroStream.json"; document.body.appendChild(a); a.click(); a.remove();
-  toast('Respaldo JSON descargado');
-}
-
-function cfgFill(){
-  $('cl').value=ST.lote; $('ct').value=ST.tema; $('cu').value=ST.u; $('c6').value=ST.sMin; $('c7').value=ST.tMax; $('c8').value=ST.wMax;
-}
-function saveCfg(){
-  ST.lote=$('cl').value.trim()||'Lote Seleccionado'; ST.tema=$('ct').value; ST.u=$('cu').value;
-  ST.sMin=parseFloat($('c6').value)||45; ST.tMax=parseFloat($('c7').value)||30; ST.wMax=parseFloat($('c8').value)||40;
-  cards(); sg(); rec(); toast('Configuración guardada');
-}
-function resetCfg(){ ST=JSON.parse(DEF); cfgFill(); cards(); sg(); rec(); toast('Restablecido'); }
-
-function login(){
-  var user = $('lu').value.trim().toLowerCase(), pass = $('lp').value;
-  var accounts = getAccounts();
-  var foundAccount = accounts.find(a => a.username.toLowerCase() === user && a.password === pass);
-
-  if(foundAccount){
-    var card = $('login-card'); card.classList.remove('animate-login'); card.classList.add('animate-logout');
-    setTimeout(function(){ $('lg').style.display = 'none'; card.classList.remove('animate-logout'); startSession({ name: foundAccount.name, role: foundAccount.role }); }, 350);
-  } else { $('le').textContent = 'Usuario o contraseña incorrectos.'; }
-}
-
-function startSession(sessionData){
-  currentUser = sessionData;
-  $('un').textContent = sessionData.name; $('ur').textContent = sessionData.role === 'admin' ? 'Administrador' : 'Usuario';
-  $('nav-usuarios').style.display = sessionData.role === 'admin' ? 'flex' : 'none';
-  $('admin-tools-card').style.display = sessionData.role === 'admin' ? 'block' : 'none';
-  
-  var main = $('main-content'); main.classList.add('animate-enter'); setTimeout(function(){ main.classList.remove('animate-enter'); }, 400);
-  logUserAccess(sessionData); cards(); sg(); rec(); als(); route(); toast('Bienvenido, ' + sessionData.name);
-}
-
-function logout(){
-  var main = $('main-content'); main.classList.add('animate-logout');
-  setTimeout(function(){
-    main.classList.remove('animate-logout'); currentUser = { name: '', role: '' };
-    $('lg').style.display = 'flex'; var card = $('login-card'); card.classList.add('animate-login');
-    $('lu').value = ''; $('lp').value = ''; $('le').textContent = ''; location.hash = '#mapa';
-  }, 350);
-}
-
-var P=['mapa','resumen','actuadores','bitacora','sensores','historial','alertas','usuarios','configuracion'];
-function route(){
-  var h = location.hash.slice(1); if(P.indexOf(h)<0) h = 'mapa';
-  if(h==='usuarios' && currentUser.role !== 'admin'){ h='mapa'; toast('Sección restringida a Admins'); }
-  P.forEach(function(p){ $(p).classList.toggle('on', p == h); });
-  document.querySelectorAll('[data-v]').forEach(function(a){ a.classList.toggle('on', a.dataset.v == h); });
-  if(h === 'mapa') setTimeout(initSatelliteMap, 100);
-  if(h === 'bitacora') renderFieldNotes();
-  if(h === 'historial') hist();
-  if(h === 'usuarios'){ renderRegisteredUsers(); renderUserLogs(); }
-  if(h === 'configuracion') cfgFill();
-}
-
-window.addEventListener('hashchange', route);
-
-window.onload = function(){
-  cards(); sg(); rec(); als(); cfgFill();
-  var t=new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}); $('t').textContent=t;
-  setTimeout(function(){
-    $('splash-screen').classList.add('hidden');
-    setTimeout(function(){ $('lg').style.display = 'flex'; $('lu').focus(); }, 300);
-  }, 1600);
-};
-</script>
-</body>
-</html>
+  csv += ST.lote + ',' + new Date().toLocaleString('es-CO') + ',' + V.
