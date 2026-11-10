@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AgroStream – Monitoreo Agrosatelital</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<!-- Leaflet CSS para Mapa Satelital sin errores -->
+<!-- Leaflet CSS para Mapa Satelital -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
 <style>
@@ -69,9 +69,8 @@ nav svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;st
 .demo a{margin-top:14px;width:100%;padding:10px;border-radius:8px;background:var(--brand-primary);color:#fff;font-weight:600;font-size:14px;text-align:center;text-decoration:none;display:block}
 main{flex:1;min-width:0}
 header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 30px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
-.lote-selector-box{display:flex;align-items:center;gap:12px}
-.lote-select{font:600 18px Outfit;background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:8px 14px;border-radius:10px;cursor:pointer}
-header p{color:var(--mut);font-size:14px;margin-top:2px}
+.lote-header-info h1{font-size:22px;font-weight:600}
+.lote-header-info p{color:var(--mut);font-size:14px;margin-top:2px}
 .btns{display:flex;gap:12px}
 .btn{padding:10px 16px;border-radius:10px;font:600 15px Outfit;cursor:pointer;border:1px solid var(--line);background:var(--soft);color:var(--brand-primary);text-decoration:none;display:inline-flex;gap:8px;align-items:center}
 .btn.p{background:var(--brand-primary);color:#fff;border-color:var(--brand-primary)}
@@ -163,7 +162,6 @@ input:checked+.slider:before{transform:translateX(22px)}
 <aside>
   <div class="brand">
     <div class="logo-container">
-      <!-- LOGO VECTORIAL AGROSTREAM -->
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z" stroke-dasharray="2 2" stroke-opacity="0.6"/>
         <path d="M12 6v12M6 12h12" stroke-opacity="0.3"/>
@@ -175,8 +173,8 @@ input:checked+.slider:before{transform:translateX(22px)}
   </div>
   <nav>
     <h6>PRINCIPAL</h6>
-    <a href="#resumen" data-v="resumen"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>Resumen</a>
     <a href="#mapa" data-v="mapa"><svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Mapa Satelital</a>
+    <a href="#resumen" data-v="resumen"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>Resumen</a>
     <a href="#actuadores" data-v="actuadores"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Control Riego</a>
     <a href="#sensores" data-v="sensores"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>Sensores</a>
     <a href="#historial" data-v="historial"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M9 20v-6M14 20V9M19 20v-9"/></svg>Historial Real</a>
@@ -190,8 +188,9 @@ input:checked+.slider:before{transform:translateX(22px)}
 <main>
   <div class="tabs" id="tabs"></div>
   <header>
-    <div class="lote-selector-box">
-      <select class="lote-select" id="lote-dropdown" onchange="changeLote(this.value)"></select>
+    <div class="lote-header-info">
+      <h1 id="lote-title">Monitoreo Satelital de Lote</h1>
+      <p>Última actualización: <span id="t"></span> · <span id="md">Modo Firebase Realtime</span></p>
     </div>
     <div class="btns">
       <button class="btn" onclick="exportCSV()">📥 Reporte CSV</button>
@@ -199,22 +198,6 @@ input:checked+.slider:before{transform:translateX(22px)}
     </div>
   </header>
   <div class="wrap">
-
-  <section class="view" id="resumen">
-    <div class="weather-card" id="weather-banner">
-      <div style="font-size:38px">📡</div>
-      <div>
-        <h4 id="w-title">Telemetría Agrosatelital Activa</h4>
-        <p id="w-desc">Cargando pronóstico y coordenadas del lote...</p>
-      </div>
-    </div>
-    <div class="alert" id="banner"><span class="dot" id="dot-banner"></span><span id="banner-text">Conectando con Firebase Realtime Database...</span></div>
-    <div class="grid" id="cards"></div>
-    <div class="two b">
-      <div class="card"><h3 style="margin-bottom:16px">Estado general</h3><div id="gen"></div></div>
-      <div class="card rec"><h3><span class="ico" style="width:40px;height:40px;background:rgba(255,255,255,.12)"><svg viewBox="0 0 24 24" style="fill:#e0f2fe;stroke:none"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14l-1 1z"/></svg></span>Recomendación agronómica</h3><div id="rec"></div><p class="foot">● Basado en sensores · <span class="tm"></span></p></div>
-    </div>
-  </section>
 
   <!-- PESTAÑA MAPA SATELITAL -->
   <section class="view" id="mapa">
@@ -243,6 +226,22 @@ input:checked+.slider:before{transform:translateX(22px)}
           <b>5 Sensores Activos</b>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="view" id="resumen">
+    <div class="weather-card" id="weather-banner">
+      <div style="font-size:38px">📡</div>
+      <div>
+        <h4 id="w-title">Telemetría Agrosatelital Activa</h4>
+        <p id="w-desc">Cargando pronóstico y coordenadas del lote...</p>
+      </div>
+    </div>
+    <div class="alert" id="banner"><span class="dot" id="dot-banner"></span><span id="banner-text">Conectando con Firebase Realtime Database...</span></div>
+    <div class="grid" id="cards"></div>
+    <div class="two b">
+      <div class="card"><h3 style="margin-bottom:16px">Estado general</h3><div id="gen"></div></div>
+      <div class="card rec"><h3><span class="ico" style="width:40px;height:40px;background:rgba(255,255,255,.12)"><svg viewBox="0 0 24 24" style="fill:#e0f2fe;stroke:none"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14l-1 1z"/></svg></span>Recomendación agronómica</h3><div id="rec"></div><p class="foot">● Basado en sensores · <span class="tm"></span></p></div>
     </div>
   </section>
 
@@ -439,26 +438,25 @@ window.onValue = onValue;
 window.set = set;
 window.push = push;
 
-window.connectLoteFirebase = function(loteKey){
-  const dbRef = ref(database, 'lotes/' + loteKey + '/sensores');
-  onValue(dbRef, (snapshot) => {
-    const data = snapshot.val();
-    if (data) {
-      if (data.suelo !== undefined) window.V.suelo = Number(data.suelo);
-      if (data.temp !== undefined) window.V.temp = Number(data.temp);
-      if (data.aire !== undefined) window.V.aire = Number(data.aire);
-      if (data.viento !== undefined) window.V.viento = Number(data.viento);
-      
-      window.ST.on = 1;
-      window.updateFirebaseStatus(true);
-      window.step(false);
-    } else {
-      window.updateFirebaseStatus(false, "Conectado a Firebase, esperando datos en /lotes/" + loteKey + "/sensores");
-    }
-  }, (error) => {
-    window.updateFirebaseStatus(false, "Error al conectar con Firebase Database");
-  });
-};
+// Conexión por defecto a Firebase
+const dbRef = ref(database, 'lote/esperanza/sensores');
+onValue(dbRef, (snapshot) => {
+  const data = snapshot.val();
+  if (data) {
+    if (data.suelo !== undefined) window.V.suelo = Number(data.suelo);
+    if (data.temp !== undefined) window.V.temp = Number(data.temp);
+    if (data.aire !== undefined) window.V.aire = Number(data.aire);
+    if (data.viento !== undefined) window.V.viento = Number(data.viento);
+    
+    window.ST.on = 1;
+    window.updateFirebaseStatus(true);
+    window.step(false);
+  } else {
+    window.updateFirebaseStatus(false, "Conectado a Firebase, esperando datos en /lote/esperanza/sensores");
+  }
+}, (error) => {
+  window.updateFirebaseStatus(false, "Error al conectar con Firebase Database");
+});
 </script>
 
 <script>
@@ -469,72 +467,34 @@ var V={suelo:42.5,temp:28.1,aire:76,viento:4.2},filt='todas',hm='suelo',hr=7;
 var currentUser = { name: '', role: '' };
 var mapInstance = null, polygonLayer = null, markerGroup = null;
 
-// LOTES SATELITALES PREDETERMINADOS (Coordenadas Reales Región Sahagún/Chinú)
-var LOTES_SATELITALES = [
-  { 
-    id: 'esperanza', 
-    name: 'Lote La Esperanza', 
-    crop: 'Yuca Industrial', 
-    lat: 9.2451, 
-    lng: -75.4012,
-    area: '14.5 Ha',
-    bounds: [
-      [9.2470, -75.4030],
-      [9.2475, -75.3990],
-      [9.2430, -75.3995],
-      [9.2435, -75.4035]
-    ]
-  },
-  { 
-    id: 'el_carmen', 
-    name: 'Lote El Carmen', 
-    crop: 'Maíz Blanco', 
-    lat: 9.2580, 
-    lng: -75.3850,
-    area: '22.0 Ha',
-    bounds: [
-      [9.2600, -75.3880],
-      [9.2610, -75.3820],
-      [9.2550, -75.3830],
-      [9.2560, -75.3890]
-    ]
-  }
-];
-
-var currentLoteId = 'esperanza';
-
-function renderLoteDropdown(){
-  var select = $('lote-dropdown');
-  select.innerHTML = LOTES_SATELITALES.map(function(l){
-    return '<option value="' + l.id + '" ' + (l.id === currentLoteId ? 'selected' : '') + '>' + l.name + ' (' + l.crop + ')</option>';
-  }).join('');
-}
-
-function changeLote(loteId){
-  currentLoteId = loteId;
-  var selected = LOTES_SATELITALES.find(l => l.id === loteId);
-  if(selected){
-    ST.lote = selected.name;
-    $('cl').value = selected.name;
-    toast('Satelital: ' + selected.name);
-    if(window.connectLoteFirebase) window.connectLoteFirebase(loteId);
-    apply();
-    if(mapInstance) updateMapSatellite(selected);
-  }
-}
+// LOTE SATELITAL ÚNICO (Región Sahagún/Chinú)
+var LOTE_SATELITAL_ACTIVO = {
+  id: 'esperanza', 
+  name: 'Lote La Esperanza', 
+  crop: 'Yuca Industrial', 
+  lat: 9.2451, 
+  lng: -75.4012,
+  area: '14.5 Hectáreas',
+  bounds: [
+    [9.2470, -75.4030],
+    [9.2475, -75.3990],
+    [9.2430, -75.3995],
+    [9.2435, -75.4035]
+  ]
+};
 
 // INICIALIZACIÓN DEL MAPA SATELITAL CON LEAFLET
 function initSatelliteMap(){
   if(mapInstance) return;
 
-  var lote = LOTES_SATELITALES.find(l => l.id === currentLoteId) || LOTES_SATELITALES[0];
+  var lote = LOTE_SATELITAL_ACTIVO;
   
   // Mapa centrado en el lote
   mapInstance = L.map('map-container').setView([lote.lat, lote.lng], 15);
 
-  // Capa Satelital Esri World Imagery (Gratuita y de Alta Resolución)
+  // Capa Satelital Esri World Imagery (Sin API Key, libre y de alta definición)
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping',
     maxZoom: 18
   }).addTo(mapInstance);
 
@@ -545,16 +505,13 @@ function initSatelliteMap(){
 function updateMapSatellite(lote){
   if(!mapInstance) return;
 
-  // Actualizar estadísticas del panel inferior
   $('map-coords').textContent = lote.lat.toFixed(4) + '° N, ' + lote.lng.toFixed(4) + '° W';
   $('map-area').textContent = lote.area;
   $('map-title-head').textContent = 'Geolocalización Satelital: ' + lote.name;
 
-  // Limpiar capas previas
   if(polygonLayer) mapInstance.removeLayer(polygonLayer);
   markerGroup.clearLayers();
 
-  // Dibujar polígono vectorial del perimetro del terreno
   polygonLayer = L.polygon(lote.bounds, {
     color: '#38bdf8',
     fillColor: '#0284c7',
@@ -562,10 +519,8 @@ function updateMapSatellite(lote){
     weight: 3
   }).addTo(mapInstance);
 
-  // Centrar mapa suavemente en los límites del terreno
   mapInstance.fitBounds(polygonLayer.getBounds());
 
-  // Agregar marcador central de la Estación de Control
   L.marker([lote.lat, lote.lng]).addTo(markerGroup)
     .bindPopup('<b>' + lote.name + '</b><br>Estación Telemetría IoT Central').openPopup();
 }
@@ -592,7 +547,7 @@ p.forEach(function(q,i){if(n<=12)o+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="4" f
 return o+'</svg>'}
 var DN=['Lun','Mar','Mié','Jue','Vie','Sáb','Hoy'];
 function series(k,n){var m=M[k],r=[],v=(m.a+m.b)/2;for(var i=0;i<n;i++){v+=rnd(-1,1,2)*(m.b-m.a)/5;v=Math.max(m.a,Math.min(m.b,v));r.push(+v.toFixed(1))}return r}
-function icon(k){return {suelo:['#e0f2fe','#0284c7','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#0284c7"/>'],temp:['#fef3c7','#d97706','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#d1fae5','#10b981','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#ede9fe','#7c3aed','<path d="M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h7"/>']}[k]}
+function icon(k){return {suelo:['#e0f2fe','#0284c7','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#0284c7"/>'],temp:['#fef3c7','#d97706','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#d1fae5','#10b981','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#ede9fe','#7c3aed','<path d="M3 8h11a3 3 0 1 0-3-3M3 16h7"/>']}[k]}
 var ST={lote:'Lote La Esperanza',tema:'auto',u:'C',int:30,notif:1,sMin:45,tMax:30,wMax:40,host:'agrostream-76ce0',port:'RTDB',topic:'lotes/esperanza/sensores',user:'',on:0},DEF=JSON.stringify(ST),act={suelo:1,temp:0,viento:0},tick=null,HC={};
 try{var sv=JSON.parse(localStorage.getItem('agro_cfg'));if(sv)for(var q in sv)ST[q]=sv[q]}catch(e){}
 function fv(k,v){return k=='temp'&&ST.u=='F'?+(v*9/5+32).toFixed(1):v}
@@ -678,13 +633,13 @@ function fetchWeatherForecast(){
 
 function togglePump(val){
   if(window.set && window.ref && window.database){
-    window.set(window.ref(window.database, 'lotes/' + currentLoteId + '/actuadores/bomba'), val);
+    window.set(window.ref(window.database, 'lote/esperanza/actuadores/bomba'), val);
   }
   toast(val ? 'Bomba ENCENDIDA' : 'Bomba APAGADA');
 }
 
 function toggleValve(zona, val){
-  var path = 'lotes/' + currentLoteId + '/actuadores/' + (zona === 'norte' ? 'valvulaNorte' : 'valvulaSur');
+  var path = 'lote/esperanza/actuadores/' + (zona === 'norte' ? 'valvulaNorte' : 'valvulaSur');
   if(window.set && window.ref && window.database){
     window.set(window.ref(window.database, path), val);
   }
@@ -710,7 +665,7 @@ function exportCSV(){
   var url = URL.createObjectURL(blob);
   var link = document.createElement('a');
   link.setAttribute('href', url);
-  link.setAttribute('download', 'Reporte_AgroStream_' + currentLoteId + '.csv');
+  link.setAttribute('download', 'Reporte_AgroStream_Satelital.csv');
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -784,7 +739,6 @@ function startSession(sessionData){
   $('ur').textContent = sessionData.role === 'admin' ? 'Administrador' : 'Usuario';
   $('le').textContent = '';
   
-  renderLoteDropdown();
   apply();
   als();
   tm();
@@ -800,7 +754,7 @@ function logout(){
   $('lu').value = '';
   $('lp').value = '';
   $('le').textContent = '';
-  location.hash = '#resumen';
+  location.hash = '#mapa';
 }
 
 function logUserAccess(userObj){
@@ -856,21 +810,21 @@ function resetCfg(){
   var d=JSON.parse(DEF);d.on=ST.on;ST=d;persist();cfgFill();apply();toast('Valores restablecidos')
 }
 
-var P=['resumen','mapa','actuadores','sensores','historial','alertas','usuarios','configuracion'],N=['Resumen','Mapa Satelital','Control Riego','Sensores','Historial','Alertas','Gestión Usuarios','Configuración'];
+var P=['mapa','resumen','actuadores','sensores','historial','alertas','usuarios','configuracion'],N=['Mapa Satelital','Resumen','Control Riego','Sensores','Historial','Alertas','Gestión Usuarios','Configuración'];
 $('tabs').innerHTML=P.map(function(p,i){return '<a href="#'+p+'" data-v="'+p+'" id="tab-'+p+'">'+N[i]+'</a>'}).join('')+'<a href="#" onclick="logout();return false">Salir</a>';
 
 function route(){
   var h=location.hash.slice(1);
-  if(P.indexOf(h)<0)h='resumen';
+  if(P.indexOf(h)<0)h='mapa';
   if(h==='usuarios' && currentUser.role !== 'admin'){
-    h='resumen';
+    h='mapa';
     toast('Sección restringida a Administradores');
   }
   P.forEach(function(p){$(p).classList.toggle('on',p==h)});
   document.querySelectorAll('[data-v]').forEach(function(a){a.classList.toggle('on',a.dataset.v==h);a.setAttribute('aria-current',a.dataset.v==h?'page':'false')});
   document.title=N[P.indexOf(h)]+' · AgroStream';
   if(h=='historial')hist();
-  if(h=='mapa'){ initSatelliteMap(); }
+  if(h=='mapa'){ setTimeout(initSatelliteMap, 100); }
   if(h=='configuracion')cfgFill();
   if(h=='usuarios'){ renderUserLogs(); renderRegisteredUsers(); }
   window.scrollTo(0,0)
@@ -879,7 +833,6 @@ function route(){
 window.addEventListener('hashchange',route);
 
 (function(){
-  renderLoteDropdown();
   var savedSession = null;
   try{ savedSession = JSON.parse(sessionStorage.getItem('agro_session')); }catch(e){}
   if(savedSession && savedSession.role){
