@@ -190,22 +190,18 @@ input,select{width:100%;margin-top:6px;padding:12px 14px;border:1px solid var(--
   <form class="lc" onsubmit="login();return false">
     <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="#d8f5e4"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14l-1 1z"/></svg></div>
     <h2>Iniciar sesión</h2>
-    <p class="sub" style="margin-bottom:18px">Selecciona tu rol e ingresa a AgroStream.</p>
+    <p class="sub" style="margin-bottom:18px">Ingresa tus credenciales para acceder a AgroStream.</p>
     
-    <label>Rol de Acceso
-      <select id="lr" onchange="onRoleChange()">
-        <option value="admin">Administrador</option>
-        <option value="user">Usuario (Solo Lectura)</option>
-      </select>
-    </label>
-    
-    <label style="margin-top:14px">Usuario<input id="lu" autocomplete="username"></label>
-    <label style="margin-top:14px">Contraseña<input id="lp" type="password" autocomplete="current-password"></label>
+    <label>Usuario<input id="lu" autocomplete="username" placeholder="Ingresa tu usuario"></label>
+    <label style="margin-top:14px">Contraseña<input id="lp" type="password" autocomplete="current-password" placeholder="Ingresa tu contraseña"></label>
     
     <div class="err" id="le" role="alert"></div>
     <button class="btn p" type="submit">Entrar al Sistema</button>
     
-    <p class="hint" id="lhint">Admin: <b>admin</b> · Contraseña: <b>agro123</b></p>
+    <p class="hint">
+      <b>Admin:</b> admin / agro123<br>
+      <b>Usuario:</b> operador / user123
+    </p>
   </form>
 </div>
 
@@ -264,6 +260,12 @@ var A=[{t:'Humedad del suelo por debajo del 45% en zona norte',k:'adv',l:'Advert
 var V={suelo:42.5,temp:28.1,aire:76,viento:4.2},filt='todas',hm='suelo',hr=7;
 var currentUser = { name: '', role: '' };
 
+// Base de datos local de usuarios autorizados
+var ACCOUNTS = [
+  { username: 'admin', password: 'agro123', name: 'Admin Principal', role: 'admin' },
+  { username: 'operador', password: 'user123', name: 'Operador Campo', role: 'user' }
+];
+
 function rnd(a,b,d){return +(a+Math.random()*(b-a)).toFixed(d)}
 function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on')},2200)}
 function line(d,lab,col,min,max){var W=600,H=250,L=44,R=14,T=14,B=34,n=d.length,x=function(i){return L+i*(W-L-R)/(n-1)},y=function(v){return T+(1-(v-min)/(max-min))*(H-T-B)},p=d.map(function(v,i){return[x(i),y(v)]}),s='M'+p[0][0]+' '+p[0][1];
@@ -275,7 +277,7 @@ p.forEach(function(q,i){if(n<=12)o+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="4" f
 return o+'</svg>'}
 var DN=['Lun','Mar','Mié','Jue','Vie','Sáb','Hoy'];
 function series(k,n){var m=M[k],r=[],v=(m.a+m.b)/2;for(var i=0;i<n;i++){v+=rnd(-1,1,2)*(m.b-m.a)/5;v=Math.max(m.a,Math.min(m.b,v));r.push(+v.toFixed(1))}return r}
-function icon(k){return {suelo:['#e6f2fc','#1b7fc4','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#1b7fc4"/>'],temp:['#fdf3d9','#e69b1e','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#e4f6ea','#2f7d57','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#efe9fc','#7c4ddb','<path d="M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h7"/>']}[k]}
+function icon(k){return {suelo:['#e6f2fc','#1b7fc4','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#1b7fc4"/>'],temp:['#fdf3d9','#e69b1e','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#e4f6ea','#2f7d57','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#efe9fc','#7c4ddb','<path d="M3 8h11a3 3 0 1 0-3-3M3 16h7"/>']}[k]}
 var ST={lote:'Lote La Esperanza',tema:'auto',u:'C',int:30,notif:1,sMin:45,tMax:30,wMax:40,host:'agrostream-76ce0',port:'RTDB',topic:'lote/esperanza/sensores',user:'',on:0},DEF=JSON.stringify(ST),act={suelo:1,temp:0,viento:0},tick=null,HC={};
 try{var sv=JSON.parse(localStorage.getItem('agro_cfg'));if(sv)for(var q in sv)ST[q]=sv[q]}catch(e){}
 function fv(k,v){return k=='temp'&&ST.u=='F'?+(v*9/5+32).toFixed(1):v}
@@ -352,31 +354,20 @@ function apply(){
   applyPermissions();
 }
 
-// --- LOGICA DE AUTENTICACION Y PERMISOS ---
-function onRoleChange(){
-  var role = $('lr').value;
-  if(role === 'admin'){
-    $('lu').value = 'admin';
-    $('lhint').innerHTML = 'Admin: <b>admin</b> · Contraseña: <b>agro123</b>';
-  } else {
-    $('lu').value = 'operador';
-    $('lhint').innerHTML = 'Usuario: <b>operador</b> · Contraseña: <b>user123</b>';
-  }
-  $('lp').value = '';
-  $('le').textContent = '';
-}
-
+// --- LOGICA DE AUTENTICACION Y PERMISOS AUTOMÁTICOS ---
 function login(){
-  var role = $('lr').value;
-  var user = $('lu').value.trim();
+  var user = $('lu').value.trim().toLowerCase();
   var pass = $('lp').value;
 
-  if(role === 'admin' && user.toLowerCase() === 'admin' && pass === 'agro123'){
-    startSession({ name: 'Admin Principal', role: 'admin' });
-  } else if(role === 'user' && user.toLowerCase() === 'operador' && pass === 'user123'){
-    startSession({ name: 'Operador Campo', role: 'user' });
+  // Busca el usuario en la lista de cuentas autorizadas
+  var foundAccount = ACCOUNTS.find(function(acc){
+    return acc.username.toLowerCase() === user && acc.password === pass;
+  });
+
+  if(foundAccount){
+    startSession({ name: foundAccount.name, role: foundAccount.role });
   } else {
-    $('le').textContent = 'Credenciales inválidas para el rol seleccionado.';
+    $('le').textContent = 'Usuario o contraseña incorrectos.';
     $('lp').value = '';
     $('lp').focus();
   }
@@ -389,7 +380,7 @@ function startSession(sessionData){
 
   $('lg').style.display = 'none';
   $('un').textContent = sessionData.name;
-  $('ur').textContent = sessionData.role === 'admin' ? 'Administrador' : 'Usuario (Lector)';
+  $('ur').textContent = sessionData.role === 'admin' ? 'Administrador' : 'Usuario';
   $('le').textContent = '';
   
   apply();
@@ -404,8 +395,9 @@ function logout(){
   currentUser = { name: '', role: '' };
   clearInterval(tick);
   $('lg').style.display = 'flex';
+  $('lu').value = '';
   $('lp').value = '';
-  onRoleChange();
+  $('le').textContent = '';
   location.hash = '#resumen';
 }
 
@@ -413,7 +405,7 @@ function logUserAccess(userObj){
   var logs = [];
   try{ logs = JSON.parse(localStorage.getItem('agro_user_logs') || '[]'); }catch(e){}
   var dateStr = new Date().toLocaleString('es-CO');
-  logs.unshift({ name: userObj.name, role: userObj.role === 'admin' ? 'Administrador' : 'Usuario (Lector)', date: dateStr });
+  logs.unshift({ name: userObj.name, role: userObj.role === 'admin' ? 'Administrador' : 'Usuario', date: dateStr });
   if(logs.length > 20) logs.pop();
   try{ localStorage.setItem('agro_user_logs', JSON.stringify(logs)); }catch(e){}
   renderUserLogs();
@@ -439,7 +431,7 @@ function applyPermissions(){
   // Pestaña de lista de usuarios (Solo Admin)
   $('nav-usuarios').style.display = isAdmin ? 'flex' : 'none';
   
-  // Formularios de configuración
+  // Deshabilitar campos de edición si es usuario normal
   var inputs = document.querySelectorAll('#configuracion input, #configuracion select');
   inputs.forEach(function(el){
     if(el.id !== 'c1' && el.id !== 'c2'){
@@ -504,7 +496,6 @@ window.addEventListener('hashchange',route);
   if(savedSession && savedSession.role){
     startSession(savedSession);
   } else {
-    onRoleChange();
     apply();als();tm();route();$('lu').focus();
   }
 })();
