@@ -314,7 +314,7 @@ input:checked+.slider:before{transform:translateX(22px)}
 
   <section class="view" id="usuarios">
     <div class="card">
-      <h3>Crear Nuevo Usuario</h3>
+      <h3>Registrar Nuevo Usuario</h3>
       <p class="sub" style="margin-bottom:14px">Agrega operadores o administradores a la plataforma.</p>
       <div class="form">
         <label>Nombre Completo<input id="nu-name" placeholder="Ej. Carlos Pérez"></label>
@@ -327,7 +327,7 @@ input:checked+.slider:before{transform:translateX(22px)}
           </select>
         </label>
       </div>
-      <button class="btn p" onclick="createUser()">➕ Guardar Usuario</button>
+      <button class="btn p" onclick="createUser()">➕ Registrar Usuario</button>
     </div>
 
     <div class="card" style="margin-top:24px">
@@ -343,8 +343,13 @@ input:checked+.slider:before{transform:translateX(22px)}
     </div>
 
     <div class="card" style="margin-top:24px">
-      <h3>Historial de Inicios de Sesión</h3>
-      <p class="sub" style="margin-bottom:18px">Registro de accesos recientes a la plataforma AgroStream.</p>
+      <div class="row">
+        <div>
+          <h3>Historial de Inicios de Sesión</h3>
+          <p class="sub">Registro detallado de accesos recientes a la plataforma AgroStream.</p>
+        </div>
+        <button class="btn danger" onclick="clearUserLogs()">🗑️ Borrar Historial</button>
+      </div>
       <div class="tw">
         <table>
           <thead>
@@ -467,7 +472,6 @@ var V={suelo:42.5,temp:28.1,aire:76,viento:4.2},filt='todas',hm='suelo',hr=7;
 var currentUser = { name: '', role: '' };
 var mapInstance = null, polygonLayer = null, markerGroup = null;
 
-// LOTE SATELITAL ÚNICO (Región Sahagún/Chinú)
 var LOTE_SATELITAL_ACTIVO = {
   id: 'esperanza', 
   name: 'Lote La Esperanza', 
@@ -483,49 +487,31 @@ var LOTE_SATELITAL_ACTIVO = {
   ]
 };
 
-// INICIALIZACIÓN DEL MAPA SATELITAL CON LEAFLET
 function initSatelliteMap(){
   if(mapInstance) return;
-
   var lote = LOTE_SATELITAL_ACTIVO;
-  
-  // Mapa centrado en el lote
   mapInstance = L.map('map-container').setView([lote.lat, lote.lng], 15);
-
-  // Capa Satelital Esri World Imagery (Sin API Key, libre y de alta definición)
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping',
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS',
     maxZoom: 18
   }).addTo(mapInstance);
-
   markerGroup = L.layerGroup().addTo(mapInstance);
   updateMapSatellite(lote);
 }
 
 function updateMapSatellite(lote){
   if(!mapInstance) return;
-
   $('map-coords').textContent = lote.lat.toFixed(4) + '° N, ' + lote.lng.toFixed(4) + '° W';
   $('map-area').textContent = lote.area;
   $('map-title-head').textContent = 'Geolocalización Satelital: ' + lote.name;
-
   if(polygonLayer) mapInstance.removeLayer(polygonLayer);
   markerGroup.clearLayers();
-
-  polygonLayer = L.polygon(lote.bounds, {
-    color: '#38bdf8',
-    fillColor: '#0284c7',
-    fillOpacity: 0.35,
-    weight: 3
-  }).addTo(mapInstance);
-
+  polygonLayer = L.polygon(lote.bounds, { color: '#38bdf8', fillColor: '#0284c7', fillOpacity: 0.35, weight: 3 }).addTo(mapInstance);
   mapInstance.fitBounds(polygonLayer.getBounds());
-
-  L.marker([lote.lat, lote.lng]).addTo(markerGroup)
-    .bindPopup('<b>' + lote.name + '</b><br>Estación Telemetría IoT Central').openPopup();
+  L.marker([lote.lat, lote.lng]).addTo(markerGroup).bindPopup('<b>' + lote.name + '</b><br>Estación Telemetría IoT Central').openPopup();
 }
 
-// CUENTAS DE USUARIO
+// CUENTAS Y LOGS DE USUARIO
 var DEFAULT_ACCOUNTS = [
   { username: 'admin', password: 'agro123', name: 'Admin Principal', role: 'admin' },
   { username: 'operador', password: 'user123', name: 'Operador Campo', role: 'user' }
@@ -547,7 +533,7 @@ p.forEach(function(q,i){if(n<=12)o+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="4" f
 return o+'</svg>'}
 var DN=['Lun','Mar','Mié','Jue','Vie','Sáb','Hoy'];
 function series(k,n){var m=M[k],r=[],v=(m.a+m.b)/2;for(var i=0;i<n;i++){v+=rnd(-1,1,2)*(m.b-m.a)/5;v=Math.max(m.a,Math.min(m.b,v));r.push(+v.toFixed(1))}return r}
-function icon(k){return {suelo:['#e0f2fe','#0284c7','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#0284c7"/>'],temp:['#fef3c7','#d97706','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#d1fae5','#10b981','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#ede9fe','#7c3aed','<path d="M3 8h11a3 3 0 1 0-3-3M3 16h7"/>']}[k]}
+function icon(k){return {suelo:['#e0f2fe','#0284c7','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#0284c7"/>'],temp:['#fef3c7','#d97706','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#d1fae5','#10b981','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#ede9fe','#7c3aed','<path d="M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h7"/>']}[k]}
 var ST={lote:'Lote La Esperanza',tema:'auto',u:'C',int:30,notif:1,sMin:45,tMax:30,wMax:40,host:'agrostream-76ce0',port:'RTDB',topic:'lotes/esperanza/sensores',user:'',on:0},DEF=JSON.stringify(ST),act={suelo:1,temp:0,viento:0},tick=null,HC={};
 try{var sv=JSON.parse(localStorage.getItem('agro_cfg'));if(sv)for(var q in sv)ST[q]=sv[q]}catch(e){}
 function fv(k,v){return k=='temp'&&ST.u=='F'?+(v*9/5+32).toFixed(1):v}
@@ -699,7 +685,7 @@ function createUser(){
 
   accounts.push({ username: user, password: pass, name: name, role: role });
   localStorage.setItem('agro_accounts', JSON.stringify(accounts));
-  toast('Usuario creado');
+  toast('Usuario creado exitosamente');
   
   $('nu-name').value = ''; $('nu-user').value = ''; $('nu-pass').value = '';
   renderRegisteredUsers();
@@ -707,7 +693,7 @@ function createUser(){
 
 function deleteUser(index){
   var accounts = getAccounts();
-  var removed = accounts.splice(index, 1);
+  accounts.splice(index, 1);
   localStorage.setItem('agro_accounts', JSON.stringify(accounts));
   toast('Usuario eliminado');
   renderRegisteredUsers();
@@ -762,7 +748,7 @@ function logUserAccess(userObj){
   try{ logs = JSON.parse(localStorage.getItem('agro_user_logs') || '[]'); }catch(e){}
   var dateStr = new Date().toLocaleString('es-CO');
   logs.unshift({ name: userObj.name, role: userObj.role === 'admin' ? 'Administrador' : 'Usuario', date: dateStr });
-  if(logs.length > 20) logs.pop();
+  if(logs.length > 25) logs.pop();
   try{ localStorage.setItem('agro_user_logs', JSON.stringify(logs)); }catch(e){}
   renderUserLogs();
 }
@@ -772,9 +758,22 @@ function renderUserLogs(){
   try{ logs = JSON.parse(localStorage.getItem('agro_user_logs') || '[]'); }catch(e){}
   var tbody = $('user-log-table');
   if(!tbody) return;
+  if(logs.length === 0){
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--mut)">No hay registros de acceso acumulados.</td></tr>';
+    return;
+  }
   tbody.innerHTML = logs.map(function(l){
     return '<tr><td><b>'+l.name+'</b></td><td><span class="role-badge" style="background:'+(l.role==='Administrador'?'#0284c7':'#2563eb')+'">'+l.role+'</span></td><td><code>'+l.date+'</code></td></tr>';
   }).join('');
+}
+
+function clearUserLogs(){
+  if(currentUser.role !== 'admin'){ toast('Acceso denegado'); return; }
+  if(confirm('¿Estás seguro de que deseas eliminar todo el historial de inicios de sesión?')){
+    localStorage.removeItem('agro_user_logs');
+    renderUserLogs();
+    toast('Historial de accesos eliminado');
+  }
 }
 
 function applyPermissions(){
