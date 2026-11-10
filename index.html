@@ -3,23 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AgroStream – Sistema Multi-Lote</title>
+<title>AgroStream – Monitoreo Agrosatelital</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<!-- Leaflet CSS para Mapa Satelital sin errores -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
 <style>
 :root{
-  --side:#0a3d27;
-  --side2:#125237;
-  --bg:#f0f7f4;
+  --side:#0f172a;
+  --side2:#1e293b;
+  --bg:#f8fafc;
   --card:#ffffff;
-  --ink:#0b2b1d;
-  --mut:#5c7367;
-  --line:#d8e5de;
-  --soft:#e8f2ec;
-  --green:#0d5c3a;
-  --mint:#25a16f;
-  --blue:#1d6fa5;
+  --ink:#0f172a;
+  --mut:#64748b;
+  --line:#e2e8f0;
+  --soft:#f1f5f9;
+  --brand-primary:#0284c7;
+  --brand-accent:#0369a1;
+  --mint:#10b981;
+  --blue:#2563eb;
   --amber:#d97706;
-  --purple:#6d28d9;
+  --purple:#7c3aed;
   --wb:#fffbeb;
   --wl:#fef3c7;
   --wt:#92400e;
@@ -33,12 +37,12 @@
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#07140e;
-    --card:#0d2118;
-    --ink:#e1efe8;
-    --mut:#859e91;
-    --line:#19382b;
-    --soft:#122b1f;
+    --bg:#090d16;
+    --card:#111827;
+    --ink:#f3f4f6;
+    --mut:#9ca3af;
+    --line:#1f2937;
+    --soft:#1f2937;
     --wb:#2d240d;
     --wl:#4a3b15;
     --wt:#fde047;
@@ -51,112 +55,128 @@
 *{box-sizing:border-box;margin:0}
 body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex;min-height:100vh}
 aside{width:290px;background:var(--side);color:#fff;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
-.brand{display:flex;gap:14px;align-items:center;padding:28px 24px 22px;border-bottom:1px solid rgba(255,255,255,.08)}
-.logo{width:45px;height:45px;border-radius:12px;background:var(--mint);display:grid;place-items:center}
-.brand b{font-size:20px;display:block}.brand small{font-size:12px;letter-spacing:.12em;color:#5eead4}
-nav{padding:16px;flex:1}nav h6{font-size:12px;letter-spacing:.14em;color:#8abfa6;margin:6px 6px 14px;font-weight:600}
-nav a{display:flex;align-items:center;gap:16px;padding:14px 20px;border-radius:12px;color:#cbe3d7;text-decoration:none;font-size:17px;font-weight:500;margin-bottom:4px}
-nav a:hover{background:rgba(255,255,255,.06)}nav a.on{background:var(--side2);color:#fff;font-weight:600}
-nav a:focus-visible,.btn:focus-visible,.chip:focus-visible{outline:2px solid var(--mint);outline-offset:2px}
-nav svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.brand{display:flex;gap:14px;align-items:center;padding:24px 20px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo-container{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg, #0284c7, #0369a1);display:grid;place-items:center;box-shadow:0 4px 12px rgba(2,132,199,0.3)}
+.brand b{font-size:20px;display:block;color:#f8fafc}.brand small{font-size:11px;letter-spacing:.14em;color:#38bdf8;font-weight:700}
+nav{padding:16px;flex:1}nav h6{font-size:11px;letter-spacing:.14em;color:#94a3b8;margin:6px 6px 14px;font-weight:600}
+nav a{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:10px;color:#cbd5e1;text-decoration:none;font-size:16px;font-weight:500;margin-bottom:4px;transition:background .2s}
+nav a:hover{background:rgba(255,255,255,.06)}nav a.on{background:var(--brand-primary);color:#fff;font-weight:600}
+nav svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .badge{margin-left:auto;background:var(--amber);color:#fff;font-size:12px;font-weight:700;border-radius:99px;padding:3px 9px}
-.demo{margin:16px;padding:20px;border-radius:14px;background:var(--side2);font-size:14px;color:#cbe3d7}
-.demo p:first-child{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.demo{margin:16px;padding:18px;border-radius:14px;background:var(--side2);font-size:13px;color:#94a3b8}
+.demo p:first-child{display:flex;gap:8px;align-items:center;margin-bottom:8px}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--amber);display:inline-block;flex-shrink:0}
-.demo a{margin-top:16px;width:100%;padding:12px;border-radius:10px;background:var(--mint);color:#fff;font-weight:600;font-size:15px;text-align:center;text-decoration:none;display:block}
+.demo a{margin-top:14px;width:100%;padding:10px;border-radius:8px;background:var(--brand-primary);color:#fff;font-weight:600;font-size:14px;text-align:center;text-decoration:none;display:block}
 main{flex:1;min-width:0}
 header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 30px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
 .lote-selector-box{display:flex;align-items:center;gap:12px}
-.lote-select{font:600 20px Outfit;background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:8px 14px;border-radius:10px;cursor:pointer}
-header p{color:var(--mut);font-size:15px;margin-top:2px}
+.lote-select{font:600 18px Outfit;background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:8px 14px;border-radius:10px;cursor:pointer}
+header p{color:var(--mut);font-size:14px;margin-top:2px}
 .btns{display:flex;gap:12px}
-.btn{padding:12px 18px;border-radius:10px;font:600 16px Outfit;cursor:pointer;border:1px solid var(--line);background:var(--soft);color:var(--green);text-decoration:none;display:inline-flex;gap:8px;align-items:center}
-.btn.p{background:var(--green);color:#fff;border-color:var(--green)}
+.btn{padding:10px 16px;border-radius:10px;font:600 15px Outfit;cursor:pointer;border:1px solid var(--line);background:var(--soft);color:var(--brand-primary);text-decoration:none;display:inline-flex;gap:8px;align-items:center}
+.btn.p{background:var(--brand-primary);color:#fff;border-color:var(--brand-primary)}
 .btn.danger{background:#dc2626;color:#fff;border-color:#b91c1c}
 .btn:disabled{opacity:0.5;cursor:not-allowed;filter:grayscale(1)}
 .wrap{padding:30px}
 .alert{background:var(--wb);border:1px solid var(--wl);color:var(--wt);border-radius:12px;padding:16px 20px;display:flex;gap:14px;align-items:center;margin-bottom:30px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px;margin-bottom:30px}
-.card{background:var(--card);border-radius:18px;padding:28px;box-shadow:0 1px 4px rgba(10,61,39,.06)}
+.card{background:var(--card);border-radius:18px;padding:24px;box-shadow:0 1px 4px rgba(15,23,42,.05);border:1px solid var(--line)}
 .k{display:flex;justify-content:space-between;gap:10px}
-.k span{font-size:14px;letter-spacing:.07em;color:var(--mut);font-weight:500;text-transform:uppercase}
-.ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;flex-shrink:0}
-.ico svg{width:24px;height:24px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.v{font:700 40px 'JetBrains Mono',monospace;margin-top:4px;letter-spacing:-.03em}
-.v small{font:500 17px Outfit;color:var(--mut);letter-spacing:0;margin-left:3px}
-.s{color:var(--mut);font-size:15px;margin:2px 0 18px;min-height:22px}
+.k span{font-size:13px;letter-spacing:.07em;color:var(--mut);font-weight:500;text-transform:uppercase}
+.ico{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;flex-shrink:0}
+.ico svg{width:22px;height:22px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.v{font:700 38px 'JetBrains Mono',monospace;margin-top:4px;letter-spacing:-.03em}
+.v small{font:500 16px Outfit;color:var(--mut);letter-spacing:0;margin-left:3px}
+.s{color:var(--mut);font-size:14px;margin:2px 0 16px;min-height:22px}
 .bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;border-radius:99px;transition:width .4s}
-.two{display:grid;grid-template-columns:1.9fr 1fr;gap:26px;margin-bottom:26px}
+.two{display:grid;grid-template-columns:1.9fr 1fr;gap:24px;margin-bottom:24px}
 .two.b{grid-template-columns:1.2fr 1fr}
-.card h3{font-size:19px;font-weight:600}
+.card h3{font-size:18px;font-weight:600}
 .row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:18px}
-.pill{font-size:13px;font-weight:600;padding:5px 12px;border-radius:8px;white-space:nowrap;border:1px solid transparent}
-.sub{color:var(--mut);font-size:15px;margin-top:4px}
+.pill{font-size:12px;font-weight:600;padding:4px 10px;border-radius:8px;white-space:nowrap;border:1px solid transparent}
+.sub{color:var(--mut);font-size:14px;margin-top:4px}
 svg.chart{width:100%;height:auto;display:block}
-.srow{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:10px;background:var(--soft);margin-bottom:10px;font-weight:500}
-.srow small{display:block;font:400 13px 'JetBrains Mono',monospace;color:var(--mut);margin-top:3px}
-.srow em{margin-left:auto;font-style:normal;font-size:13px;color:var(--mut)}
+.srow{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:var(--soft);margin-bottom:10px;font-weight:500;font-size:14px}
+.srow small{display:block;font:400 12px 'JetBrains Mono',monospace;color:var(--mut);margin-top:2px}
+.srow em{margin-left:auto;font-style:normal;font-size:12px;color:var(--mut)}
 .srow.w{background:var(--wb);border:1px solid var(--wl)}
 .sd{width:10px;height:10px;border-radius:50%;background:#10b981;flex-shrink:0}.srow.w .sd{background:var(--amber)}
-.al{display:flex;gap:14px;padding:16px;border-radius:12px;margin-bottom:12px;border:1px solid;align-items:flex-start;line-height:1.35}
-.al .dot{margin-top:7px}.al div{flex:1}.al small{display:block;color:var(--mut);margin-top:6px;font-size:14px}
+.al{display:flex;gap:14px;padding:14px;border-radius:12px;margin-bottom:10px;border:1px solid;align-items:flex-start;line-height:1.35;font-size:14px}
+.al .dot{margin-top:6px}.al div{flex:1}.al small{display:block;color:var(--mut);margin-top:4px;font-size:13px}
 .al.adv{background:var(--wb);border-color:var(--wl)}.al.inf{background:var(--ib);border-color:var(--il)}.al.cri{background:var(--cb);border-color:var(--cl)}
 .al.inf .dot{background:#2563eb}.al.cri .dot{background:#ef4444}.al.read{opacity:.55}
 .al .pill{background:var(--card);align-self:flex-start}
 .al.adv .pill{color:#b45309;border-color:var(--wl)}.al.inf .pill{color:#1d4ed8;border-color:var(--il)}.al.cri .pill{color:#b91c1c;border-color:var(--cl)}
-.rec{background:var(--side2);color:#e1efe8;border-color:transparent}
+.rec{background:var(--side2);color:#f1f5f9;border-color:transparent}
 .rec h3{display:flex;gap:12px;align-items:center;color:#fff}
-.rb{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-top:16px;font-size:17px;line-height:1.55}
-.rb h5{font-size:13px;letter-spacing:.12em;color:#5eead4;margin-bottom:8px}.rb b{color:#99f6e4}
-.foot{margin-top:18px;font-size:14px;color:#8abfa6}
-table{width:100%;border-collapse:collapse;font-size:15px}
-th{text-align:left;color:var(--mut);font-weight:500;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:0 12px 12px}
-td{padding:14px 12px;border-top:1px solid var(--line)}td code{font:14px 'JetBrains Mono',monospace;color:var(--mut)}
+.rb{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:16px 18px;margin-top:14px;font-size:15px;line-height:1.5}
+.rb h5{font-size:12px;letter-spacing:.12em;color:#38bdf8;margin-bottom:6px}.rb b{color:#7dd3fc}
+.foot{margin-top:16px;font-size:13px;color:#94a3b8}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;color:var(--mut);font-weight:500;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:0 12px 10px}
+td{padding:12px;border-top:1px solid var(--line)}td code{font:13px 'JetBrains Mono',monospace;color:var(--mut)}
 .tw{overflow-x:auto}
-.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
-.chip{padding:9px 16px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:500 15px Outfit;cursor:pointer}
-.chip.on{background:var(--side);color:#fff;border-color:var(--side)}
-.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin:18px 0}
-label{display:block;font-size:14px;font-weight:500;color:var(--mut)}
-input,select{width:100%;margin-top:6px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font:16px Outfit;background:var(--soft);color:var(--ink)}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.chip{padding:8px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:500 14px Outfit;cursor:pointer}
+.chip.on{background:var(--brand-primary);color:#fff;border-color:var(--brand-primary)}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:16px 0}
+label{display:block;font-size:13px;font-weight:500;color:var(--mut)}
+input,select{width:100%;margin-top:6px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:15px Outfit;background:var(--soft);color:var(--ink)}
 .toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--side);color:#fff;padding:12px 22px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:20}
 .toast.on{opacity:1}
 .view{display:none}.view.on{display:block}
 .tabs{display:none}
 @media(max-width:900px){body{flex-direction:column}aside{display:none}.two,.two.b{grid-template-columns:1fr}.wrap{padding:18px}header{padding:14px 18px}
-.tabs{display:flex;gap:6px;overflow-x:auto;background:var(--side);padding:10px 12px;position:sticky;top:0;z-index:6}.tabs a{color:#cbe3d7;text-decoration:none;padding:9px 14px;border-radius:99px;white-space:nowrap;font-weight:500}.tabs a.on{background:var(--side2);color:#fff}header{top:auto;position:static}}
+.tabs{display:flex;gap:6px;overflow-x:auto;background:var(--side);padding:10px 12px;position:sticky;top:0;z-index:6}.tabs a{color:#cbd5e1;text-decoration:none;padding:9px 14px;border-radius:99px;white-space:nowrap;font-weight:500}.tabs a.on{background:var(--brand-primary);color:#fff}header{top:auto;position:static}}
 .srow{color:inherit;text-decoration:none}a.srow:hover{filter:brightness(.97)}
-.st{padding:20px 24px}.st .v{font-size:28px}
-.pr{background:var(--soft);border-radius:10px;padding:12px 14px;font-size:15px;line-height:1.4;margin:12px 0 10px}.pr.w{background:var(--wb);color:var(--wt)}
+.st{padding:18px 20px}.st .v{font-size:26px}
+.pr{background:var(--soft);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.4;margin:12px 0 10px}.pr.w{background:var(--wb);color:var(--wt)}
 .sp{width:100%;height:auto;display:block;margin-top:8px}
 #lg{position:fixed;inset:0;z-index:50;background:var(--side);display:flex;align-items:center;justify-content:center;padding:20px}
-.lc{background:var(--card);border-radius:20px;padding:36px;width:100%;max-width:420px}.lc .logo{margin-bottom:18px}.lc h2{font-size:26px;font-weight:600;margin-bottom:6px}.lc .btn{width:100%;justify-content:center;margin-top:16px}
-.err{color:#dc2626;font-size:14px;min-height:20px;margin-top:10px}.hint{font-size:13px;color:var(--mut);margin-top:14px;text-align:center;line-height:1.4}
-.user{margin:0 16px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;color:#cbe3d7;font-size:15px;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
-.user button{background:none;border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:8px;padding:6px 12px;font:500 14px Outfit;cursor:pointer}
+.lc{background:var(--card);border-radius:20px;padding:36px;width:100%;max-width:400px}.lc .logo-container{margin-bottom:18px}.lc h2{font-size:24px;font-weight:600;margin-bottom:6px}.lc .btn{width:100%;justify-content:center;margin-top:16px}
+.err{color:#dc2626;font-size:13px;min-height:20px;margin-top:8px}.hint{font-size:13px;color:var(--mut);margin-top:14px;text-align:center;line-height:1.4}
+.user{margin:0 16px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;color:#cbd5e1;font-size:14px;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+.user button{background:none;border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:8px;padding:6px 12px;font:500 13px Outfit;cursor:pointer}
 .ntc{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));right:16px;z-index:40;display:flex;flex-direction:column;gap:10px;max-width:340px}
-.ni{display:block;background:var(--card);color:var(--ink);text-decoration:none;border-radius:12px;padding:14px 16px;box-shadow:0 6px 24px rgba(0,0,0,.25);border-left:5px solid #2563eb;font-size:15px;line-height:1.35}.ni b{display:block;margin-bottom:3px}.ni.adv{border-color:var(--amber)}.ni.cri{border-color:#ef4444}
-:root[data-theme="dark"]{--bg:#07140e;--card:#0d2118;--ink:#e1efe8;--mut:#859e91;--line:#19382b;--soft:#122b1f;--wb:#2d240d;--wl:#4a3b15;--wt:#fde047;--ib:#0c2a4a;--il:#1e4976;--cb:#3f1416;--cl:#732427}
-.btns{flex-wrap:wrap}.card .btns{margin-top:6px}
-.role-badge{font-size:11px;padding:2px 8px;border-radius:4px;background:var(--mint);color:#fff;font-weight:700;margin-left:6px;vertical-align:middle;text-transform:uppercase}
-.switch{position:relative;display:inline-block;width:52px;height:28px}
+.ni{display:block;background:var(--card);color:var(--ink);text-decoration:none;border-radius:12px;padding:14px 16px;box-shadow:0 6px 24px rgba(0,0,0,.25);border-left:5px solid #0284c7;font-size:14px;line-height:1.35}.ni b{display:block;margin-bottom:3px}.ni.adv{border-color:var(--amber)}.ni.cri{border-color:#ef4444}
+.role-badge{font-size:11px;padding:2px 8px;border-radius:4px;background:var(--brand-primary);color:#fff;font-weight:700;margin-left:6px;vertical-align:middle;text-transform:uppercase}
+.switch{position:relative;display:inline-block;width:48px;height:26px}
 .switch input{opacity:0;width:0;height:0}
-.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;transition:.3s;border-radius:34px}
-.slider:before{position:absolute;content:"";height:20px;width:20px;left:4px;bottom:4px;background-color:white;transition:.3s;border-radius:50%}
-input:checked+.slider{background-color:var(--green)}
-input:checked+.slider:before{transform:translateX(24px)}
-.actuator-box{display:flex;align-items:center;justify-content:space-between;padding:16px;border-radius:12px;background:var(--soft);margin-top:12px}
-.weather-card{display:flex;align-items:center;gap:18px;background:linear-gradient(135deg,var(--side2),var(--side));color:#fff;padding:20px;border-radius:16px;margin-bottom:24px}
-.weather-card h4{font-size:18px;margin-bottom:4px}
-.weather-card p{font-size:14px;color:#a2d6bc}
+.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#cbd5e1;transition:.3s;border-radius:34px}
+.slider:before{position:absolute;content:"";height:18px;width:18px;left:4px;bottom:4px;background-color:white;transition:.3s;border-radius:50%}
+input:checked+.slider{background-color:var(--brand-primary)}
+input:checked+.slider:before{transform:translateX(22px)}
+.actuator-box{display:flex;align-items:center;justify-content:space-between;padding:14px;border-radius:12px;background:var(--soft);margin-top:10px}
+.weather-card{display:flex;align-items:center;gap:18px;background:linear-gradient(135deg,var(--side2),var(--side));color:#fff;padding:20px;border-radius:16px;margin-bottom:24px;border:1px solid rgba(255,255,255,0.05)}
+.weather-card h4{font-size:17px;margin-bottom:4px}
+.weather-card p{font-size:14px;color:#94a3b8}
+
+/* Visor Satelital Mapa */
+#map-container{width:100%;height:520px;border-radius:16px;z-index:1;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.map-info-box{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:18px}
+.map-stat-card{background:var(--soft);padding:14px 16px;border-radius:12px}
+.map-stat-card span{font-size:12px;color:var(--mut);display:block;text-transform:uppercase;font-weight:600}
+.map-stat-card b{font-size:18px;color:var(--ink);margin-top:2px;display:block}
 </style>
 </head>
 <body>
 <aside>
-  <div class="brand"><div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="#d8f5e4"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14l-1 1z"/></svg></div><div><b>AgroStream</b><small>SISTEMA MULTI-LOTE</small></div></div>
+  <div class="brand">
+    <div class="logo-container">
+      <!-- LOGO VECTORIAL AGROSTREAM -->
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z" stroke-dasharray="2 2" stroke-opacity="0.6"/>
+        <path d="M12 6v12M6 12h12" stroke-opacity="0.3"/>
+        <path d="M7 16c3-1 6-5 6-10 0 5 3 9 6 10" stroke="#38bdf8" stroke-width="2.5"/>
+        <circle cx="12" cy="12" r="3" fill="#38bdf8"/>
+      </svg>
+    </div>
+    <div><b>AgroStream</b><small>SATELITAL & IOT</small></div>
+  </div>
   <nav>
     <h6>PRINCIPAL</h6>
     <a href="#resumen" data-v="resumen"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>Resumen</a>
+    <a href="#mapa" data-v="mapa"><svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Mapa Satelital</a>
     <a href="#actuadores" data-v="actuadores"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Control Riego</a>
     <a href="#sensores" data-v="sensores"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>Sensores</a>
     <a href="#historial" data-v="historial"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M9 20v-6M14 20V9M19 20v-9"/></svg>Historial Real</a>
@@ -164,8 +184,8 @@ input:checked+.slider:before{transform:translateX(24px)}
     <a href="#usuarios" data-v="usuarios" id="nav-usuarios" style="display:none"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Gestión Usuarios</a>
     <a href="#configuracion" data-v="configuracion"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Configuración</a>
   </nav>
-  <div class="user"><div><span><b id="un"></b></span><br><small id="ur" style="color:#5eead4;font-weight:600;font-size:12px"></small></div><button onclick="logout()">Salir</button></div>
-  <div class="demo"><p><span class="dot" id="dot-status"></span><span id="dm">CONECTANDO...</span></p><p id="dt">Estableciendo conexión con Firebase Database...</p><a href="#configuracion">Ver Configuración</a></div>
+  <div class="user"><div><span><b id="un"></b></span><br><small id="ur" style="color:#38bdf8;font-weight:600;font-size:11px"></small></div><button onclick="logout()">Salir</button></div>
+  <div class="demo"><p><span class="dot" id="dot-status"></span><span id="dm">CONECTANDO...</span></p><p id="dt">Conexión Firebase Database activa.</p><a href="#configuracion">Ver Configuración</a></div>
 </aside>
 <main>
   <div class="tabs" id="tabs"></div>
@@ -182,17 +202,47 @@ input:checked+.slider:before{transform:translateX(24px)}
 
   <section class="view" id="resumen">
     <div class="weather-card" id="weather-banner">
-      <div style="font-size:40px">🌧️</div>
+      <div style="font-size:38px">📡</div>
       <div>
-        <h4 id="w-title">Pronóstico Agroclimático: Zona Sahagún / Chinú</h4>
-        <p id="w-desc">Cargando pronóstico del tiempo...</p>
+        <h4 id="w-title">Telemetría Agrosatelital Activa</h4>
+        <p id="w-desc">Cargando pronóstico y coordenadas del lote...</p>
       </div>
     </div>
     <div class="alert" id="banner"><span class="dot" id="dot-banner"></span><span id="banner-text">Conectando con Firebase Realtime Database...</span></div>
     <div class="grid" id="cards"></div>
     <div class="two b">
-      <div class="card"><h3 style="margin-bottom:18px">Estado general</h3><div id="gen"></div></div>
-      <div class="card rec"><h3><span class="ico" style="width:40px;height:40px;background:rgba(255,255,255,.12)"><svg viewBox="0 0 24 24" style="fill:#d8f5e4;stroke:none"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14l-1 1z"/></svg></span>Recomendación del día</h3><div id="rec"></div><p class="foot">● Basado en datos de sensores · <span class="tm"></span></p></div>
+      <div class="card"><h3 style="margin-bottom:16px">Estado general</h3><div id="gen"></div></div>
+      <div class="card rec"><h3><span class="ico" style="width:40px;height:40px;background:rgba(255,255,255,.12)"><svg viewBox="0 0 24 24" style="fill:#e0f2fe;stroke:none"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14l-1 1z"/></svg></span>Recomendación agronómica</h3><div id="rec"></div><p class="foot">● Basado en sensores · <span class="tm"></span></p></div>
+    </div>
+  </section>
+
+  <!-- PESTAÑA MAPA SATELITAL -->
+  <section class="view" id="mapa">
+    <div class="card">
+      <div class="row">
+        <div>
+          <h3 id="map-title-head">Geolocalización Satelital del Lote</h3>
+          <p class="sub">Vista satelital de alta resolución con delimitación perimetral y nodos de sensores IoT en campo.</p>
+        </div>
+        <span class="pill" style="background:#e0f2fe;color:#0369a1">Imágenes ESRI World Imagery</span>
+      </div>
+      
+      <div id="map-container"></div>
+
+      <div class="map-info-box">
+        <div class="map-stat-card">
+          <span>Coordenadas Centro</span>
+          <b id="map-coords">9.2451° N, 75.4012° W</b>
+        </div>
+        <div class="map-stat-card">
+          <span>Área Estimada</span>
+          <b id="map-area">14.5 Hectáreas</b>
+        </div>
+        <div class="map-stat-card">
+          <span>Nodos de Campo</span>
+          <b>5 Sensores Activos</b>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -308,16 +358,6 @@ input:checked+.slider:before{transform:translateX(24px)}
   </section>
 
   <section class="view" id="configuracion">
-    <div class="card" id="add-lote-box" style="margin-bottom:24px;display:none">
-      <h3>➕ Añadir Nuevo Lote Agrícola</h3>
-      <p class="sub">Registra una nueva parcela de terreno para monitoreo de terreno.</p>
-      <div class="form">
-        <label>Nombre del Lote<input id="nl-name" placeholder="Ej. Lote San José"></label>
-        <label>Variedad de Cultivo<input id="nl-crop" placeholder="Ej. Yuca / Maíz"></label>
-      </div>
-      <button class="btn p" onclick="addNewLote()">Crear Nuevo Lote</button>
-    </div>
-
     <div class="card">
       <div class="row">
         <h3>Preferencias del Lote Activo</h3>
@@ -343,7 +383,14 @@ input:checked+.slider:before{transform:translateX(24px)}
 
 <div id="lg">
   <form class="lc" onsubmit="login();return false">
-    <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="#d8f5e4"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14l-1 1z"/></svg></div>
+    <div class="logo-container">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z" stroke-dasharray="2 2" stroke-opacity="0.6"/>
+        <path d="M12 6v12M6 12h12" stroke-opacity="0.3"/>
+        <path d="M7 16c3-1 6-5 6-10 0 5 3 9 6 10" stroke="#38bdf8" stroke-width="2.5"/>
+        <circle cx="12" cy="12" r="3" fill="#38bdf8"/>
+      </svg>
+    </div>
     <h2>Iniciar sesión</h2>
     <p class="sub" style="margin-bottom:18px">Ingresa tus credenciales para acceder a AgroStream.</p>
     
@@ -362,6 +409,9 @@ input:checked+.slider:before{transform:translateX(24px)}
 
 <div class="ntc" id="ntc" aria-live="polite"></div>
 <div class="toast" id="toast" role="status"></div>
+
+<!-- JS de Leaflet.js para renderizar mapas satelitales -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
@@ -413,60 +463,111 @@ window.connectLoteFirebase = function(loteKey){
 
 <script>
 var $=function(i){return document.getElementById(i)};
-var M={suelo:{n:'Humedad del suelo',u:'%',c:'#1d6fa5',a:36,b:50,d:1},temp:{n:'Temperatura ambiente',u:'°C',c:'#d97706',a:24,b:33,d:1},aire:{n:'Humedad del aire',u:'%',c:'#25a16f',a:65,b:85,d:0},viento:{n:'Velocidad del viento',u:'km/h',c:'#6d28d9',a:2,b:12,d:1}};
+var M={suelo:{n:'Humedad del suelo',u:'%',c:'#0284c7',a:36,b:50,d:1},temp:{n:'Temperatura ambiente',u:'°C',c:'#d97706',a:24,b:33,d:1},aire:{n:'Humedad del aire',u:'%',c:'#10b981',a:65,b:85,d:0},viento:{n:'Velocidad del viento',u:'km/h',c:'#7c3aed',a:2,b:12,d:1}};
 var A=[{t:'Humedad del suelo por debajo del 45% en zona norte',k:'adv',l:'Advertencia',w:'hace 12 min',r:0},{t:'Sensor WIND-01 reconectado exitosamente',k:'inf',l:'Info',w:'hace 34 min',r:0},{t:'Temperatura ambiente superó 30°C durante 2 horas',k:'cri',l:'Crítica',w:'hace 1 h',r:0},{t:'Ciclo de riego programado completado',k:'inf',l:'Info',w:'hace 2 h',r:0}];
 var V={suelo:42.5,temp:28.1,aire:76,viento:4.2},filt='todas',hm='suelo',hr=7;
 var currentUser = { name: '', role: '' };
+var mapInstance = null, polygonLayer = null, markerGroup = null;
 
-// GESTIÓN MULTI-LOTE
-var DEFAULT_LOTES = [
-  { id: 'esperanza', name: 'Lote La Esperanza', crop: 'Yuca Industrial' },
-  { id: 'el_carmen', name: 'Lote El Carmen', crop: 'Maíz Blanco' }
+// LOTES SATELITALES PREDETERMINADOS (Coordenadas Reales Región Sahagún/Chinú)
+var LOTES_SATELITALES = [
+  { 
+    id: 'esperanza', 
+    name: 'Lote La Esperanza', 
+    crop: 'Yuca Industrial', 
+    lat: 9.2451, 
+    lng: -75.4012,
+    area: '14.5 Ha',
+    bounds: [
+      [9.2470, -75.4030],
+      [9.2475, -75.3990],
+      [9.2430, -75.3995],
+      [9.2435, -75.4035]
+    ]
+  },
+  { 
+    id: 'el_carmen', 
+    name: 'Lote El Carmen', 
+    crop: 'Maíz Blanco', 
+    lat: 9.2580, 
+    lng: -75.3850,
+    area: '22.0 Ha',
+    bounds: [
+      [9.2600, -75.3880],
+      [9.2610, -75.3820],
+      [9.2550, -75.3830],
+      [9.2560, -75.3890]
+    ]
+  }
 ];
-
-function getLotes(){
-  try{ return JSON.parse(localStorage.getItem('agro_lotes')) || DEFAULT_LOTES; }
-  catch(e){ return DEFAULT_LOTES; }
-}
 
 var currentLoteId = 'esperanza';
 
 function renderLoteDropdown(){
-  var lotes = getLotes();
   var select = $('lote-dropdown');
-  select.innerHTML = lotes.map(function(l){
+  select.innerHTML = LOTES_SATELITALES.map(function(l){
     return '<option value="' + l.id + '" ' + (l.id === currentLoteId ? 'selected' : '') + '>' + l.name + ' (' + l.crop + ')</option>';
   }).join('');
 }
 
 function changeLote(loteId){
   currentLoteId = loteId;
-  var lotes = getLotes();
-  var selected = lotes.find(l => l.id === loteId);
+  var selected = LOTES_SATELITALES.find(l => l.id === loteId);
   if(selected){
     ST.lote = selected.name;
     $('cl').value = selected.name;
-    toast('Cambiado a ' + selected.name);
+    toast('Satelital: ' + selected.name);
     if(window.connectLoteFirebase) window.connectLoteFirebase(loteId);
     apply();
+    if(mapInstance) updateMapSatellite(selected);
   }
 }
 
-function addNewLote(){
-  var name = $('nl-name').value.trim();
-  var crop = $('nl-crop').value.trim() || 'Cultivo General';
-  if(!name){ toast('Escribe el nombre del nuevo lote'); return; }
+// INICIALIZACIÓN DEL MAPA SATELITAL CON LEAFLET
+function initSatelliteMap(){
+  if(mapInstance) return;
 
-  var id = name.toLowerCase().replace(/[^a-z0-9]/g, '_');
-  var lotes = getLotes();
-  lotes.push({ id: id, name: name, crop: crop });
-  localStorage.setItem('agro_lotes', JSON.stringify(lotes));
+  var lote = LOTES_SATELITALES.find(l => l.id === currentLoteId) || LOTES_SATELITALES[0];
+  
+  // Mapa centrado en el lote
+  mapInstance = L.map('map-container').setView([lote.lat, lote.lng], 15);
 
-  $('nl-name').value = '';
-  $('nl-crop').value = '';
-  renderLoteDropdown();
-  changeLote(id);
-  toast('Nuevo Lote Registrado con Éxito');
+  // Capa Satelital Esri World Imagery (Gratuita y de Alta Resolución)
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    maxZoom: 18
+  }).addTo(mapInstance);
+
+  markerGroup = L.layerGroup().addTo(mapInstance);
+  updateMapSatellite(lote);
+}
+
+function updateMapSatellite(lote){
+  if(!mapInstance) return;
+
+  // Actualizar estadísticas del panel inferior
+  $('map-coords').textContent = lote.lat.toFixed(4) + '° N, ' + lote.lng.toFixed(4) + '° W';
+  $('map-area').textContent = lote.area;
+  $('map-title-head').textContent = 'Geolocalización Satelital: ' + lote.name;
+
+  // Limpiar capas previas
+  if(polygonLayer) mapInstance.removeLayer(polygonLayer);
+  markerGroup.clearLayers();
+
+  // Dibujar polígono vectorial del perimetro del terreno
+  polygonLayer = L.polygon(lote.bounds, {
+    color: '#38bdf8',
+    fillColor: '#0284c7',
+    fillOpacity: 0.35,
+    weight: 3
+  }).addTo(mapInstance);
+
+  // Centrar mapa suavemente en los límites del terreno
+  mapInstance.fitBounds(polygonLayer.getBounds());
+
+  // Agregar marcador central de la Estación de Control
+  L.marker([lote.lat, lote.lng]).addTo(markerGroup)
+    .bindPopup('<b>' + lote.name + '</b><br>Estación Telemetría IoT Central').openPopup();
 }
 
 // CUENTAS DE USUARIO
@@ -491,7 +592,7 @@ p.forEach(function(q,i){if(n<=12)o+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="4" f
 return o+'</svg>'}
 var DN=['Lun','Mar','Mié','Jue','Vie','Sáb','Hoy'];
 function series(k,n){var m=M[k],r=[],v=(m.a+m.b)/2;for(var i=0;i<n;i++){v+=rnd(-1,1,2)*(m.b-m.a)/5;v=Math.max(m.a,Math.min(m.b,v));r.push(+v.toFixed(1))}return r}
-function icon(k){return {suelo:['#e0f2fe','#1d6fa5','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#1d6fa5"/>'],temp:['#fef3c7','#d97706','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#d1fae5','#25a16f','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#ede9fe','#6d28d9','<path d="M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h7"/>']}[k]}
+function icon(k){return {suelo:['#e0f2fe','#0284c7','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#0284c7"/>'],temp:['#fef3c7','#d97706','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#d1fae5','#10b981','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#ede9fe','#7c3aed','<path d="M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h7"/>']}[k]}
 var ST={lote:'Lote La Esperanza',tema:'auto',u:'C',int:30,notif:1,sMin:45,tMax:30,wMax:40,host:'agrostream-76ce0',port:'RTDB',topic:'lotes/esperanza/sensores',user:'',on:0},DEF=JSON.stringify(ST),act={suelo:1,temp:0,viento:0},tick=null,HC={};
 try{var sv=JSON.parse(localStorage.getItem('agro_cfg'));if(sv)for(var q in sv)ST[q]=sv[q]}catch(e){}
 function fv(k,v){return k=='temp'&&ST.u=='F'?+(v*9/5+32).toFixed(1):v}
@@ -499,8 +600,8 @@ function un(k){return k=='temp'?'°'+ST.u:M[k].u}
 function pc(v){return Math.max(0,Math.min(100,v))}
 function cards(){var sub={suelo:'Óptimo: 50–70%',temp:ST.u=='F'?'Rango ideal: 77–95°F':'Rango ideal: 25–35°C',aire:'Buena ventilación',viento:'Brisa suave'},w={suelo:V.suelo,temp:(V.temp-15)/40*100,aire:V.aire,viento:V.viento/30*100},h='';
 for(var k in M){var i=icon(k);h+='<div class="card"><div class="k"><span>'+M[k].n+'</span><div class="ico" style="background:'+i[0]+'"><svg viewBox="0 0 24 24" style="stroke:'+i[1]+'">'+i[2]+'</svg></div></div><div class="v">'+fv(k,V[k])+'<small>'+un(k)+'</small></div><div class="s">'+sub[k]+'</div><div class="bar"><i style="width:'+pc(w[k])+'%;background:'+M[k].c+'"></i></div></div>'}
-h+='<div class="card"><div class="k"><span>Lluvia acumulada</span><div class="ico" style="background:#e0f2fe"><svg viewBox="0 0 24 24" style="stroke:#1d6fa5"><path d="M7 15a4 4 0 0 1 0-8 5 5 0 0 1 10 1 3.5 3.5 0 0 1 0 7M9 18v3M13 18v3M17 18v3"/></svg></div></div><div class="v">0.0<small>mm</small></div><div class="s">Sin precipitaciones hoy</div><div class="bar"><i style="width:0"></i></div></div>';$('cards').innerHTML=h}
-var RN={n:'Lluvia acumulada',u:'mm',c:'#1d6fa5',d:1};
+h+='<div class="card"><div class="k"><span>Lluvia acumulada</span><div class="ico" style="background:#e0f2fe"><svg viewBox="0 0 24 24" style="stroke:#0284c7"><path d="M7 15a4 4 0 0 1 0-8 5 5 0 0 1 10 1 3.5 3.5 0 0 1 0 7M9 18v3M13 18v3M17 18v3"/></svg></div></div><div class="v">0.0<small>mm</small></div><div class="s">Sin precipitaciones hoy</div><div class="bar"><i style="width:0"></i></div></div>';$('cards').innerHTML=h}
+var RN={n:'Lluvia acumulada',u:'mm',c:'#0284c7',d:1};
 var SN=[['Suelo Norte','SOIL-01','suelo',0,92,'ahora',1],['Suelo Sur','SOIL-02','suelo',2,87,'hace 2 min',1],['Clima Central','CLIM-01','temp',0,78,'ahora',1],['Viento','WIND-01','viento',0,64,'hace 1 min',1],['Pluviómetro','RAIN-01','lluvia',0,23,'hace 18 min',0]].map(function(s){return {n:s[0],c:s[1],k:s[2],o:s[3],b:s[4],w:s[5],on:s[6],h:[]}});
 function sval(s){return s.k=='lluvia'?0:+(V[s.k]+s.o).toFixed(1)}
 SN.forEach(function(s){s.h=s.k=='lluvia'?[0,0,0,0,0,0,0,0,0,0,0,0]:series(s.k,11).map(function(v){return +(v+s.o).toFixed(1)});if(s.k!='lluvia')s.h.push(sval(s))});
@@ -570,8 +671,8 @@ function apply(){
 
 function fetchWeatherForecast(){
   var probLluvia = 80;
-  $('w-title').textContent = "Pronóstico Agroclimático: Zona Sahagún / Chinú";
-  $('w-desc').innerHTML = "Probabilidad de lluvia: <b>"+probLluvia+"%</b> en la tarde. " + 
+  $('w-title').textContent = "Telemetría Satelital Activa: Sahagún / Chinú";
+  $('w-desc').innerHTML = "Probabilidad de lluvia regional: <b>"+probLluvia+"%</b> en la tarde. " + 
     (probLluvia > 75 ? "<span style='color:#fde047'>⚠️ Se sugiere suspender riego programado para ahorrar agua.</span>" : "Condiciones estables para riego.");
 }
 
@@ -624,7 +725,7 @@ function renderRegisteredUsers(){
     return '<tr>' +
       '<td><b>' + acc.name + '</b></td>' +
       '<td><code>' + acc.username + '</code></td>' +
-      '<td><span class="role-badge" style="background:' + (acc.role === 'admin' ? '#0d5c3a' : '#1d6fa5') + '">' + (acc.role === 'admin' ? 'Admin' : 'Usuario') + '</span></td>' +
+      '<td><span class="role-badge" style="background:' + (acc.role === 'admin' ? '#0284c7' : '#2563eb') + '">' + (acc.role === 'admin' ? 'Admin' : 'Usuario') + '</span></td>' +
       '<td>' + (acc.username !== 'admin' ? '<button class="btn danger" style="padding:4px 10px;font-size:12px" onclick="deleteUser(' + idx + ')">Eliminar</button>' : '<small>Principal</small>') + '</td>' +
     '</tr>';
   }).join('');
@@ -718,14 +819,13 @@ function renderUserLogs(){
   var tbody = $('user-log-table');
   if(!tbody) return;
   tbody.innerHTML = logs.map(function(l){
-    return '<tr><td><b>'+l.name+'</b></td><td><span class="role-badge" style="background:'+(l.role==='Administrador'?'#0d5c3a':'#1d6fa5')+'">'+l.role+'</span></td><td><code>'+l.date+'</code></td></tr>';
+    return '<tr><td><b>'+l.name+'</b></td><td><span class="role-badge" style="background:'+(l.role==='Administrador'?'#0284c7':'#2563eb')+'">'+l.role+'</span></td><td><code>'+l.date+'</code></td></tr>';
   }).join('');
 }
 
 function applyPermissions(){
   var isAdmin = currentUser.role === 'admin';
   $('nav-usuarios').style.display = isAdmin ? 'flex' : 'none';
-  $('add-lote-box').style.display = isAdmin ? 'block' : 'none';
 
   var inputs = document.querySelectorAll('#configuracion input, #configuracion select');
   inputs.forEach(function(el){
@@ -756,7 +856,7 @@ function resetCfg(){
   var d=JSON.parse(DEF);d.on=ST.on;ST=d;persist();cfgFill();apply();toast('Valores restablecidos')
 }
 
-var P=['resumen','actuadores','sensores','historial','alertas','usuarios','configuracion'],N=['Resumen','Control Riego','Sensores','Historial','Alertas','Gestión Usuarios','Configuración'];
+var P=['resumen','mapa','actuadores','sensores','historial','alertas','usuarios','configuracion'],N=['Resumen','Mapa Satelital','Control Riego','Sensores','Historial','Alertas','Gestión Usuarios','Configuración'];
 $('tabs').innerHTML=P.map(function(p,i){return '<a href="#'+p+'" data-v="'+p+'" id="tab-'+p+'">'+N[i]+'</a>'}).join('')+'<a href="#" onclick="logout();return false">Salir</a>';
 
 function route(){
@@ -770,6 +870,7 @@ function route(){
   document.querySelectorAll('[data-v]').forEach(function(a){a.classList.toggle('on',a.dataset.v==h);a.setAttribute('aria-current',a.dataset.v==h?'page':'false')});
   document.title=N[P.indexOf(h)]+' · AgroStream';
   if(h=='historial')hist();
+  if(h=='mapa'){ initSatelliteMap(); }
   if(h=='configuracion')cfgFill();
   if(h=='usuarios'){ renderUserLogs(); renderRegisteredUsers(); }
   window.scrollTo(0,0)
