@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AgroStream – Monitoreo Agrosatelital</title>
 
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%231e293b'/%3E%3Cpath d='M 50 14 A 36 36 0 0 1 86 50 C 72 50 60 40 50 14 Z' fill='%23ffffff'/%3E%3Cpath d='M 50 86 A 36 36 0 0 1 14 50 C 28 50 40 60 50 86 Z' fill='%2338bdf8'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%231e293b'/%3E%3Cpath d='M 50 14 A 36 36 0 0 1 86 50 C 72 50 40 50 14 Z' fill='%23ffffff'/%3E%3Cpath d='M 50 86 A 36 36 0 0 1 14 50 C 28 50 40 60 50 86 Z' fill='%2338bdf8'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
@@ -58,6 +58,8 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .lc input { width: 100%; margin-top: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font: 15px Outfit; background: var(--soft); }
 .lc .btn { width: 100%; justify-content: center; margin-top: 20px; padding: 12px; background: var(--brand-primary); color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
 .err { color: #dc2626; font-size: 13px; margin-top: 10px; text-align: center; min-height: 18px; }
+.forgot-pass { display: block; text-align: right; font-size: 13px; color: var(--brand-primary); margin-top: 8px; text-decoration: none; cursor: pointer; }
+.forgot-pass:hover { text-decoration: underline; }
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--side); color: #fff; padding: 12px 22px; border-radius: 10px; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 600; }
 .toast.on { opacity: 1; }
 </style>
@@ -79,6 +81,8 @@ header { display: flex; justify-content: space-between; align-items: center; pad
     <label>Contraseña</label>
     <input id="pass-input" type="password" placeholder="••••••••" required>
     
+    <a class="forgot-pass" onclick="recuperarClave()">¿Olvidaste tu contraseña?</a>
+
     <div class="err" id="login-error"></div>
     <button class="btn" type="submit">Iniciar Sesión</button>
   </form>
@@ -89,7 +93,7 @@ header { display: flex; justify-content: space-between; align-items: center; pad
   <div class="nav-container">
     <div class="brand">
       <div class="logo-container">
-        <svg width="26" height="26" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="46" fill="#1e293b"/><path d="M 50 14 A 36 36 0 0 1 86 50 C 72 50 60 40 50 14 Z" fill="#ffffff"/><path d="M 50 86 A 36 36 0 0 1 14 50 C 28 50 40 60 50 86 Z" fill="#38bdf8"/></svg>
+        <svg width="26" height="26" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="46" fill="#1e293b"/><path d="M 50 14 A 36 36 0 0 1 86 50 C 72 50 40 50 14 Z" fill="#ffffff"/><path d="M 50 86 A 36 36 0 0 1 14 50 C 28 50 40 60 50 86 Z" fill="#38bdf8"/></svg>
       </div>
       <div><b>AgroStream</b><small>SATELITAL & IOT</small></div>
     </div>
@@ -116,7 +120,7 @@ header { display: flex; justify-content: space-between; align-items: center; pad
   <header>
     <div>
       <h1>Monitoreo Satelital de Lote</h1>
-      <p style="font-size:14px;color:var(--mut)">Conectado a Firebase Realtime Database</p>
+      <p style="font-size:14px;color:var(--mut)">Conectado a Firebase Realtime Database & Auth</p>
     </div>
   </header>
 
@@ -134,68 +138,86 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// 1. CONFIGURACIÓN DE TU FIREBASE
+// CONFIGURACIÓN DE TU FIREBASE (Ingresa tus llaves reales de la consola de Firebase)
 const firebaseConfig = {
-  databaseURL: "https://agrostream-76ce0-default-rtdb.firebaseio.com"
+  apiKey: "TU_API_KEY_DE_FIREBASE",
+  authDomain: "agrostream-76ce0.firebaseapp.com",
+  databaseURL: "https://agrostream-76ce0-default-rtdb.firebaseio.com",
+  projectId: "agrostream-76ce0"
 };
 
 // Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const auth = firebase.auth();
 
 let mapInstance = null;
 
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('on');
-  setTimeout(() => t.classList.remove('on'), 2500);
+  setTimeout(() => t.classList.remove('on'), 3000);
 }
 
-// 2. FUNCIÓN DE VALIDACIÓN CON LA BASE DE DATOS REALTIME
+// INICIAR SESIÓN CON FIREBASE AUTH
 function loginFirebase(event) {
   event.preventDefault();
-  const emailVal = document.getElementById('email-input').value.trim().toLowerCase();
+  const emailVal = document.getElementById('email-input').value.trim();
+  const passVal = document.getElementById('pass-input').value;
   const errDiv = document.getElementById('login-error');
-  errDiv.textContent = 'Validando usuario en Firebase...';
+  errDiv.textContent = 'Iniciando sesión...';
 
-  // Consultar la colección 'usuarios' importada en Firebase
-  db.ref('usuarios').once('value').then((snapshot) => {
-    const usuarios = snapshot.val();
-    let usuarioEncontrado = null;
-
-    if (usuarios) {
-      Object.keys(usuarios).forEach(key => {
-        if (usuarios[key].email && usuarios[key].email.toLowerCase() === emailVal) {
-          usuarioEncontrado = usuarios[key];
-        }
-      });
-    }
-
-    if (usuarioEncontrado) {
+  auth.signInWithEmailAndPassword(emailVal, passVal)
+    .then((userCredential) => {
       errDiv.textContent = '';
-      // Cargar datos en la UI
-      document.getElementById('user-name').textContent = usuarioEncontrado.nombre;
-      document.getElementById('user-email').textContent = usuarioEncontrado.email;
-      document.getElementById('user-role').textContent = usuarioEncontrado.rol.toUpperCase();
-
-      // Ocultar formulario de login
+      const user = userCredential.user;
+      
+      document.getElementById('user-email').textContent = user.email;
       document.getElementById('lg').style.display = 'none';
-      toast('Bienvenido, ' + usuarioEncontrado.nombre);
+      toast('Bienvenido, ' + (user.displayName || user.email));
       initMap();
-    } else {
-      errDiv.textContent = 'El correo no existe en la base de datos de usuarios.';
-    }
-  }).catch((error) => {
-    console.error(error);
-    errDiv.textContent = 'Error al consultar la base de datos de Firebase.';
-  });
+    })
+    .catch((error) => {
+      console.error(error);
+      errDiv.textContent = 'Correo o contraseña incorrectos.';
+    });
+}
+
+// FUNCIÓN PARA ENVIAR CORREO DE RECUPERACIÓN DE CONTRASEÑA
+function recuperarClave() {
+  const emailVal = document.getElementById('email-input').value.trim();
+  const errDiv = document.getElementById('login-error');
+
+  if (!emailVal) {
+    errDiv.textContent = 'Por favor escribe tu correo electrónico arriba para enviar las instrucciones.';
+    return;
+  }
+
+  errDiv.textContent = 'Enviando correo de recuperación...';
+
+  auth.sendPasswordResetEmail(emailVal)
+    .then(() => {
+      errDiv.textContent = '';
+      toast('Se ha enviado un enlace a ' + emailVal + ' para restablecer tu contraseña.');
+    })
+    .catch((error) => {
+      console.error(error);
+      if (error.code === 'auth/user-not-found') {
+        errDiv.textContent = 'No existe ninguna cuenta registrada con este correo.';
+      } else {
+        errDiv.textContent = 'Error al enviar el correo de recuperación.';
+      }
+    });
 }
 
 function logout() {
-  document.getElementById('lg').style.display = 'flex';
-  document.getElementById('email-input').value = '';
-  document.getElementById('pass-input').value = '';
-  document.getElementById('user-dropdown').classList.remove('show');
+  auth.signOut().then(() => {
+    document.getElementById('lg').style.display = 'flex';
+    document.getElementById('email-input').value = '';
+    document.getElementById('pass-input').value = '';
+    document.getElementById('user-dropdown').classList.remove('show');
+    toast('Sesión cerrada correctamente');
+  });
 }
 
 function initMap() {
