@@ -563,9 +563,19 @@ const firebaseConfig = {
   databaseURL: "https://agrostream-76ce0-default-rtdb.firebaseio.com"
 };
 
-firebase.initializeApp(firebaseConfig);
+// Inicializar Firebase
+try {
+  firebase.initializeApp(firebaseConfig);
+} catch(e) {
+  console.log("Firebase ya estaba inicializado");
+}
 const db = firebase.database();
-const auth = firebase.auth ? firebase.auth() : null;
+var auth = null;
+try {
+  auth = firebase.auth ? firebase.auth() : null;
+} catch(e) {
+  console.log("Firebase Auth no disponible");
+}
 
 var $=function(i){return document.getElementById(i)};
 var M={suelo:{n:'Humedad del suelo',u:'%',c:'#0284c7',a:36,b:50,d:1},temp:{n:'Temperatura ambiente',u:'°C',c:'#d97706',a:24,b:33,d:1},aire:{n:'Humedad del aire',u:'%',c:'#10b981',a:65,b:85,d:0},viento:{n:'Velocidad del viento',u:'km/h',c:'#7c3aed',a:2,b:12,d:1}};
