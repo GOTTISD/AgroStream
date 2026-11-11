@@ -282,7 +282,7 @@ input,select,textarea { width: 100%; margin-top: 6px; padding: 10px 12px; border
 .lc .logo-container { margin: 0 auto 18px; }
 .lc h2 { font-size: 24px; font-weight: 600; margin-bottom: 6px; text-align: center; }
 .lc .btn { width: 100%; justify-content: center; margin-top: 16px; }
-.err { color: #dc2626; font-size: 13px; min-height: 20px; margin-top: 8px; text-align: center; }
+.err { color: #dc2626; font-size: 13px; min-height: 20px; margin-top: 8px; text-align: center; word-break: break-word; }
 .forgot-pass { display: block; text-align: right; font-size: 13px; color: var(--brand-primary); margin-top: 8px; text-decoration: none; cursor: pointer; }
 .forgot-pass:hover { text-decoration: underline; }
 
@@ -558,23 +558,29 @@ input:checked+.slider:before { transform: translateX(22px); }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-// CONFIGURACIÓN DE FIREBASE
+// CONFIGURACIÓN DE FIREBASE (Ingresa las llaves de tu proyecto si las tienes)
 const firebaseConfig = {
-  databaseURL: "https://agrostream-76ce0-default-rtdb.firebaseio.com"
+  apiKey: "AIzaSy_REEMPLAZAR_CON_TU_API_KEY",
+  authDomain: "agrostream-76ce0.firebaseapp.com",
+  databaseURL: "https://agrostream-76ce0-default-rtdb.firebaseio.com",
+  projectId: "agrostream-76ce0",
+  storageBucket: "agrostream-76ce0.appspot.com"
 };
 
 // Inicializar Firebase
 try {
-  firebase.initializeApp(firebaseConfig);
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
 } catch(e) {
-  console.log("Firebase ya estaba inicializado");
+  console.log("Error al inicializar Firebase:", e);
 }
 const db = firebase.database();
 var auth = null;
 try {
   auth = firebase.auth ? firebase.auth() : null;
 } catch(e) {
-  console.log("Firebase Auth no disponible");
+  console.log("Firebase Auth no disponible:", e);
 }
 
 var $=function(i){return document.getElementById(i)};
@@ -730,7 +736,7 @@ function saveCfg(){
 }
 function resetCfg(){ ST=JSON.parse(DEF); cfgFill(); cards(); sg(); rec(); toast('Restablecido'); }
 
-// AUTENTICACIÓN FIREBASE REALTIME DATABASE
+// AUTENTICACIÓN Y VALIDACIÓN CON FIREBASE
 function loginFirebase(event){
   event.preventDefault();
   var emailVal = $('lu').value.trim().toLowerCase();
@@ -772,8 +778,8 @@ function loginFirebase(event){
       errDiv.textContent = 'Correo electrónico o contraseña incorrectos.';
     }
   }).catch(function(error){
-    console.error(error);
-    errDiv.textContent = 'Error al conectar con la base de datos.';
+    console.error('Error Firebase:', error);
+    errDiv.textContent = 'Error: ' + (error.message || 'Verifica las reglas de seguridad en Firebase.');
   });
 }
 
@@ -793,7 +799,7 @@ function recuperarClave(){
       errDiv.textContent = '';
       toast('Se ha enviado un enlace a ' + emailVal + ' para cambiar tu contraseña.');
     }).catch(function(err){
-      errDiv.textContent = 'Error al enviar correo de recuperación.';
+      errDiv.textContent = 'Error: ' + (err.message || 'No se pudo enviar el correo.');
     });
   } else {
     toast('Instrucciones enviadas a ' + emailVal);
