@@ -462,30 +462,97 @@ input:checked+.slider:before { transform: translateX(22px); }
       <div class="card"><div class="row"><h3>Todas las Alertas</h3><button class="btn" onclick="readAll()">Marcar todas como leídas</button></div><div id="al2"></div></div>
     </section>
 
-    <!-- GESTIÓN USUARIOS -->
+    <!-- GESTIÓN DE USUARIOS (PANEL ADMIN) -->
     <section class="view" id="usuarios">
       <div class="card">
-        <h3>Registrar Nuevo Usuario</h3>
-        <div class="form">
-          <label>Nombre Completo<input id="nu-name" placeholder="Ej. Carlos Pérez"></label>
-          <label>Correo Electrónico<input id="nu-email" type="email" placeholder="carlos@agrostream.com"></label>
-          <label>Contraseña<input id="nu-pass" type="password"></label>
-          <label>Rol<select id="nu-role"><option value="user">Usuario (Operador)</option><option value="admin">Administrador</option></select></label>
+        <div class="row">
+          <h3 id="form-user-title">Registrar Nuevo Usuario</h3>
+          <button class="btn" id="btn-cancel-edit" style="display:none" onclick="cancelEditUser()">Cancelar Edición</button>
         </div>
-        <button class="btn p" onclick="createUser()">➕ Registrar Usuario</button>
-      </div>
-
-      <div class="card" style="margin-top:24px">
-        <h3>Usuarios Registrados en el Sistema</h3>
-        <div class="tw"><table style="margin-top:10px"><thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Acciones</th></tr></thead><tbody id="users-list-table"></tbody></table></div>
+        
+        <div class="form">
+          <input type="hidden" id="edit-user-key">
+          <label>Nombre Completo
+            <input id="nu-name" placeholder="Ej. Carlos Pérez">
+          </label>
+          <label>Correo Electrónico
+            <input id="nu-email" type="email" placeholder="carlos@agrostream.com">
+          </label>
+          <label>Contraseña 
+            <div style="display:flex;gap:6px">
+              <input id="nu-pass" type="text" placeholder="Contraseña">
+              <button class="btn" type="button" onclick="generateRandomPass()" title="Generar Clave Segura">🔑</button>
+            </div>
+          </label>
+          <label>Rol
+            <select id="nu-role">
+              <option value="user">Operador de Campo</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </label>
+          <label>Estado
+            <select id="nu-status">
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo (Suspendido)</option>
+            </select>
+          </label>
+        </div>
+        
+        <div class="btns" style="margin-top:14px">
+          <button class="btn p" id="btn-save-user" onclick="saveUserFromAdmin()">➕ Registrar Usuario</button>
+        </div>
       </div>
 
       <div class="card" style="margin-top:24px">
         <div class="row">
-          <div><h3>Historial de Inicios de Sesión</h3><p class="sub">Registro de accesos recientes a la plataforma.</p></div>
+          <div>
+            <h3>Usuarios Registrados en la Plataforma</h3>
+            <p class="sub">Gestión en tiempo real almacenada en Firebase Realtime Database.</p>
+          </div>
+          <button class="btn" onclick="loadUsersTable()">↻ Recargar Lista</button>
+        </div>
+        <div class="tw">
+          <table style="margin-top:10px">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Fecha Creación</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="users-list-table">
+              <tr><td colspan="6" style="text-align:center">Cargando usuarios...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:24px">
+        <div class="row">
+          <div>
+            <h3>Historial de Inicios de Sesión (Logs)</h3>
+            <p class="sub">Auditoría de accesos al sistema con fecha y estado.</p>
+          </div>
           <button class="btn danger" onclick="clearUserLogs()">🗑️ Borrar Historial</button>
         </div>
-        <div class="tw"><table style="margin-top:10px"><thead><tr><th>Correo</th><th>Rol</th><th>Fecha y Hora</th></tr></thead><tbody id="user-log-table"></tbody></table></div>
+        <div class="tw">
+          <table style="margin-top:10px">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Correo</th>
+                <th>Rol</th>
+                <th>Fecha y Hora</th>
+              </tr>
+            </thead>
+            <tbody id="user-log-table">
+              <tr><td colspan="4" style="text-align:center">Sin registros recientes</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
@@ -519,18 +586,11 @@ input:checked+.slider:before { transform: translateX(22px); }
           <button class="btn" id="btn-reset-cfg" onclick="resetCfg()">Restablecer</button>
         </div>
       </div>
-
-      <div class="card" id="admin-tools-card" style="margin-top:24px">
-        <h3>Herramientas de Administración y Respaldo</h3>
-        <div class="btns" style="margin-top:12px">
-          <button class="btn" onclick="exportSystemBackup()">💾 Exportar Copia de Seguridad (JSON)</button>
-        </div>
-      </div>
     </section>
   </div>
 </main>
 
-<!-- LOGIN OVERLAY CON FIREBASE Y RECUPERACIÓN DE CLAVE -->
+<!-- LOGIN OVERLAY -->
 <div id="lg" style="display:none">
   <form class="lc animate-login" id="login-card" onsubmit="loginFirebase(event)">
     <div class="logo-container">
@@ -558,16 +618,11 @@ input:checked+.slider:before { transform: translateX(22px); }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-// CONFIGURACIÓN DE FIREBASE (Ingresa las llaves de tu proyecto si las tienes)
+// CONFIGURACIÓN DE FIREBASE
 const firebaseConfig = {
-  apiKey: "AIzaSy_REEMPLAZAR_CON_TU_API_KEY",
-  authDomain: "agrostream-76ce0.firebaseapp.com",
-  databaseURL: "https://agrostream-76ce0-default-rtdb.firebaseio.com",
-  projectId: "agrostream-76ce0",
-  storageBucket: "agrostream-76ce0.appspot.com"
+  databaseURL: "https://agrostream-76ce0-default-rtdb.firebaseio.com"
 };
 
-// Inicializar Firebase
 try {
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
@@ -736,7 +791,9 @@ function saveCfg(){
 }
 function resetCfg(){ ST=JSON.parse(DEF); cfgFill(); cards(); sg(); rec(); toast('Restablecido'); }
 
-// AUTENTICACIÓN Y VALIDACIÓN CON FIREBASE
+// ==========================================
+// AUTENTICACIÓN Y REGISTRO DE AUDITORÍA
+// ==========================================
 function loginFirebase(event){
   event.preventDefault();
   var emailVal = $('lu').value.trim().toLowerCase();
@@ -760,12 +817,19 @@ function loginFirebase(event){
     }
 
     if (usuarioEncontrado) {
+      if (usuarioEncontrado.estado && usuarioEncontrado.estado === 'inactivo') {
+        errDiv.textContent = 'Tu cuenta se encuentra suspendida. Contacta al administrador.';
+        return;
+      }
+
       errDiv.textContent = '';
       currentUser = usuarioEncontrado;
       $('un').textContent = usuarioEncontrado.nombre || 'Samuel Salgado Jaraba';
       $('ue').textContent = usuarioEncontrado.email;
       $('ur').textContent = (usuarioEncontrado.rol || 'admin').toUpperCase();
       $('nav-usuarios').style.display = (usuarioEncontrado.rol === 'admin') ? 'flex' : 'none';
+
+      recordAccessLog(usuarioEncontrado);
 
       var card = $('login-card');
       card.classList.remove('animate-login'); card.classList.add('animate-logout');
@@ -779,7 +843,7 @@ function loginFirebase(event){
     }
   }).catch(function(error){
     console.error('Error Firebase:', error);
-    errDiv.textContent = 'Error: ' + (error.message || 'Verifica las reglas de seguridad en Firebase.');
+    errDiv.textContent = 'Error al conectar con la base de datos.';
   });
 }
 
@@ -807,6 +871,185 @@ function recuperarClave(){
   }
 }
 
+function recordAccessLog(user){
+  var logRef = db.ref('logs_acceso').push();
+  logRef.set({
+    nombre: user.nombre || 'Sin nombre',
+    email: user.email,
+    rol: user.rol || 'user',
+    fecha: new Date().toLocaleString('es-CO')
+  });
+}
+
+// ==========================================
+// FUNCIONALIDADES ADMINISTRATIVAS DE USUARIOS
+// ==========================================
+function generateRandomPass(){
+  var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%";
+  var pass = "";
+  for(var i=0; i<10; i++){
+    pass += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  $('nu-pass').value = pass;
+  navigator.clipboard.writeText(pass);
+  toast('Clave generada y copiada');
+}
+
+function loadUsersTable(){
+  var tbody = $('users-list-table');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">Cargando usuarios...</td></tr>';
+
+  db.ref('usuarios').once('value').then(function(snapshot){
+    var usuarios = snapshot.val();
+    if(!usuarios){
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">No hay usuarios registrados.</td></tr>';
+      return;
+    }
+
+    var html = '';
+    Object.keys(usuarios).forEach(function(key){
+      var u = usuarios[key];
+      var isCurrent = (u.email === currentUser.email);
+      var badgeRole = u.rol === 'admin' ? 'background:#0284c7;color:#fff' : 'background:#e2e8f0;color:#0f172a';
+      var badgeStatus = u.estado === 'activo' ? 'background:#d1fae5;color:#065f46' : 'background:#fef2f2;color:#991b1b';
+      
+      html += '<tr>' +
+        '<td><b>' + (u.nombre || 'Sin nombre') + '</b>' + (isCurrent ? ' <small style="color:#0284c7">(Tú)</small>' : '') + '</td>' +
+        '<td><code>' + u.email + '</code></td>' +
+        '<td><span class="pill" style="' + badgeRole + '">' + (u.rol || 'user').toUpperCase() + '</span></td>' +
+        '<td><span class="pill" style="' + badgeStatus + '">' + (u.estado || 'activo').toUpperCase() + '</span></td>' +
+        '<td><small>' + (u.creado ? new Date(u.creado).toLocaleDateString() : 'N/A') + '</small></td>' +
+        '<td>' +
+          '<div style="display:flex;gap:6px">' +
+            '<button class="btn" style="padding:4px 8px;font-size:12px" onclick="editUser(\'' + key + '\')">✏️ Editar</button>' +
+            (!isCurrent ? '<button class="btn danger" style="padding:4px 8px;font-size:12px" onclick="deleteUser(\'' + key + '\',\'' + u.email + '\')">🗑️ Eliminar</button>' : '') +
+          '</div>' +
+        '</td>' +
+      '</tr>';
+    });
+
+    tbody.innerHTML = html;
+  }).catch(function(err){
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:red">Error al cargar datos</td></tr>';
+  });
+}
+
+function saveUserFromAdmin(){
+  var key = $('edit-user-key').value;
+  var nombre = $('nu-name').value.trim();
+  var email = $('nu-email').value.trim().toLowerCase();
+  var pass = $('nu-pass').value.trim();
+  var rol = $('nu-role').value;
+  var estado = $('nu-status').value;
+
+  if(!nombre || !email){
+    toast('Nombre y correo son obligatorios');
+    return;
+  }
+
+  var userRef = key ? db.ref('usuarios/' + key) : db.ref('usuarios').push();
+
+  var data = {
+    nombre: nombre,
+    email: email,
+    rol: rol,
+    estado: estado,
+    actualizado: new Date().toISOString()
+  };
+
+  if(!key){
+    data.creado = new Date().toISOString();
+    data.password = pass || 'agro123';
+  } else if(pass) {
+    data.password = pass;
+  }
+
+  userRef.update(data).then(function(){
+    toast(key ? 'Usuario actualizado' : 'Usuario registrado exitosamente');
+    cancelEditUser();
+    loadUsersTable();
+  }).catch(function(err){
+    toast('Error al guardar en Firebase');
+  });
+}
+
+function editUser(key){
+  db.ref('usuarios/' + key).once('value').then(function(snapshot){
+    var u = snapshot.val();
+    if(!u) return;
+
+    $('edit-user-key').value = key;
+    $('nu-name').value = u.nombre || '';
+    $('nu-email').value = u.email || '';
+    $('nu-pass').value = '';
+    $('nu-pass').placeholder = 'Dejar en blanco para mantener clave actual';
+    $('nu-role').value = u.rol || 'user';
+    $('nu-status').value = u.estado || 'activo';
+
+    $('form-user-title').textContent = 'Editar Usuario: ' + u.nombre;
+    $('btn-save-user').textContent = '💾 Guardar Cambios';
+    $('btn-cancel-edit').style.display = 'inline-flex';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+function cancelEditUser(){
+  $('edit-user-key').value = '';
+  $('nu-name').value = '';
+  $('nu-email').value = '';
+  $('nu-pass').value = '';
+  $('nu-pass').placeholder = 'Contraseña';
+  $('nu-role').value = 'user';
+  $('nu-status').value = 'activo';
+
+  $('form-user-title').textContent = 'Registrar Nuevo Usuario';
+  $('btn-save-user').textContent = '➕ Registrar Usuario';
+  $('btn-cancel-edit').style.display = 'none';
+}
+
+function deleteUser(key, email){
+  if(confirm('¿Estás seguro de eliminar permanentemente al usuario ' + email + '?')){
+    db.ref('usuarios/' + key).remove().then(function(){
+      toast('Usuario eliminado');
+      loadUsersTable();
+    }).catch(function(){
+      toast('Error al eliminar');
+    });
+  }
+}
+
+function loadAccessLogs(){
+  var tbody = $('user-log-table');
+  db.ref('logs_acceso').limitToLast(15).once('value').then(function(snapshot){
+    var logs = snapshot.val();
+    if(!logs){
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center">Sin inicios de sesión registrados.</td></tr>';
+      return;
+    }
+    var html = '';
+    var keys = Object.keys(logs).reverse();
+    keys.forEach(function(k){
+      var l = logs[k];
+      html += '<tr>' +
+        '<td><b>' + l.nombre + '</b></td>' +
+        '<td><code>' + l.email + '</code></td>' +
+        '<td><span class="pill">' + (l.rol || 'user').toUpperCase() + '</span></td>' +
+        '<td><small>' + l.fecha + '</small></td>' +
+      '</tr>';
+    });
+    tbody.innerHTML = html;
+  });
+}
+
+function clearUserLogs(){
+  if(confirm('¿Deseas vaciar el historial de inicios de sesión?')){
+    db.ref('logs_acceso').remove().then(function(){
+      toast('Historial limpiado');
+      loadAccessLogs();
+    });
+  }
+}
+
 function startSession(){
   cards(); sg(); rec(); als(); route(); toast('Bienvenido, ' + (currentUser.nombre || 'Usuario'));
 }
@@ -823,10 +1066,15 @@ function route(){
   var h = location.hash.slice(1); if(P.indexOf(h)<0) h = 'mapa';
   P.forEach(function(p){ $(p).classList.toggle('on', p == h); });
   document.querySelectorAll('[data-v]').forEach(function(a){ a.classList.toggle('on', a.dataset.v == h); });
+  
   if(h === 'mapa') initSatelliteMap();
   if(h === 'bitacora') renderFieldNotes();
   if(h === 'historial') hist();
   if(h === 'configuracion') cfgFill();
+  if(h === 'usuarios' && currentUser.rol === 'admin'){
+    loadUsersTable();
+    loadAccessLogs();
+  }
 }
 
 window.addEventListener('hashchange', route);
