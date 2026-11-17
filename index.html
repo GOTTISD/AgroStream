@@ -82,7 +82,6 @@ body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--in
 
 .animate-login { animation: fadeInScale 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .animate-logout { animation: fadeOutScale 0.35s ease-in forwards; }
-.animate-enter { animation: fadeInView 0.4s ease-out forwards; }
 
 #splash-screen {
   position: fixed; inset: 0; z-index: 500;
@@ -103,7 +102,7 @@ body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--in
 .splash-title { color: #fff; font-size: 26px; margin-top: 20px; font-weight: 700; letter-spacing: -0.02em; }
 .splash-subtitle { color: #38bdf8; font-size: 12px; letter-spacing: 0.2em; font-weight: 600; margin-top: 4px; }
 
-/* BARRA SUPERIOR CON LOGO ALINEADO A LA EXTREMA IZQUIERDA */
+/* BARRA SUPERIOR */
 .navbar-top {
   background: var(--side); color: #fff;
   position: sticky; top: 0; z-index: 100;
@@ -127,16 +126,16 @@ body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--in
 .brand b { font-size: 19px; color: #f8fafc; }
 .brand small { font-size: 10px; letter-spacing: .12em; color: #38bdf8; font-weight: 700; display: block; }
 
-nav.top-nav-links { display: flex; gap: 10px; align-items: center; margin-right: 20px; }
+nav.top-nav-links { display: flex; gap: 8px; align-items: center; margin-right: 16px; }
 nav.top-nav-links a {
   position: relative;
   display: flex; align-items: center; justify-content: center;
-  width: 44px; height: 44px; border-radius: 10px;
+  width: 42px; height: 42px; border-radius: 10px;
   color: #cbd5e1; text-decoration: none; transition: all .2s;
 }
 nav.top-nav-links a:hover { background: rgba(255,255,255,.1); color: #fff; }
 nav.top-nav-links a.on { background: var(--brand-primary); color: #fff; }
-nav.top-nav-links svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+nav.top-nav-links svg { width: 21px; height: 21px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 nav.top-nav-links a::after {
   content: attr(data-title);
@@ -150,15 +149,24 @@ nav.top-nav-links a::after {
 }
 nav.top-nav-links a:hover::after { opacity: 1; transform: translateX(-50%) translateY(12px); }
 
+.net-pill {
+  font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 99px;
+  background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);
+  margin-right: 12px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+}
+.net-pill.off {
+  background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);
+}
+
 .user-settings-dropdown { position: relative; display: inline-block; }
 .gear-btn {
-  width: 44px; height: 44px; border-radius: 10px;
+  width: 42px; height: 42px; border-radius: 10px;
   background: var(--side2); border: 1px solid rgba(255,255,255,0.1);
   color: #fff; display: grid; place-items: center; cursor: pointer;
   transition: all 0.2s ease;
 }
 .gear-btn:hover { background: var(--brand-primary); border-color: var(--brand-primary); }
-.gear-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s; }
+.gear-btn svg { width: 21px; height: 21px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s; }
 .gear-btn:hover svg { transform: rotate(45deg); }
 
 .dropdown-menu {
@@ -189,8 +197,9 @@ nav.top-nav-links a:hover::after { opacity: 1; transform: translateX(-50%) trans
 .menu-toggle svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; }
 .badge { position: absolute; top: 4px; right: 4px; background: var(--amber); color: #fff; font-size: 10px; font-weight: 700; border-radius: 99px; padding: 2px 5px; line-height: 1; }
 
-@media(max-width: 900px) {
+@media(max-width: 960px) {
   .menu-toggle { display: block; }
+  .net-pill { display: none; }
   nav.top-nav-links {
     display: none; position: absolute; top: 100%; left: 0; right: 0;
     background: var(--side); flex-direction: column; align-items: stretch;
@@ -203,43 +212,48 @@ nav.top-nav-links a:hover::after { opacity: 1; transform: translateX(-50%) trans
 }
 
 main { flex: 1; width: 100%; max-width: 1400px; margin: 0 auto; }
-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 18px 30px; background: var(--card); border-bottom: 1px solid var(--line); }
-.lote-header-info h1 { font-size: 22px; font-weight: 600; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.lote-header-info p { color: var(--mut); font-size: 14px; margin-top: 2px; }
+header.sub-bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 16px 30px; background: var(--card); border-bottom: 1px solid var(--line); }
+.lote-header-info h1 { font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.lote-header-info p { color: var(--mut); font-size: 13px; margin-top: 4px; }
+.lote-select-inline {
+  margin-top: 0; padding: 6px 12px; font-size: 15px; font-weight: 600;
+  border-radius: 8px; border: 1px solid var(--brand-primary); background: var(--soft); color: var(--ink); width: auto;
+}
 
-.btns { display: flex; gap: 12px; flex-wrap: wrap; }
-.btn { padding: 10px 16px; border-radius: 10px; font: 600 15px Outfit; cursor: pointer; border: 1px solid var(--line); background: var(--soft); color: var(--brand-primary); text-decoration: none; display: inline-flex; gap: 8px; align-items: center; transition: opacity 0.2s; }
+.btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { padding: 9px 14px; border-radius: 10px; font: 600 14px Outfit; cursor: pointer; border: 1px solid var(--line); background: var(--soft); color: var(--brand-primary); text-decoration: none; display: inline-flex; gap: 6px; align-items: center; transition: opacity 0.2s; }
 .btn.p { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
 .btn.danger { background: #dc2626; color: #fff; border-color: #b91c1c; }
 .btn.warn { background: #d97706; color: #fff; border-color: #b45309; }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-.wrap { padding: 30px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(230px,1fr)); gap: 22px; margin-bottom: 30px; }
-.card { background: var(--card); border-radius: 18px; padding: 24px; box-shadow: 0 1px 4px rgba(15,23,42,.05); border: 1px solid var(--line); margin-bottom: 24px; position: relative; }
+.wrap { padding: 26px 30px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(230px,1fr)); gap: 20px; margin-bottom: 26px; }
+.card { background: var(--card); border-radius: 18px; padding: 22px; box-shadow: 0 1px 4px rgba(15,23,42,.05); border: 1px solid var(--line); margin-bottom: 22px; position: relative; }
 .k { display: flex; justify-content: space-between; gap: 10px; }
-.k span { font-size: 13px; letter-spacing: .07em; color: var(--mut); font-weight: 500; text-transform: uppercase; }
-.ico { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; flex-shrink: 0; }
+.k span { font-size: 12px; letter-spacing: .07em; color: var(--mut); font-weight: 500; text-transform: uppercase; }
+.ico { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; flex-shrink: 0; }
 .ico svg { width: 22px; height: 22px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.v { font: 700 38px 'JetBrains Mono',monospace; margin-top: 4px; letter-spacing: -.03em; }
-.v small { font: 500 16px Outfit; color: var(--mut); letter-spacing: 0; margin-left: 3px; }
-.s { color: var(--mut); font-size: 14px; margin: 2px 0 16px; min-height: 22px; }
+.v { font: 700 36px 'JetBrains Mono',monospace; margin-top: 4px; letter-spacing: -.03em; }
+.v small { font: 500 15px Outfit; color: var(--mut); letter-spacing: 0; margin-left: 3px; }
+.s { color: var(--mut); font-size: 13px; margin: 2px 0 14px; min-height: 20px; }
 .bar { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; }
 .bar i { display: block; height: 100%; border-radius: 99px; transition: width .4s; }
 
 /* TARJETAS DE KPI EXPERIMENTALES */
-.kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 26px; }
-.kpi-box { background: var(--side2); color: #f8fafc; border-radius: 14px; padding: 18px 20px; border: 1px solid rgba(56, 189, 248, 0.25); }
+.kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.kpi-box { background: var(--side2); color: #f8fafc; border-radius: 14px; padding: 16px 18px; border: 1px solid rgba(56, 189, 248, 0.25); }
 .kpi-box small { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: #38bdf8; font-weight: 700; }
-.kpi-box b { display: block; font: 700 26px 'JetBrains Mono', monospace; margin: 4px 0; color: #fff; }
+.kpi-box b { display: block; font: 700 24px 'JetBrains Mono', monospace; margin: 4px 0; color: #fff; }
 .kpi-box span { font-size: 12px; color: #94a3b8; }
 
-#map-wrapper { width: 100%; height: 500px; position: relative; border-radius: 14px; overflow: hidden; }
+#map-wrapper { width: 100%; height: 480px; position: relative; border-radius: 14px; overflow: hidden; }
 #map-container { width: 100%; height: 100%; position: absolute; inset: 0; z-index: 1; }
 
-.two { display: grid; grid-template-columns: 1.9fr 1fr; gap: 24px; margin-bottom: 24px; }
+.two { display: grid; grid-template-columns: 1.9fr 1fr; gap: 22px; margin-bottom: 22px; }
 .two.b { grid-template-columns: 1.2fr 1fr; }
-.row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
+@media(max-width: 850px){ .two, .two.b { grid-template-columns: 1fr; } }
+.row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
 .pill { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 8px; white-space: nowrap; border: 1px solid transparent; }
 .sub { color: var(--mut); font-size: 14px; margin-top: 4px; }
 
@@ -265,20 +279,20 @@ svg.chart { width: 100%; height: auto; display: block; }
 
 .rec { background: var(--side2); color: #f1f5f9; border-color: transparent; }
 .rec h3 { color: #fff; }
-.rb { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 16px 18px; margin-top: 14px; font-size: 15px; line-height: 1.5; }
-.rb h5 { font-size: 12px; letter-spacing: .12em; color: #38bdf8; margin-bottom: 6px; }
+.rb { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 14px 16px; margin-top: 12px; font-size: 14px; line-height: 1.5; }
+.rb h5 { font-size: 11px; letter-spacing: .12em; color: #38bdf8; margin-bottom: 4px; }
 
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
 th { text-align: left; color: var(--mut); font-weight: 500; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; padding: 0 12px 10px; }
 td { padding: 12px; border-top: 1px solid var(--line); }
 td code { font: 13px 'JetBrains Mono',monospace; color: var(--mut); }
 .tw { overflow-x: auto; }
-.form { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 16px; margin: 16px 0; }
+.form { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); gap: 14px; margin: 14px 0; }
 label { display: block; font-size: 13px; font-weight: 500; color: var(--mut); }
 input,select,textarea { width: 100%; margin-top: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font: 15px Outfit; background: var(--soft); color: var(--ink); }
 input:disabled, select:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.chips { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.chips { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
 .chip { padding: 8px 14px; border-radius: 99px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: 500 14px Outfit; cursor: pointer; }
 .chip.on { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
 
@@ -357,8 +371,10 @@ input:checked+.slider:before { transform: translateX(22px); }
       <a href="#historial" data-v="historial" data-title="Historial Real" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M9 20v-6M14 20V9M19 20v-9"/></svg></a>
       <a href="#alertas" data-v="alertas" data-title="Alertas" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/></svg><span class="badge" id="bd">3</span></a>
       <a href="#usuarios" data-v="usuarios" id="nav-usuarios" data-title="Gestión Usuarios (Admin)" style="display:none" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></a>
-      <a href="#configuracion" data-v="configuracion" data-title="Configuración" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></a>
+      <a href="#configuracion" data-v="configuracion" data-title="Configuración y Lotes" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></a>
     </nav>
+
+    <span class="net-pill" id="net-status" onclick="toggleOfflineSim()" title="Clic para simular corte/reconexión de red" style="cursor:pointer">🟢 Online · Firebase</span>
 
     <div class="user-settings-dropdown">
       <button class="gear-btn" onclick="toggleDropdown()" title="Configuración de Cuenta">
@@ -371,7 +387,7 @@ input:checked+.slider:before { transform: translateX(22px); }
           <p id="ue">samsalgadojaraba25@gmail.com</p>
           <small id="ur">ADMINISTRADOR</small>
         </div>
-        <a class="dropdown-item" href="#configuracion" onclick="closeDropdown()">⚙️ Preferencias Sistema</a>
+        <a class="dropdown-item" href="#configuracion" onclick="closeDropdown()">⚙️ Preferencias y Lotes</a>
         <button class="dropdown-item logout" onclick="logout();closeDropdown()">🚪 Cerrar Sesión</button>
       </div>
     </div>
@@ -379,14 +395,18 @@ input:checked+.slider:before { transform: translateX(22px); }
 </header>
 
 <main id="main-content">
-  <header>
+  <header class="sub-bar">
     <div class="lote-header-info">
-      <h1><span id="lote-title">Lote La Esperanza</span> <span class="role-badge" id="header-role-badge">ADMIN</span></h1>
-      <p>Última actualización: <span id="t"></span> · <span id="md">Modo Firebase Realtime</span></p>
+      <h1>
+        <select id="active-lote-selector" class="lote-select-inline" onchange="changeActiveLote(this.value)"></select>
+        <span class="role-badge" id="header-role-badge">ADMIN</span>
+      </h1>
+      <p id="lote-crop-subtitle">Cultivo: Maíz (Floración · Kc 1.15) · Última lectura: <span id="t"></span></p>
     </div>
     <div class="btns">
-      <button class="btn" onclick="exportCSV()">📥 Reporte CSV</button>
-      <button class="btn p" onclick="refreshTelemetry()">↻ Actualizar Lecturas</button>
+      <button class="btn" onclick="exportCSV()">📥 CSV</button>
+      <button class="btn" onclick="generatePDFReport()">📄 Informe PDF</button>
+      <button class="btn p" onclick="refreshTelemetry()">↻ Sincronizar</button>
     </div>
   </header>
 
@@ -397,9 +417,9 @@ input:checked+.slider:before { transform: translateX(22px); }
         <div class="row">
           <div>
             <h3 id="map-title-head">Geolocalización Satelital del Lote</h3>
-            <p class="sub">Vista satelital de alta resolución con delimitación perimetral y nodos IoT en campo.</p>
+            <p class="sub">Polígono dinámico según estrés hídrico (Verde: Óptimo · Amarillo: Advertencia · Rojo: Crítico).</p>
           </div>
-          <span class="pill" style="background:#e0f2fe;color:#0369a1">ESRI World Imagery</span>
+          <span class="pill" style="background:#e0f2fe;color:#0369a1">ESRI World Imagery + NDVI</span>
         </div>
         <div id="map-wrapper">
           <div id="map-container"></div>
@@ -412,9 +432,9 @@ input:checked+.slider:before { transform: translateX(22px); }
       <!-- INDICADORES CLAVE DE DESEMPEÑO (KPIs) -->
       <div class="kpi-strip">
         <div class="kpi-box">
-          <small>KPI 1 · Latencia Telemetría</small>
-          <b id="kpi-latency">142 ms</b>
-          <span>Sincronización Firebase RTDB</span>
+          <small>KPI 1 · Índice Satelital NDVI</small>
+          <b id="kpi-ndvi">0.76</b>
+          <span id="kpi-ndvi-desc">Vigor clorofílico alto</span>
         </div>
         <div class="kpi-box">
           <small>KPI 2 · Déficit Presión Vapor (VPD)</small>
@@ -427,27 +447,35 @@ input:checked+.slider:before { transform: translateX(22px); }
           <span>Ahorro vs. riego por calendario</span>
         </div>
         <div class="kpi-box">
-          <small>KPI 4 · Precisión Umbrales</small>
-          <b>100%</b>
-          <span>Detección automática activa</span>
+          <small>KPI 4 · Latencia Telemetría</small>
+          <b id="kpi-latency">142 ms</b>
+          <span>Sincronización Firebase RTDB</span>
         </div>
       </div>
 
       <div class="grid" id="cards"></div>
       <div class="two b">
-        <div class="card"><h3 style="margin-bottom:16px">Estado General</h3><div id="gen"></div></div>
-        <div class="card rec"><h3>Recomendación Agronómica</h3><div id="rec"></div></div>
+        <div class="card"><h3 style="margin-bottom:16px">Estado General del Lote</h3><div id="gen"></div></div>
+        <div class="card rec"><h3>Recomendación Agronómica (FAO-56)</h3><div id="rec"></div></div>
       </div>
     </section>
 
-    <!-- CONTROL RIEGO -->
+    <!-- CONTROL RIEGO Y AUTOMATIZACIÓN -->
     <section class="view" id="actuadores">
       <div class="card">
-        <h3>Control de Actuadores y Riego en Campo</h3>
-        <p class="sub">Envía órdenes directas a las electroválvulas y bomba de agua.</p>
+        <h3>Control de Actuadores y Automatización de Riego</h3>
+        <p class="sub">Gestiona electroválvulas manualmente o activa el riego autónomo por umbral de humedad.</p>
         
         <div class="actuator-box">
-          <div><b>Bomba de Riego Principal</b><p class="sub" id="pump-status">Estado: APAGADA</p></div>
+          <div>
+            <b>🤖 Modo Riego Automático Inteligente (Regla IoT)</b>
+            <p class="sub">Si humedad del suelo &lt; umbral mínimo del cultivo, activa el riego automáticamente.</p>
+          </div>
+          <label class="switch"><input type="checkbox" id="sw-auto-riego" onchange="toggleAutoRiego(this.checked)"><span class="slider"></span></label>
+        </div>
+
+        <div class="actuator-box">
+          <div><b>💧 Bomba de Riego Principal</b><p class="sub" id="pump-status">Estado: APAGADA</p></div>
           <label class="switch"><input type="checkbox" id="sw-bomba" onchange="togglePump(this.checked)"><span class="slider"></span></label>
         </div>
 
@@ -462,14 +490,22 @@ input:checked+.slider:before { transform: translateX(22px); }
     <!-- BITÁCORA DE CAMPO -->
     <section class="view" id="bitacora">
       <div class="card">
-        <h3>Añadir Nota de Campo</h3>
-        <p class="sub" style="margin-bottom:14px">Registra eventos diarios, labores agrícolas o incidencias en campo.</p>
+        <div class="row">
+          <div>
+            <h3>Añadir Nota de Campo</h3>
+            <p class="sub">Registra eventos diarios, labores agrícolas o incidencias (con soporte de cola offline).</p>
+          </div>
+          <span class="pill" id="offline-queue-pill" style="background:#e0f2fe;color:#0369a1">0 pendientes offline</span>
+        </div>
         <div class="form">
-          <label style="grid-column:1/-1">Observaciones / Detalles
+          <label style="grid-column:1/-1">Observaciones / Detalles del Lote Activo
             <textarea id="note-text" rows="3" placeholder="Ej. Mantenimiento realizado al sensor SOIL-01..."></textarea>
           </label>
         </div>
-        <button class="btn p" onclick="saveFieldNote()">📝 Guardar Registro</button>
+        <div class="btns">
+          <button class="btn p" onclick="saveFieldNote()">📝 Guardar Registro</button>
+          <button class="btn" id="btn-sync-offline" style="display:none" onclick="syncOfflineQueue()">☁️ Sincronizar Cola Offline</button>
+        </div>
       </div>
 
       <div class="card" style="margin-top:24px">
@@ -591,12 +627,12 @@ input:checked+.slider:before { transform: translateX(22px); }
       </div>
     </section>
 
-    <!-- CONFIGURACIÓN Y PRUEBAS EXPERIMENTALES -->
+    <!-- CONFIGURACIÓN, GESTIÓN DE LOTES Y PRUEBAS EXPERIMENTALES -->
     <section class="view" id="configuracion">
       <!-- BANNER DE PERMISOS PARA OPERADORES -->
       <div class="perm-banner" id="operator-lock-banner" style="display:none">
         <span>🔒</span>
-        <div><b>Modo Operador de Campo:</b> Puedes visualizar los umbrales configurados y cambiar tu tema/unidad local, pero solo un <b>Administrador</b> puede modificar parámetros críticos o ejecutar pruebas de estrés.</div>
+        <div><b>Modo Operador de Campo:</b> Puedes visualizar los parámetros agronómicos del lote y cambiar tu tema/unidad local, pero solo un <b>Administrador</b> puede registrar nuevos lotes, modificar umbrales críticos o ejecutar pruebas de estrés.</div>
       </div>
 
       <!-- LABORATORIO DE VALIDACIÓN EXPERIMENTAL (SOLO ADMIN) -->
@@ -604,21 +640,51 @@ input:checked+.slider:before { transform: translateX(22px); }
         <div class="row">
           <div>
             <h3>🧪 Laboratorio de Pruebas Experimentales y Validación (Admin)</h3>
-            <p class="sub">Simula escenarios agronómicos extremos para validar el disparo automático de alertas críticas, KPIs y recomendaciones.</p>
+            <p class="sub">Simula escenarios extremos o cortes de red para validar alertas críticas, automatización de riego y polígonos satelitales.</p>
           </div>
           <span class="pill" style="background:#fef3c7;color:#92400e">VALIDACIÓN EXPERIMENTAL</span>
         </div>
         <div class="btns">
-          <button class="btn warn" onclick="simulateStressScenario()">🔥 Simular Escenario Crítico (Sequía + Calor)</button>
+          <button class="btn warn" onclick="simulateStressScenario()">🔥 Simular Sequía y Golpe de Calor</button>
           <button class="btn" onclick="restoreNormalScenario()">🌱 Restaurar Condiciones Óptimas</button>
+          <button class="btn" onclick="toggleOfflineSim()">📡 Alternar Modo Offline / Online</button>
         </div>
       </div>
 
+      <!-- CREAR NUEVO LOTE / CULTIVO (SOLO ADMIN) -->
+      <div class="card" id="admin-new-lote-card">
+        <h3>🌾 Registrar Nuevo Lote / Cultivo (Ajuste Automático FAO-56)</h3>
+        <p class="sub">Al crear un lote y elegir especie y etapa fenológica, el sistema calibra automáticamente los umbrales de riego.</p>
+        <div class="form">
+          <label>Nombre del Lote<input id="nl-name" placeholder="Ej. Lote Norte - Yuca"></label>
+          <label>Especie Cultivada
+            <select id="nl-crop">
+              <option value="Maíz">🌽 Maíz</option>
+              <option value="Plátano">🍌 Plátano</option>
+              <option value="Ají dulce">🌶️ Ají dulce</option>
+              <option value="Yuca">🥔 Yuca</option>
+              <option value="Frijol">🫘 Frijol</option>
+            </select>
+          </label>
+          <label>Etapa Fenológica
+            <select id="nl-stage">
+              <option value="Siembra">Preparación / Siembra</option>
+              <option value="Desarrollo">Desarrollo vegetativo</option>
+              <option value="Floración">Floración / Fructificación</option>
+              <option value="Cosecha">Maduración / Cosecha</option>
+            </select>
+          </label>
+          <label>Área (Hectáreas)<input id="nl-area" type="number" step="0.1" value="2.5"></label>
+        </div>
+        <button class="btn p" onclick="addNewLote()">➕ Crear Lote y Calibrar Umbrales</button>
+      </div>
+
+      <!-- PARÁMETROS DEL LOTE ACTIVO -->
       <div class="card">
-        <div class="row"><h3>Preferencias del Lote Activo</h3></div>
+        <div class="row"><h3>Parámetros Agronómicos del Lote Activo</h3></div>
         <div class="form">
           <label>Nombre del lote<input id="cl"></label>
-          <label>Tema<select id="ct"><option value="auto">Automático</option><option value="light">Claro</option><option value="dark">Oscuro</option></select></label>
+          <label>Tema de interfaz<select id="ct"><option value="auto">Automático</option><option value="light">Claro</option><option value="dark">Oscuro</option></select></label>
           <label>Unidad de temperatura<select id="cu"><option value="C">Celsius (°C)</option><option value="F">Fahrenheit (°F)</option></select></label>
         </div>
         <h3 style="margin-top:20px">Umbrales de Alerta Crítica</h3>
@@ -687,11 +753,20 @@ try {
 var $=function(i){return document.getElementById(i)};
 var M={suelo:{n:'Humedad del suelo',u:'%',c:'#0284c7',a:36,b:50,d:1},temp:{n:'Temperatura ambiente',u:'°C',c:'#d97706',a:24,b:33,d:1},aire:{n:'Humedad del aire',u:'%',c:'#10b981',a:65,b:85,d:0},viento:{n:'Velocidad del viento',u:'km/h',c:'#7c3aed',a:2,b:12,d:1}};
 var A=[{t:'Humedad del suelo por debajo del 45% en zona norte',k:'adv',l:'Advertencia',w:'hace 12 min',r:0},{t:'Sensor WIND-01 reconectado exitosamente',k:'inf',l:'Info',w:'hace 34 min',r:0},{t:'Temperatura ambiente superó 30°C durante 2 horas',k:'cri',l:'Crítica',w:'hace 1 h',r:0}];
-var V={suelo:42.5,temp:28.1,aire:76,viento:4.2},filt='todas',hm='suelo',hr=7;
+var V={suelo:48.5,temp:28.1,aire:76,viento:4.2},filt='todas',hm='suelo',hr=7;
 var currentUser = { nombre: '', email: '', rol: 'user' };
-var mapInstance = null;
+var mapInstance = null, lotePolygon = null, loteMarker = null;
+var isOfflineMode = false, autoRiegoActive = false;
 
-var ST={lote:'Lote La Esperanza',tema:'auto',u:'C',int:30,notif:1,sMin:45,tMax:30,wMax:40,on:0},DEF=JSON.stringify(ST),HC={};
+// CATÁLOGO MULTI-LOTE CON PARÁMETROS FAO-56
+var LOTES = [
+  { id: 'lote1', nombre: 'Lote La Esperanza', cultivo: 'Maíz', etapa: 'Floración', kc: 1.15, area: 3.2, sMin: 45, tMax: 32, ndvi: 0.78, coords: [[9.2470, -75.4030],[9.2475, -75.3990],[9.2430, -75.3995],[9.2435, -75.4035]], center: [9.2451, -75.4012] },
+  { id: 'lote2', nombre: 'Lote El Carmen', cultivo: 'Plátano', etapa: 'Desarrollo', kc: 1.10, area: 4.5, sMin: 55, tMax: 33, ndvi: 0.82, coords: [[9.2510, -75.4060],[9.2515, -75.4020],[9.2480, -75.4025],[9.2485, -75.4065]], center: [9.2497, -75.4042] },
+  { id: 'lote3', nombre: 'Lote San José', cultivo: 'Ají dulce', etapa: 'Cosecha', kc: 0.90, area: 1.8, sMin: 40, tMax: 31, ndvi: 0.69, coords: [[9.2420, -75.3980],[9.2425, -75.3945],[9.2390, -75.3950],[9.2395, -75.3985]], center: [9.2407, -75.3965] }
+];
+var activeLote = LOTES[0];
+
+var ST={lote:activeLote.nombre,tema:'auto',u:'C',int:30,notif:1,sMin:activeLote.sMin,tMax:activeLote.tMax,wMax:40,on:0},DEF=JSON.stringify(ST),HC={};
 
 function toggleMobileMenu(){ $('nav-links').classList.toggle('open'); }
 function closeMobileMenu(){ $('nav-links').classList.remove('open'); }
@@ -712,9 +787,86 @@ function un(k){return k=='temp'?'°'+ST.u:M[k].u}
 function pc(v){return Math.max(0,Math.min(100,v))}
 function icon(k){return {suelo:['#e0f2fe','#0284c7','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#0284c7"/>'],temp:['#fef3c7','#d97706','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#d1fae5','#10b981','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#ede9fe','#7c3aed','<path d="M3 8h11a3 3 0 1 0-3-3M3 16h7"/>']}[k]}
 
-// CÁLCULO DE KPIs AGRONÓMICOS (VPD - FAO 56)
+// RENDER SELECTOR DE LOTES
+function renderLoteSelector(){
+  var sel = $('active-lote-selector');
+  sel.innerHTML = LOTES.map(function(l){
+    return '<option value="'+l.id+'"'+(l.id===activeLote.id?' selected':'')+'>'+l.nombre+' ('+l.cultivo+')</option>';
+  }).join('');
+  $('lote-crop-subtitle').innerHTML = 'Cultivo: <b>'+activeLote.cultivo+'</b> ('+activeLote.etapa+' · Kc '+activeLote.kc+' · '+activeLote.area+' ha) · Última lectura: <span id="t">'+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'})+'</span>';
+}
+
+function changeActiveLote(id){
+  var found = LOTES.find(function(l){ return l.id === id; });
+  if(!found) return;
+  activeLote = found;
+  ST.lote = found.nombre;
+  ST.sMin = found.sMin;
+  ST.tMax = found.tMax;
+  renderLoteSelector();
+  cfgFill();
+  cards(); sg(); rec();
+  updateMapPolygon();
+  toast('Cambiado a ' + found.nombre + ' (Umbral humedad: ' + found.sMin + '%)');
+}
+
+function addNewLote(){
+  if(currentUser.rol !== 'admin') return;
+  var nombre = $('nl-name').value.trim();
+  var cultivo = $('nl-crop').value;
+  var etapa = $('nl-stage').value;
+  var area = parseFloat($('nl-area').value) || 2.0;
+  if(!nombre){ toast('Escribe un nombre para el lote'); return; }
+
+  // Calibración automática FAO-56 por cultivo y etapa
+  var tablaFAO = {
+    'Maíz': { sMin: 45, tMax: 32, kc: 1.15 },
+    'Plátano': { sMin: 55, tMax: 33, kc: 1.10 },
+    'Ají dulce': { sMin: 42, tMax: 31, kc: 0.95 },
+    'Yuca': { sMin: 35, tMax: 35, kc: 0.85 },
+    'Frijol': { sMin: 48, tMax: 30, kc: 1.05 }
+  };
+  var ref = tablaFAO[cultivo] || { sMin: 45, tMax: 32, kc: 1.0 };
+  if(etapa === 'Floración') ref.sMin += 5;
+
+  var offset = (LOTES.length * 0.004);
+  var newLote = {
+    id: 'lote' + (LOTES.length + 1),
+    nombre: nombre,
+    cultivo: cultivo,
+    etapa: etapa,
+    kc: ref.kc,
+    area: area,
+    sMin: ref.sMin,
+    tMax: ref.tMax,
+    ndvi: 0.75,
+    coords: [[9.2470+offset, -75.4030],[9.2475+offset, -75.3990],[9.2430+offset, -75.3995],[9.2435+offset, -75.4035]],
+    center: [9.2451+offset, -75.4012]
+  };
+  LOTES.push(newLote);
+  $('nl-name').value = '';
+  changeActiveLote(newLote.id);
+  toast('Lote "' + nombre + '" creado y calibrado (FAO-56)');
+}
+
+// CÁLCULO DE KPIs AGRONÓMICOS (NDVI + VPD FAO-56)
 function updateKPIs(latencyMs){
   if(latencyMs) $('kpi-latency').textContent = latencyMs + ' ms';
+  
+  // NDVI dinámico según estrés hídrico
+  var ndviVal = +(activeLote.ndvi - (V.suelo < ST.sMin ? 0.16 : 0)).toFixed(2);
+  $('kpi-ndvi').textContent = ndviVal;
+  if(ndviVal >= 0.70){
+    $('kpi-ndvi').style.color = '#10b981';
+    $('kpi-ndvi-desc').textContent = '✅ Vigor clorofílico alto';
+  } else if(ndviVal >= 0.55){
+    $('kpi-ndvi').style.color = '#fbbf24';
+    $('kpi-ndvi-desc').textContent = '⚠️ Estrés hídrico moderado';
+  } else {
+    $('kpi-ndvi').style.color = '#ef4444';
+    $('kpi-ndvi-desc').textContent = '🚨 Déficit foliar severo';
+  }
+
   // Cálculo científico de Déficit de Presión de Vapor (VPD en kPa)
   var es = 0.6108 * Math.exp((17.27 * V.temp) / (V.temp + 237.3));
   var ea = es * (V.aire / 100);
@@ -734,7 +886,7 @@ function updateKPIs(latencyMs){
 }
 
 function cards(){
-  var sub={suelo:'Óptimo: 50–70%',temp:ST.u=='F'?'Rango ideal: 77–95°F':'Rango ideal: 25–35°C',aire:'Buena ventilación',viento:'Brisa suave'},w={suelo:V.suelo,temp:(V.temp-15)/40*100,aire:V.aire,viento:V.viento/30*100},h='';
+  var sub={suelo:'Mínimo cultivo: '+ST.sMin+'%',temp:ST.u=='F'?'Máx: '+fv('temp',ST.tMax)+'°F':'Máx cultivo: '+ST.tMax+'°C',aire:'Buena ventilación',viento:'Brisa suave'},w={suelo:V.suelo,temp:(V.temp-15)/40*100,aire:V.aire,viento:V.viento/30*100},h='';
   for(var k in M){
     var i=icon(k);
     h+='<div class="card"><div class="k"><span>'+M[k].n+'</span><div class="ico" style="background:'+i[0]+'"><svg viewBox="0 0 24 24" style="stroke:'+i[1]+'">'+i[2]+'</svg></div></div><div class="v">'+fv(k,V[k])+'<small>'+un(k)+'</small></div><div class="s">'+sub[k]+'</div><div class="bar"><i style="width:'+pc(w[k])+'%;background:'+M[k].c+'"></i></div></div>';
@@ -742,6 +894,23 @@ function cards(){
   h+='<div class="card"><div class="k"><span>Lluvia acumulada</span><div class="ico" style="background:#e0f2fe"><svg viewBox="0 0 24 24" style="stroke:#0284c7"><path d="M7 15a4 4 0 0 1 0-8 5 5 0 0 1 10 1 3.5 3.5 0 0 1 0 7M9 18v3M13 18v3M17 18v3"/></svg></div></div><div class="v">0.0<small>mm</small></div><div class="s">Sin precipitaciones hoy</div><div class="bar"><i style="width:0"></i></div></div>';
   $('cards').innerHTML=h;
   updateKPIs();
+  checkAutoIrrigationRule();
+}
+
+// REGLA IOT DE RIEGO AUTOMÁTICO INTELIGENTE
+function toggleAutoRiego(enabled){
+  autoRiegoActive = enabled;
+  toast(enabled ? '🤖 Riego Automático Inteligente ACTIVADO' : 'Riego Automático DESACTIVADO');
+  if(enabled) checkAutoIrrigationRule();
+}
+
+function checkAutoIrrigationRule(){
+  if(autoRiegoActive && V.suelo < ST.sMin && !$('sw-bomba').checked){
+    $('sw-bomba').checked = true;
+    togglePump(true);
+    pushNoteToStorage('🤖 AUTOMATIZACIÓN IOT', 'ACTIVACIÓN AUTÓNOMA: Humedad ('+V.suelo+'%) cayó bajo umbral de '+activeLote.cultivo+' ('+ST.sMin+'%).');
+    toast('🤖 Riego activado automáticamente por déficit hídrico');
+  }
 }
 
 function series(k,n){var m=M[k],r=[],v=(m.a+m.b)/2;for(var i=0;i<n;i++){v+=rnd(-1,1,2)*(m.b-m.a)/5;v=Math.max(m.a,Math.min(m.b,v));r.push(+v.toFixed(1))}return r}
@@ -756,7 +925,7 @@ function pred(s){var h=s.h,n=h.length,mx=(n-1)/2,my=h.reduce(function(a,b){retur
 function spark(s,p){var a=s.h.concat(p),mn=Math.min.apply(null,a),mx=Math.max.apply(null,a),W=300,H=84,n=a.length;if(mx==mn){mx+=1;mn-=1}
 var X=function(i){return 6+i*(W-12)/(n-1)},Y=function(v){return 8+(1-(v-mn)/(mx-mn))*(H-16)},d1='',d2='';
 s.h.forEach(function(v,i){d1+=(i?'L':'M')+X(i)+' '+Y(v)});d2='M'+X(s.h.length-1)+' '+Y(s.h[s.h.length-1]);p.forEach(function(v,i){d2+='L'+X(s.h.length+i)+' '+Y(v)});
-var c=s.k=='lluvia'?RN.c:M[s.k].c;return '<svg class="sp" viewBox="0 0 '+W+' '+H+'"><path d="'+d1+'" fill="none" stroke="'+c+'" stroke-width="2.5"/><path d="'+d2+'" fill="none" stroke="'+c+'" stroke-width="2.5" stroke-dasharray="5 5" opacity=".7"/><circle cx="'+X(s.h.length-1)+'" cy="'+Y(s.h.length-1)+'" r="4" fill="'+c+'"/></svg>'}
+var c=s.k=='lluvia'?RN.c:M[s.k].c;return '<svg class="sp" viewBox="0 0 '+W+' '+H+'"><path d="'+d1+'" fill="none" stroke="'+c+'" stroke-width="2.5"/><path d="'+d2+'" fill="none" stroke="'+c+'" stroke-width="2.5" stroke-dasharray="5 5" opacity=".7"/><circle cx="'+X(s.h.length-1)+'" cy="'+Y(s.h[s.h.length-1])+'" r="4" fill="'+c+'"/></svg>'}
 
 function sg(){
   $('sg').innerHTML=SN.map(function(s){
@@ -795,44 +964,121 @@ function readAll(){A.forEach(function(a){a.r=1});als();toast('Alertas leídas')}
 
 function gen(){
   var on=SN.filter(function(s){return s.on}).length,u=A.filter(function(a){return !a.r}).length;
-  $('gen').innerHTML='<a class="srow'+(on<SN.length?' w':'')+'" href="#sensores"><span class="sd"></span><div>Sensores en línea<small>'+on+' de '+SN.length+' activos</small></div><em>Ver sensores</em></a><a class="srow'+(u?' w':'')+'" href="#alertas"><span class="sd"></span><div>Alertas sin leer<small>'+(u?u+' por revisar':'Todo al día')+'</small></div><em>Ver alertas</em></a>';
+  $('gen').innerHTML='<a class="srow'+(on<SN.length?' w':'')+'" href="#sensores"><span class="sd"></span><div>Sensores en línea<small>'+on+' de '+SN.length+' activos en '+activeLote.nombre+'</small></div><em>Ver sensores</em></a><a class="srow'+(u?' w':'')+'" href="#alertas"><span class="sd"></span><div>Alertas sin leer<small>'+(u?u+' por revisar':'Todo al día')+'</small></div><em>Ver alertas</em></a>';
 }
 function rec(){
-  var s=V.suelo<ST.sMin?'⚠️ Humedad crítica ('+V.suelo+'%). <b>Activar riego por goteo</b> en zona norte de inmediato.':'✅ Humedad adecuada ('+V.suelo+'%). No requiere riego.',c=V.temp>ST.tMax?'⚠️ Estrés térmico ('+fv('temp',V.temp)+'°'+ST.u+'). Evitar fertilización foliar.':'✅ Condiciones térmicas óptimas para desarrollo.';
-  $('rec').innerHTML='<div class="rb"><h5>RIEGO</h5>'+s+'</div><div class="rb"><h5>CLIMA</h5>'+c+'</div>';
+  var etc = +(5.2 * activeLote.kc).toFixed(2);
+  var s=V.suelo<ST.sMin?'⚠️ Humedad crítica ('+V.suelo+'% &lt; '+ST.sMin+'%). Reponer lámina de <b>'+etc+' mm/día</b> en '+activeLote.cultivo+'.':'✅ Humedad óptima ('+V.suelo+'%) para '+activeLote.cultivo+' en fase de '+activeLote.etapa+'.',
+      c=V.temp>ST.tMax?'⚠️ Estrés térmico ('+fv('temp',V.temp)+'°'+ST.u+'). Evitar fertilización foliar.':'✅ Condiciones térmicas ideales (ETc estimada: '+etc+' mm/día).';
+  $('rec').innerHTML='<div class="rb"><h5>RIEGO Y BALANCE HÍDRICO</h5>'+s+'</div><div class="rb"><h5>CLIMA Y EVAPOTRANSPIRACIÓN</h5>'+c+'</div>';
+}
+
+// MAPA SATELITAL CON POLÍGONO DINÁMICO POR COLOR DE ESTRÉS
+function getPolygonStyle(){
+  if(V.suelo < ST.sMin - 8) return { color: '#ef4444', fillColor: '#dc2626', fillOpacity: 0.42 }; // Crítico (Rojo)
+  if(V.suelo < ST.sMin) return { color: '#f59e0b', fillColor: '#d97706', fillOpacity: 0.38 }; // Advertencia (Amarillo)
+  return { color: '#10b981', fillColor: '#059669', fillOpacity: 0.35 }; // Óptimo (Verde)
+}
+
+function updateMapPolygon(){
+  if(!mapInstance) return;
+  if(lotePolygon) mapInstance.removeLayer(lotePolygon);
+  if(loteMarker) mapInstance.removeLayer(loteMarker);
+
+  lotePolygon = L.polygon(activeLote.coords, getPolygonStyle()).addTo(mapInstance);
+  loteMarker = L.marker(activeLote.center).addTo(mapInstance)
+    .bindPopup('<b>'+activeLote.nombre+'</b><br>Cultivo: '+activeLote.cultivo+' ('+activeLote.etapa+')<br>Humedad: <b>'+V.suelo+'%</b> · NDVI: <b>'+$('kpi-ndvi').textContent+'</b>')
+    .openPopup();
+  mapInstance.setView(activeLote.center, 15);
 }
 
 function initSatelliteMap(){
   try {
     if(!mapInstance && typeof L !== 'undefined'){
-      mapInstance = L.map('map-container').setView([9.2451, -75.4012], 15);
+      mapInstance = L.map('map-container').setView(activeLote.center, 15);
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Esri World Imagery'
       }).addTo(mapInstance);
-      L.polygon([[9.2470, -75.4030],[9.2475, -75.3990],[9.2430, -75.3995],[9.2435, -75.4035]], { color: '#38bdf8', fillColor: '#0284c7', fillOpacity: 0.35 }).addTo(mapInstance);
-      L.marker([9.2451, -75.4012]).addTo(mapInstance).bindPopup('<b>Lote La Esperanza</b><br>Estación Telemetría IoT Central').openPopup();
     }
+    updateMapPolygon();
     setTimeout(function(){ if(mapInstance) mapInstance.invalidateSize(); }, 200);
   } catch(e) { console.log('Error map:', e); }
 }
 
+// BITÁCORA CON SOPORTE OFFLINE Y SINCRONIZACIÓN
+function pushNoteToStorage(author, text){
+  var notes = []; try{ notes = JSON.parse(localStorage.getItem('agro_field_notes') || '[]'); }catch(e){}
+  var item = {
+    lote: activeLote.nombre,
+    author: author,
+    role: currentUser.rol || 'user',
+    text: text,
+    date: new Date().toLocaleString('es-CO'),
+    synced: !isOfflineMode
+  };
+  notes.unshift(item);
+  localStorage.setItem('agro_field_notes', JSON.stringify(notes));
+
+  if(!isOfflineMode){
+    db.ref('bitacora').push(item);
+  }
+  renderFieldNotes();
+}
+
 function saveFieldNote(){
   var text = $('note-text').value.trim(); if(!text){ toast('Escribe alguna observación'); return; }
-  var notes = []; try{ notes = JSON.parse(localStorage.getItem('agro_field_notes') || '[]'); }catch(e){}
-  notes.unshift({ author: currentUser.nombre || 'Operador', role: currentUser.rol || 'user', text: text, date: new Date().toLocaleString('es-CO') });
-  localStorage.setItem('agro_field_notes', JSON.stringify(notes)); $('note-text').value = ''; renderFieldNotes(); toast('Nota guardada en bitácora');
+  pushNoteToStorage(currentUser.nombre || 'Operador', text);
+  $('note-text').value = '';
+  toast(isOfflineMode ? '🟠 Guardado en cola offline (sin red)' : '✅ Nota guardada y sincronizada en Firebase');
 }
 
 function renderFieldNotes(){
   var notes = []; try{ notes = JSON.parse(localStorage.getItem('agro_field_notes') || '[]'); }catch(e){}
+  var pendingCount = notes.filter(function(n){ return !n.synced; }).length;
+  $('offline-queue-pill').textContent = pendingCount + ' pendientes offline';
+  $('btn-sync-offline').style.display = pendingCount > 0 ? 'inline-flex' : 'none';
+
   var c = $('notes-list-container'); if(!c) return;
   if(notes.length === 0){ c.innerHTML = '<p class="sub">Sin notas registradas en la bitácora.</p>'; return; }
-  c.innerHTML = notes.map(function(n){ return '<div class="note-item"><b>'+n.author+'</b> <small style="color:var(--mut)">('+(n.role||'user').toUpperCase()+') · '+n.date+'</small><p style="margin-top:6px;font-size:14px;color:var(--ink)">'+n.text+'</p></div>'; }).join('');
+  c.innerHTML = notes.map(function(n){
+    var syncTag = n.synced ? '<span style="color:#10b981;font-size:11px;font-weight:700">☁️ NUBE</span>' : '<span style="color:#d97706;font-size:11px;font-weight:700">⏳ COLA OFFLINE</span>';
+    return '<div class="note-item"><div style="display:flex;justify-content:space-between"><div><b>'+n.author+'</b> <small style="color:var(--mut)">('+(n.role||'user').toUpperCase()+') · '+(n.lote||activeLote.nombre)+' · '+n.date+'</small></div>'+syncTag+'</div><p style="margin-top:6px;font-size:14px;color:var(--ink)">'+n.text+'</p></div>';
+  }).join('');
+}
+
+function syncOfflineQueue(){
+  if(isOfflineMode){ toast('Restaura la conexión a internet primero'); return; }
+  var notes = []; try{ notes = JSON.parse(localStorage.getItem('agro_field_notes') || '[]'); }catch(e){}
+  var count = 0;
+  notes.forEach(function(n){
+    if(!n.synced){
+      n.synced = true;
+      db.ref('bitacora').push(n);
+      count++;
+    }
+  });
+  localStorage.setItem('agro_field_notes', JSON.stringify(notes));
+  renderFieldNotes();
+  toast('☁️ ' + count + ' registros sincronizados con Firebase');
+}
+
+function toggleOfflineSim(){
+  isOfflineMode = !isOfflineMode;
+  var pill = $('net-status');
+  if(isOfflineMode){
+    pill.textContent = '🟠 Offline · Caché Local';
+    pill.classList.add('off');
+    toast('Modo Offline activado: los registros se encolarán localmente');
+  } else {
+    pill.textContent = '🟢 Online · Firebase';
+    pill.classList.remove('off');
+    syncOfflineQueue();
+  }
 }
 
 function togglePump(val){
-  $('pump-status').textContent = val ? 'Estado: ENCENDIDA (Flujo activo)' : 'Estado: APAGADA';
-  toast(val ? 'Bomba ENCENDIDA por ' + currentUser.nombre : 'Bomba APAGADA');
+  $('pump-status').textContent = val ? 'Estado: ENCENDIDA (Flujo activo en '+activeLote.nombre+')' : 'Estado: APAGADA';
+  toast(val ? 'Bomba ENCENDIDA' : 'Bomba APAGADA');
 }
 
 function startTimerRiego(){
@@ -840,13 +1086,12 @@ function startTimerRiego(){
   var reason = $('irrigation-reason').value.trim() || 'Riego temporizado';
   $('sw-bomba').checked = true;
   togglePump(true);
-  var notes = []; try{ notes = JSON.parse(localStorage.getItem('agro_field_notes') || '[]'); }catch(e){}
-  notes.unshift({ author: currentUser.nombre || 'Sistema', role: currentUser.rol || 'user', text: '🤖 RIEGO AUTOMÁTICO ('+mins+' min): '+reason, date: new Date().toLocaleString('es-CO') });
-  localStorage.setItem('agro_field_notes', JSON.stringify(notes));
+  pushNoteToStorage(currentUser.nombre || 'Sistema', '💧 RIEGO TEMPORIZADO ('+mins+' min): '+reason);
   toast('Riego iniciado por ' + mins + ' min');
 }
 
 function refreshTelemetry(){
+  if(isOfflineMode){ toast('Sin conexión: mostrando datos en caché local'); return; }
   var t0 = performance.now();
   V.suelo = +(V.suelo + rnd(-0.8, 0.8, 1)).toFixed(1);
   V.temp = +(V.temp + rnd(-0.4, 0.4, 1)).toFixed(1);
@@ -854,7 +1099,8 @@ function refreshTelemetry(){
   V.viento = +(Math.max(0.5, V.viento + rnd(-0.6, 0.6, 1))).toFixed(1);
   
   db.ref('telemetria_actual').set({
-    lote: ST.lote,
+    lote: activeLote.nombre,
+    cultivo: activeLote.cultivo,
     suelo: V.suelo,
     temp: V.temp,
     aire: V.aire,
@@ -863,7 +1109,7 @@ function refreshTelemetry(){
   }).then(function(){
     var lat = Math.max(45, Math.round(performance.now() - t0));
     $('t').textContent = new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    cards(); sg(); rec(); updateKPIs(lat);
+    cards(); sg(); rec(); updateKPIs(lat); updateMapPolygon();
     toast('Telemetría sincronizada (' + lat + ' ms)');
   });
 }
@@ -877,59 +1123,76 @@ function simulateStressScenario(){
   V.viento = 14.5;
   
   A.unshift({
-    t: 'ALERTA CRÍTICA EXPERIMENTAL: Déficit hídrico severo ('+V.suelo+'%) y estrés térmico ('+V.temp+'°C)',
+    t: 'ALERTA CRÍTICA EXPERIMENTAL ['+activeLote.nombre+']: Déficit hídrico severo ('+V.suelo+'%) y estrés térmico ('+V.temp+'°C)',
     k: 'cri',
     l: 'Crítica',
     w: 'ahora',
     r: 0
   });
   
-  cards(); sg(); rec(); als();
+  cards(); sg(); rec(); als(); updateMapPolygon();
   location.hash = '#resumen';
-  toast('Escenario crítico simulado: Revisa los KPIs y Alertas');
+  toast('Escenario crítico simulado: Revisa KPIs, Alertas y color del Mapa');
 }
 
 function restoreNormalScenario(){
   if(currentUser.rol !== 'admin'){ toast('Acción permitida solo para Administradores'); return; }
-  V = {suelo: 56.2, temp: 27.4, aire: 74, viento: 4.8};
+  V = {suelo: 58.2, temp: 27.4, aire: 74, viento: 4.8};
   A.unshift({
-    t: 'Condiciones agronómicas normalizadas tras riego controlado',
+    t: 'Condiciones agronómicas normalizadas en '+activeLote.nombre,
     k: 'inf',
     l: 'Info',
     w: 'ahora',
     r: 0
   });
-  cards(); sg(); rec(); als();
+  cards(); sg(); rec(); als(); updateMapPolygon();
   toast('Condiciones óptimas restauradas');
 }
 
 function exportCSV(){
-  var csv = 'Lote,Operador,Rol,Fecha/Hora,Humedad Suelo (%),Temperatura (C),Humedad Aire (%),Viento (km/h)\n';
-  csv += ST.lote + ',' + currentUser.nombre + ',' + currentUser.rol + ',' + new Date().toLocaleString('es-CO') + ',' + V.suelo + ',' + V.temp + ',' + V.aire + ',' + V.viento + '\n';
+  var csv = 'Lote,Cultivo,Etapa,Operador,Rol,Fecha/Hora,Humedad Suelo (%),Temperatura (C),Humedad Aire (%),Viento (km/h),NDVI\n';
+  csv += activeLote.nombre + ',' + activeLote.cultivo + ',' + activeLote.etapa + ',' + currentUser.nombre + ',' + currentUser.rol + ',' + new Date().toLocaleString('es-CO') + ',' + V.suelo + ',' + V.temp + ',' + V.aire + ',' + V.viento + ',' + $('kpi-ndvi').textContent + '\n';
   var blob = new Blob([csv], { type: 'text/csv;' }), url = URL.createObjectURL(blob), link = document.createElement('a');
-  link.href = url; link.download = 'Reporte_AgroStream_' + new Date().toISOString().slice(0,10) + '.csv'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  link.href = url; link.download = 'Reporte_AgroStream_' + activeLote.id + '_' + new Date().toISOString().slice(0,10) + '.csv'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
   toast('Reporte CSV descargado');
+}
+
+// GENERADOR DE INFORME EJECUTIVO IMPRIMIBLE / PDF
+function generatePDFReport(){
+  var win = window.open('', '_blank');
+  var notes = []; try{ notes = JSON.parse(localStorage.getItem('agro_field_notes') || '[]').slice(0,5); }catch(e){}
+  var notesHtml = notes.map(function(n){ return '<li><b>'+n.date+' ('+n.author+'):</b> '+n.text+'</li>'; }).join('') || '<li>Sin observaciones recientes.</li>';
+
+  win.document.write('<html><head><title>Informe Técnico AgroStream</title><style>body{font-family:Arial,sans-serif;padding:30px;color:#0f172a}h1{color:#0284c7;border-bottom:2px solid #0284c7;padding-bottom:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.box{background:#f1f5f9;padding:12px;border-radius:8px}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #cbd5e1;padding:10px;text-align:left}</style></head><body>');
+  win.document.write('<h1>AgroStream – Informe Técnico de Monitoreo Agrosatelital</h1>');
+  win.document.write('<p><b>Fecha de emisión:</b> '+new Date().toLocaleString('es-CO')+' | <b>Generado por:</b> '+currentUser.nombre+' ('+currentUser.rol.toUpperCase()+')</p>');
+  win.document.write('<div class="grid"><div class="box"><b>Lote Evaluado:</b> '+activeLote.nombre+' ('+activeLote.area+' ha)</div><div class="box"><b>Cultivo y Etapa:</b> '+activeLote.cultivo+' – '+activeLote.etapa+' (Kc '+activeLote.kc+')</div></div>');
+  win.document.write('<h3>1. Indicadores Clave de Desempeño (KPIs) y Telemetría</h3>');
+  win.document.write('<table><tr><th>Variable / Indicador</th><th>Valor Registrado</th><th>Referencia / Estado</th></tr>');
+  win.document.write('<tr><td>Humedad del Suelo</td><td>'+V.suelo+' %</td><td>Umbral mínimo: '+ST.sMin+'%</td></tr>');
+  win.document.write('<tr><td>Temperatura Ambiente</td><td>'+V.temp+' °C</td><td>Umbral máximo: '+ST.tMax+'°C</td></tr>');
+  win.document.write('<tr><td>Índice Satelital NDVI</td><td>'+$('kpi-ndvi').textContent+'</td><td>'+$('kpi-ndvi-desc').textContent+'</td></tr>');
+  win.document.write('<tr><td>Déficit de Presión de Vapor (VPD)</td><td>'+$('kpi-vpd').textContent+'</td><td>'+$('kpi-vpd-desc').textContent+'</td></tr>');
+  win.document.write('<tr><td>Eficiencia Hídrica Estimada</td><td>+24.5%</td><td>Ahorro frente a riego tradicional</td></tr></table>');
+  win.document.write('<h3>2. Últimas Observaciones de Bitácora en Campo</h3><ul>'+notesHtml+'</ul>');
+  win.document.write('<script>window.onload=function(){window.print();}<\/script></body></html>');
+  win.document.close();
 }
 
 // APLICAR PERMISOS SEGÚN ROL
 function applyRolePermissions(){
   var isAdmin = (currentUser.rol === 'admin');
-  
-  // 1. Mostrar u ocultar módulo de Gestión de Usuarios
   $('nav-usuarios').style.display = isAdmin ? 'flex' : 'none';
-  
-  // 2. Mostrar u ocultar Laboratorio de Pruebas Experimentales
   $('admin-lab-card').style.display = isAdmin ? 'block' : 'none';
-  
-  // 3. Mostrar banner informativo y bloquear edición de parámetros críticos para Operadores
+  $('admin-new-lote-card').style.display = isAdmin ? 'block' : 'none';
   $('operator-lock-banner').style.display = isAdmin ? 'none' : 'flex';
+  
   $('cl').disabled = !isAdmin;
   $('c6').disabled = !isAdmin;
   $('c7').disabled = !isAdmin;
   $('c8').disabled = !isAdmin;
   $('btn-reset-cfg').style.display = isAdmin ? 'inline-flex' : 'none';
 
-  // 4. Etiqueta visual de rol en el encabezado
   var badge = $('header-role-badge');
   badge.textContent = isAdmin ? 'ADMINISTRADOR' : 'OPERADOR DE CAMPO';
   badge.className = isAdmin ? 'role-badge' : 'role-badge op';
@@ -942,15 +1205,18 @@ function cfgFill(){
 
 function saveCfg(){
   if(currentUser.rol === 'admin'){
-    ST.lote=$('cl').value.trim()||'Lote Seleccionado';
-    ST.sMin=parseFloat($('c6').value)||45;
-    ST.tMax=parseFloat($('c7').value)||30;
-    ST.wMax=parseFloat($('c8').value)||40;
-    $('lote-title').textContent = ST.lote;
+    activeLote.nombre = $('cl').value.trim() || activeLote.nombre;
+    activeLote.sMin = parseFloat($('c6').value) || activeLote.sMin;
+    activeLote.tMax = parseFloat($('c7').value) || activeLote.tMax;
+    ST.lote = activeLote.nombre;
+    ST.sMin = activeLote.sMin;
+    ST.tMax = activeLote.tMax;
+    ST.wMax = parseFloat($('c8').value) || 40;
+    renderLoteSelector();
   }
   ST.tema=$('ct').value;
   ST.u=$('cu').value;
-  cards(); sg(); rec(); toast('Preferencias guardadas');
+  cards(); sg(); rec(); updateMapPolygon(); toast('Preferencias guardadas');
 }
 
 function resetCfg(){
@@ -1017,18 +1283,15 @@ function loginFirebase(event){
 function recuperarClave(){
   var emailVal = $('lu').value.trim();
   var errDiv = $('le');
-
   if (!emailVal) {
     errDiv.textContent = 'Escribe tu correo arriba para enviar las instrucciones.';
     return;
   }
-
   errDiv.textContent = 'Enviando correo de recuperación...';
-
   if (auth) {
     auth.sendPasswordResetEmail(emailVal).then(function(){
       errDiv.textContent = '';
-      toast('Se ha enviado un enlace a ' + emailVal + ' para cambiar tu contraseña.');
+      toast('Se ha enviado un enlace a ' + emailVal);
     }).catch(function(err){
       errDiv.textContent = 'Error: ' + (err.message || 'No se pudo enviar el correo.');
     });
@@ -1220,7 +1483,7 @@ function clearUserLogs(){
 }
 
 function startSession(){
-  cards(); sg(); rec(); als(); route(); toast('Bienvenido, ' + (currentUser.nombre || 'Usuario'));
+  renderLoteSelector(); cards(); sg(); rec(); als(); route(); toast('Bienvenido, ' + (currentUser.nombre || 'Usuario'));
 }
 
 function logout(){
@@ -1234,7 +1497,6 @@ var P=['mapa','resumen','actuadores','bitacora','sensores','historial','alertas'
 function route(){
   var h = location.hash.slice(1);
   if(P.indexOf(h)<0) h = 'mapa';
-  // Protección de ruta si un operador intenta forzar #usuarios por URL
   if(h === 'usuarios' && currentUser.rol !== 'admin'){
     h = 'mapa';
     location.hash = '#mapa';
@@ -1258,7 +1520,7 @@ window.addEventListener('hashchange', route);
 
 window.addEventListener('DOMContentLoaded', function(){
   try {
-    cards(); sg(); rec(); als(); cfgFill();
+    renderLoteSelector(); cards(); sg(); rec(); als(); cfgFill();
     $('t').textContent = new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
   } catch(e) { console.log('Init err:', e); }
 
