@@ -95,6 +95,12 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
+/* OCULTAR APP HASTA INICIAR SESIÓN (EVITA PARPADEO AL RECARGAR) */
+body:not(.authenticated) .navbar-top,
+body:not(.authenticated) #main-content {
+  display: none !important;
+}
+
 /* SCROLLBAR PERSONALIZADO */
 ::-webkit-scrollbar{width:7px;height:7px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -147,7 +153,7 @@ body{
 .splash-title { color: #fff; font-size: 28px; margin-top: 20px; font-weight: 700; letter-spacing: -0.02em; }
 .splash-subtitle { color: #38bdf8; font-size: 11px; letter-spacing: 0.24em; font-weight: 700; margin-top: 6px; }
 
-/* NAVBAR SUPERIOR */
+/* NAVBAR SUPERIOR ORGANIZADA POR BLOQUES */
 .navbar-top {
   background: linear-gradient(90deg, #0b1120 0%, #111c33 100%);
   color: #fff;
@@ -158,7 +164,7 @@ body{
 }
 .nav-container {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 24px; max-width: 100%; margin: 0;
+  padding: 10px 24px; max-width: 100%; margin: 0; gap: 16px;
 }
 .brand { display: flex; gap: 12px; align-items: center; margin-right: auto; }
 .logo-container {
@@ -170,40 +176,60 @@ body{
 .brand b { font-size: 19px; color: #f8fafc; letter-spacing: -0.01em; }
 .brand small { font-size: 10px; letter-spacing: .14em; color: #38bdf8; font-weight: 700; display: block; }
 
-nav.top-nav-links { display: flex; gap: 6px; align-items: center; margin-right: 16px; }
+/* CÁPSULA DE NAVEGACIÓN CON SEPARADORES DE GRUPO */
+nav.top-nav-links {
+  display: flex; align-items: center; gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 5px 8px;
+  border-radius: 14px;
+}
+.nav-divider {
+  width: 1px; height: 22px;
+  background: rgba(255, 255, 255, 0.14);
+  margin: 0 6px;
+  flex-shrink: 0;
+}
 nav.top-nav-links a {
   position: relative;
   display: flex; align-items: center; justify-content: center;
-  width: 42px; height: 42px; border-radius: 11px;
+  width: 38px; height: 38px; border-radius: 10px;
   color: #94a3b8; text-decoration: none; transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-nav.top-nav-links a:hover { background: rgba(255,255,255,.08); color: #fff; transform: translateY(-1px); }
+nav.top-nav-links a:hover { background: rgba(255,255,255,.09); color: #fff; transform: translateY(-1px); }
 nav.top-nav-links a.on {
   background: linear-gradient(135deg, #0284c7, #0369a1);
   color: #fff;
   box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
 }
-nav.top-nav-links svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+nav.top-nav-links svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 nav.top-nav-links a::after {
   content: attr(data-title);
   position: absolute; top: 100%; left: 50%;
-  transform: translateX(-50%) translateY(8px);
+  transform: translateX(-50%) translateY(10px);
   background: #0f172a; color: #f8fafc; padding: 6px 12px;
   font-size: 12px; font-weight: 500; border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(56,189,248,0.25);
   white-space: nowrap; opacity: 0; pointer-events: none;
   transition: opacity 0.2s, transform 0.2s;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.35); z-index: 10;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4); z-index: 20;
 }
-nav.top-nav-links a:hover::after { opacity: 1; transform: translateX(-50%) translateY(12px); }
+nav.top-nav-links a:hover::after { opacity: 1; transform: translateX(-50%) translateY(14px); }
+
+/* BLOQUE DERECHO: ESTADO + PERFIL */
+.nav-right-actions {
+  display: flex; align-items: center; gap: 10px;
+}
 
 .net-pill {
-  font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 99px;
-  background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);
-  margin-right: 12px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+  font-size: 11px; font-weight: 700; padding: 7px 13px; border-radius: 99px;
+  background: rgba(16, 185, 129, 0.14); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);
+  display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
   animation: pulseLive 2.5s infinite;
+  transition: all 0.2s;
 }
+.net-pill:hover { background: rgba(16, 185, 129, 0.22); }
 .net-pill.off {
   background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);
   animation: none;
@@ -211,13 +237,13 @@ nav.top-nav-links a:hover::after { opacity: 1; transform: translateX(-50%) trans
 
 .user-settings-dropdown { position: relative; display: inline-block; }
 .gear-btn {
-  width: 42px; height: 42px; border-radius: 11px;
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  width: 40px; height: 40px; border-radius: 11px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
   color: #fff; display: grid; place-items: center; cursor: pointer;
   transition: all 0.2s ease;
 }
 .gear-btn:hover { background: var(--brand-primary); border-color: var(--brand-primary); }
-.gear-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.gear-btn svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 .dropdown-menu {
   position: absolute; top: calc(100% + 12px); right: 0;
@@ -249,15 +275,17 @@ nav.top-nav-links a:hover::after { opacity: 1; transform: translateX(-50%) trans
 
 .menu-toggle { display: none; background: transparent; border: none; color: #fff; cursor: pointer; padding: 6px; }
 .menu-toggle svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; }
-.badge { position: absolute; top: 3px; right: 3px; background: #ef4444; color: #fff; font-size: 10px; font-weight: 700; border-radius: 99px; padding: 2px 5px; line-height: 1; box-shadow: 0 2px 6px rgba(239,68,68,0.5); }
+.badge { position: absolute; top: 2px; right: 2px; background: #ef4444; color: #fff; font-size: 10px; font-weight: 700; border-radius: 99px; padding: 2px 5px; line-height: 1; box-shadow: 0 2px 6px rgba(239,68,68,0.5); }
 
-@media(max-width: 960px) {
+@media(max-width: 1024px) {
   .menu-toggle { display: block; }
   .net-pill { display: none; }
+  .nav-divider { display: none; }
   nav.top-nav-links {
     display: none; position: absolute; top: 100%; left: 0; right: 0;
     background: var(--side); flex-direction: column; align-items: stretch;
-    padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); margin: 0;
+    padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-radius: 0; border-left: none; border-right: none;
   }
   nav.top-nav-links a { width: 100%; height: auto; justify-content: flex-start; gap: 12px; padding: 12px 16px; }
   nav.top-nav-links a::before { content: attr(data-title); font-size: 14px; font-weight: 500; }
@@ -482,7 +510,7 @@ input:checked+.slider:before { transform: translateX(22px); }
   <div class="splash-subtitle">MONITOREO AGROSATELITAL</div>
 </div>
 
-<!-- BARRA SUPERIOR -->
+<!-- BARRA SUPERIOR ORGANIZADA POR BLOQUES -->
 <header class="navbar-top">
   <div class="nav-container">
     <div class="brand">
@@ -501,31 +529,42 @@ input:checked+.slider:before { transform: translateX(22px); }
     </button>
 
     <nav class="top-nav-links" id="nav-links">
+      <!-- BLOQUE 1: MONITOREO Y TELEMETRÍA -->
       <a href="#mapa" data-v="mapa" data-title="Mapa Satelital" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></a>
       <a href="#resumen" data-v="resumen" data-title="Resumen y KPIs" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></a>
-      <a href="#actuadores" data-v="actuadores" data-title="Control Riego" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></a>
-      <a href="#bitacora" data-v="bitacora" data-title="Bitácora Campo" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></a>
-      <a href="#sensores" data-v="sensores" data-title="Sensores" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></a>
-      <a href="#historial" data-v="historial" data-title="Historial Real" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M9 20v-6M14 20V9M19 20v-9"/></svg></a>
+      <a href="#sensores" data-v="sensores" data-title="Sensores IoT" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></a>
+      <a href="#historial" data-v="historial" data-title="Historial y Tendencias" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M9 20v-6M14 20V9M19 20v-9"/></svg></a>
+
+      <span class="nav-divider"></span>
+
+      <!-- BLOQUE 2: OPERACIÓN EN CAMPO -->
+      <a href="#actuadores" data-v="actuadores" data-title="Control de Riego" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></a>
+      <a href="#bitacora" data-v="bitacora" data-title="Bitácora de Campo" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></a>
+
+      <span class="nav-divider"></span>
+
+      <!-- BLOQUE 3: ALERTAS Y ADMINISTRACIÓN -->
       <a href="#alertas" data-v="alertas" data-title="Alertas" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/></svg><span class="badge" id="bd">3</span></a>
       <a href="#usuarios" data-v="usuarios" id="nav-usuarios" data-title="Gestión Usuarios (Admin)" style="display:none" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></a>
       <a href="#configuracion" data-v="configuracion" data-title="Configuración y Lotes" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></a>
     </nav>
 
-    <span class="net-pill" id="net-status" onclick="toggleOfflineSim()" title="Clic para simular corte/reconexión de red" style="cursor:pointer">🟢 Online · Firebase</span>
+    <div class="nav-right-actions">
+      <span class="net-pill" id="net-status" onclick="toggleOfflineSim()" title="Clic para simular corte/reconexión de red" style="cursor:pointer">🟢 Online · Firebase</span>
 
-    <div class="user-settings-dropdown">
-      <button class="gear-btn" onclick="toggleDropdown()" title="Perfil y Sesión">
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      </button>
+      <div class="user-settings-dropdown">
+        <button class="gear-btn" onclick="toggleDropdown()" title="Perfil y Sesión">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
 
-      <div class="dropdown-menu" id="user-dropdown">
-        <div class="user-profile-box">
-          <b id="un">Samuel Salgado Jaraba</b>
-          <p id="ue">samsalgadojaraba25@gmail.com</p>
-          <small id="ur">ADMINISTRADOR</small>
+        <div class="dropdown-menu" id="user-dropdown">
+          <div class="user-profile-box">
+            <b id="un">Samuel Salgado Jaraba</b>
+            <p id="ue">samsalgadojaraba25@gmail.com</p>
+            <small id="ur">ADMINISTRADOR</small>
+          </div>
+          <button class="dropdown-item logout" onclick="logout();closeDropdown()">🚪 Cerrar Sesión</button>
         </div>
-        <button class="dropdown-item logout" onclick="logout();closeDropdown()">🚪 Cerrar Sesión</button>
       </div>
     </div>
   </div>
@@ -845,8 +884,8 @@ input:checked+.slider:before { transform: translateX(22px); }
   </div>
 </main>
 
-<!-- LOGIN OVERLAY -->
-<div id="lg" style="display:none">
+<!-- LOGIN OVERLAY (VISIBLE DETRÁS DEL SPLASH SCREEN PARA EVITAR PARPADEO) -->
+<div id="lg">
   <form class="lc animate-login" id="login-card" onsubmit="loginFirebase(event)">
     <div class="logo-container">
       <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
@@ -995,7 +1034,6 @@ function addNewLote(){
   var ref = tablaFAO[cultivo] || { sMin: 45, tMax: 32, kc: 1.0 };
   if(etapa === 'Floración') ref.sMin += 5;
 
-  // Calcular radio en grados proporcional a las hectáreas (1 ha ≈ 100m x 100m)
   var halfSideDeg = (Math.sqrt(area * 10000) / 2) / 111320;
   var polyCoords = [
     [+(lat + halfSideDeg).toFixed(5), +(lng - halfSideDeg).toFixed(5)],
@@ -1021,7 +1059,6 @@ function addNewLote(){
   LOTES.push(newLote);
   if(pinTempMarker && mapInstance){ mapInstance.removeLayer(pinTempMarker); pinTempMarker = null; }
   
-  // Guardar también en Firebase
   db.ref('lotes/' + newLote.id).set(newLote);
 
   $('nl-name').value = '';
@@ -1179,7 +1216,6 @@ function initSatelliteMap(){
         attribution: 'Esri World Imagery'
       }).addTo(mapInstance);
 
-      // Evento clic en el mapa para capturar coordenadas y precargarlas en el formulario
       mapInstance.on('click', function(e){
         var cLat = e.latlng.lat.toFixed(5);
         var cLng = e.latlng.lng.toFixed(5);
@@ -1470,7 +1506,7 @@ function loginFirebase(event){
         $('lg').style.display = 'none';
         card.classList.remove('animate-logout');
         startSession();
-      }, 350);
+      }, 300);
     } else {
       errDiv.textContent = 'Correo electrónico o contraseña incorrectos.';
     }
@@ -1683,10 +1719,13 @@ function clearUserLogs(){
 }
 
 function startSession(){
-  renderLoteSelector(); cards(); sg(); rec(); als(); route(); toast('Bienvenido, ' + (currentUser.nombre || 'Usuario'));
+  document.body.classList.add('authenticated');
+  renderLoteSelector(); cards(); sg(); rec(); als(); route();
+  toast('Bienvenido, ' + (currentUser.nombre || 'Usuario'));
 }
 
 function logout(){
+  document.body.classList.remove('authenticated');
   $('lg').style.display = 'flex';
   $('lu').value = ''; $('lp').value = ''; $('le').textContent = '';
   var card = $('login-card'); card.classList.add('animate-login');
@@ -1727,13 +1766,9 @@ window.addEventListener('DOMContentLoaded', function(){
   setTimeout(function(){
     var splash = $('splash-screen');
     if(splash) splash.classList.add('hidden');
-    setTimeout(function(){
-      var lg = $('lg');
-      if(lg) lg.style.display = 'flex';
-      var lu = $('lu');
-      if(lu) lu.focus();
-    }, 200);
-  }, 1200);
+    var lu = $('lu');
+    if(lu) lu.focus();
+  }, 1100);
 });
 </script>
 </body>
