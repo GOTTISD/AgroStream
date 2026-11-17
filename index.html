@@ -147,7 +147,7 @@ body{
 .splash-title { color: #fff; font-size: 28px; margin-top: 20px; font-weight: 700; letter-spacing: -0.02em; }
 .splash-subtitle { color: #38bdf8; font-size: 11px; letter-spacing: 0.24em; font-weight: 700; margin-top: 6px; }
 
-/* NAVBAR SUPERIOR CON ACENTO AGRO-SATELITAL */
+/* NAVBAR SUPERIOR */
 .navbar-top {
   background: linear-gradient(90deg, #0b1120 0%, #111c33 100%);
   color: #fff;
@@ -347,6 +347,12 @@ header.sub-bar {
 /* MAPA SATELITAL */
 #map-wrapper { width: 100%; height: 490px; position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
 #map-container { width: 100%; height: 100%; position: absolute; inset: 0; z-index: 1; }
+.map-hud-tip {
+  position: absolute; bottom: 14px; left: 14px; z-index: 500;
+  background: rgba(15, 23, 42, 0.85); color: #f8fafc;
+  padding: 8px 14px; border-radius: 10px; font-size: 12px;
+  backdrop-filter: blur(8px); border: 1px solid rgba(56,189,248,0.25);
+}
 
 .two { display: grid; grid-template-columns: 1.9fr 1fr; gap: 22px; margin-bottom: 22px; }
 .two.b { grid-template-columns: 1.2fr 1fr; }
@@ -548,19 +554,19 @@ input:checked+.slider:before { transform: translateX(22px); }
         <div class="row">
           <div>
             <h3 id="map-title-head">Geolocalización Satelital del Lote</h3>
-            <p class="sub">Polígono dinámico según estrés hídrico (Verde: Óptimo · Amarillo: Advertencia · Rojo: Crítico).</p>
+            <p class="sub">Haz clic en cualquier punto del mapa para capturar coordenadas y registrar un nuevo cultivo.</p>
           </div>
           <span class="pill" style="background:#e0f2fe;color:#0369a1">ESRI World Imagery + NDVI</span>
         </div>
         <div id="map-wrapper">
           <div id="map-container"></div>
+          <div class="map-hud-tip" id="map-coord-hud">📍 Coordenadas activas: 9.2451, -75.4012 (Clic en el mapa para fijar punto)</div>
         </div>
       </div>
     </section>
 
     <!-- RESUMEN Y KPIS -->
     <section class="view" id="resumen">
-      <!-- INDICADORES CLAVE DE DESEMPEÑO (KPIs) -->
       <div class="kpi-strip">
         <div class="kpi-box">
           <small>KPI 1 · Índice Satelital NDVI</small>
@@ -760,32 +766,20 @@ input:checked+.slider:before { transform: translateX(22px); }
 
     <!-- CONFIGURACIÓN, GESTIÓN DE LOTES Y PRUEBAS EXPERIMENTALES -->
     <section class="view" id="configuracion">
-      <!-- BANNER DE PERMISOS PARA OPERADORES -->
       <div class="perm-banner" id="operator-lock-banner" style="display:none">
         <span>🔒</span>
         <div><b>Modo Operador de Campo:</b> Puedes visualizar los parámetros agronómicos del lote y cambiar tu tema/unidad local, pero solo un <b>Administrador</b> puede registrar nuevos lotes, modificar umbrales críticos o ejecutar pruebas de estrés.</div>
       </div>
 
-      <!-- LABORATORIO DE VALIDACIÓN EXPERIMENTAL (SOLO ADMIN) -->
-      <div class="card" id="admin-lab-card" style="border-left: 5px solid #d97706;">
+      <!-- CREAR NUEVO LOTE / CULTIVO POR COORDENADAS (SOLO ADMIN) -->
+      <div class="card" id="admin-new-lote-card">
         <div class="row">
           <div>
-            <h3>🧪 Laboratorio de Pruebas Experimentales y Validación (Admin)</h3>
-            <p class="sub">Simula escenarios extremos o cortes de red para validar alertas críticas, automatización de riego y polígonos satelitales.</p>
+            <h3>🌾 Registrar Nuevo Lote / Cultivo por Coordenadas (FAO-56)</h3>
+            <p class="sub">Ingresa las coordenadas geográficas (Latitud, Longitud) o usa tu ubicación GPS actual para georreferenciar el polígono del cultivo.</p>
           </div>
-          <span class="pill" style="background:#fef3c7;color:#92400e">VALIDACIÓN EXPERIMENTAL</span>
+          <button class="btn" type="button" onclick="getDeviceGPS()">📡 Usar mi GPS Actual</button>
         </div>
-        <div class="btns">
-          <button class="btn warn" onclick="simulateStressScenario()">🔥 Simular Sequía y Golpe de Calor</button>
-          <button class="btn" onclick="restoreNormalScenario()">🌱 Restaurar Condiciones Óptimas</button>
-          <button class="btn" onclick="toggleOfflineSim()">📡 Alternar Modo Offline / Online</button>
-        </div>
-      </div>
-
-      <!-- CREAR NUEVO LOTE / CULTIVO (SOLO ADMIN) -->
-      <div class="card" id="admin-new-lote-card">
-        <h3>🌾 Registrar Nuevo Lote / Cultivo (Ajuste Automático FAO-56)</h3>
-        <p class="sub">Al crear un lote y elegir especie y etapa fenológica, el sistema calibra automáticamente los umbrales de riego.</p>
         <div class="form">
           <label>Nombre del Lote<input id="nl-name" placeholder="Ej. Lote Norte - Yuca"></label>
           <label>Especie Cultivada
@@ -806,8 +800,26 @@ input:checked+.slider:before { transform: translateX(22px); }
             </select>
           </label>
           <label>Área (Hectáreas)<input id="nl-area" type="number" step="0.1" value="2.5"></label>
+          <label>Latitud (Centroide)<input id="nl-lat" type="number" step="0.0001" value="9.2540" placeholder="Ej. 9.2540"></label>
+          <label>Longitud (Centroide)<input id="nl-lng" type="number" step="0.0001" value="-75.4080" placeholder="Ej. -75.4080"></label>
         </div>
-        <button class="btn p" onclick="addNewLote()">➕ Crear Lote y Calibrar Umbrales</button>
+        <button class="btn p" onclick="addNewLote()">➕ Crear Lote Georreferenciado y Calibrar</button>
+      </div>
+
+      <!-- LABORATORIO DE VALIDACIÓN EXPERIMENTAL (SOLO ADMIN) -->
+      <div class="card" id="admin-lab-card" style="border-left: 5px solid #d97706;">
+        <div class="row">
+          <div>
+            <h3>🧪 Laboratorio de Pruebas Experimentales y Validación (Admin)</h3>
+            <p class="sub">Simula escenarios extremos o cortes de red para validar alertas críticas, automatización de riego y polígonos satelitales.</p>
+          </div>
+          <span class="pill" style="background:#fef3c7;color:#92400e">VALIDACIÓN EXPERIMENTAL</span>
+        </div>
+        <div class="btns">
+          <button class="btn warn" onclick="simulateStressScenario()">🔥 Simular Sequía y Golpe de Calor</button>
+          <button class="btn" onclick="restoreNormalScenario()">🌱 Restaurar Condiciones Óptimas</button>
+          <button class="btn" onclick="toggleOfflineSim()">📡 Alternar Modo Offline / Online</button>
+        </div>
       </div>
 
       <!-- PARÁMETROS DEL LOTE ACTIVO -->
@@ -886,7 +898,7 @@ var M={suelo:{n:'Humedad del suelo',u:'%',c:'#0284c7',a:36,b:50,d:1},temp:{n:'Te
 var A=[{t:'Humedad del suelo por debajo del 45% en zona norte',k:'adv',l:'Advertencia',w:'hace 12 min',r:0},{t:'Sensor WIND-01 reconectado exitosamente',k:'inf',l:'Info',w:'hace 34 min',r:0},{t:'Temperatura ambiente superó 30°C durante 2 horas',k:'cri',l:'Crítica',w:'hace 1 h',r:0}];
 var V={suelo:48.5,temp:28.1,aire:76,viento:4.2},filt='todas',hm='suelo',hr=7;
 var currentUser = { nombre: '', email: '', rol: 'user' };
-var mapInstance = null, lotePolygon = null, loteMarker = null;
+var mapInstance = null, lotePolygon = null, loteMarker = null, pinTempMarker = null;
 var isOfflineMode = false, autoRiegoActive = false;
 
 // CATÁLOGO MULTI-LOTE CON PARÁMETROS FAO-56
@@ -910,7 +922,7 @@ window.onclick = function(e){
   }
 }
 
-function toast(m){ var t=$('toast'); t.textContent=m; t.classList.add('on'); setTimeout(function(){t.classList.remove('on')},2500); }
+function toast(m){ var t=$('toast'); t.textContent=m; t.classList.add('on'); setTimeout(function(){t.classList.remove('on')},2800); }
 
 function rnd(a,b,d){return +(a+Math.random()*(b-a)).toFixed(d)}
 function fv(k,v){return k=='temp'&&ST.u=='F'?+(v*9/5+32).toFixed(1):v}
@@ -924,7 +936,7 @@ function renderLoteSelector(){
   sel.innerHTML = LOTES.map(function(l){
     return '<option value="'+l.id+'"'+(l.id===activeLote.id?' selected':'')+'>'+l.nombre+' ('+l.cultivo+')</option>';
   }).join('');
-  $('lote-crop-subtitle').innerHTML = 'Cultivo: <b>'+activeLote.cultivo+'</b> ('+activeLote.etapa+' · Kc '+activeLote.kc+' · '+activeLote.area+' ha) · Última lectura: <span id="t">'+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'})+'</span>';
+  $('lote-crop-subtitle').innerHTML = 'Cultivo: <b>'+activeLote.cultivo+'</b> ('+activeLote.etapa+' · Kc '+activeLote.kc+' · '+activeLote.area+' ha · ['+activeLote.center[0]+', '+activeLote.center[1]+']) · Lectura: <span id="t">'+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'})+'</span>';
 }
 
 function changeActiveLote(id){
@@ -941,13 +953,37 @@ function changeActiveLote(id){
   toast('Cambiado a ' + found.nombre + ' (Umbral humedad: ' + found.sMin + '%)');
 }
 
+// OBTENER COORDENADAS GPS DEL DISPOSITIVO
+function getDeviceGPS(){
+  if(!navigator.geolocation){
+    toast('Tu navegador no soporta geolocalización GPS');
+    return;
+  }
+  toast('Obteniendo ubicación satelital GPS...');
+  navigator.geolocation.getCurrentPosition(function(pos){
+    $('nl-lat').value = pos.coords.latitude.toFixed(5);
+    $('nl-lng').value = pos.coords.longitude.toFixed(5);
+    toast('📡 Coordenadas GPS capturadas con éxito');
+  }, function(){
+    toast('No se pudo obtener el GPS. Verifica los permisos.');
+  });
+}
+
+// CREAR NUEVO LOTE POR COORDENADAS GEOGRÁFICAS
 function addNewLote(){
-  if(currentUser.rol !== 'admin') return;
+  if(currentUser.rol !== 'admin'){ toast('Solo administradores pueden registrar lotes'); return; }
   var nombre = $('nl-name').value.trim();
   var cultivo = $('nl-crop').value;
   var etapa = $('nl-stage').value;
-  var area = parseFloat($('nl-area').value) || 2.0;
+  var area = parseFloat($('nl-area').value) || 2.5;
+  var lat = parseFloat($('nl-lat').value);
+  var lng = parseFloat($('nl-lng').value);
+
   if(!nombre){ toast('Escribe un nombre para el lote'); return; }
+  if(isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180){
+    toast('Ingresa coordenadas válidas (Latitud entre -90 y 90, Longitud entre -180 y 180)');
+    return;
+  }
 
   var tablaFAO = {
     'Maíz': { sMin: 45, tMax: 32, kc: 1.15 },
@@ -959,7 +995,15 @@ function addNewLote(){
   var ref = tablaFAO[cultivo] || { sMin: 45, tMax: 32, kc: 1.0 };
   if(etapa === 'Floración') ref.sMin += 5;
 
-  var offset = (LOTES.length * 0.004);
+  // Calcular radio en grados proporcional a las hectáreas (1 ha ≈ 100m x 100m)
+  var halfSideDeg = (Math.sqrt(area * 10000) / 2) / 111320;
+  var polyCoords = [
+    [+(lat + halfSideDeg).toFixed(5), +(lng - halfSideDeg).toFixed(5)],
+    [+(lat + halfSideDeg).toFixed(5), +(lng + halfSideDeg).toFixed(5)],
+    [+(lat - halfSideDeg).toFixed(5), +(lng + halfSideDeg).toFixed(5)],
+    [+(lat - halfSideDeg).toFixed(5), +(lng - halfSideDeg).toFixed(5)]
+  ];
+
   var newLote = {
     id: 'lote' + (LOTES.length + 1),
     nombre: nombre,
@@ -969,14 +1013,21 @@ function addNewLote(){
     area: area,
     sMin: ref.sMin,
     tMax: ref.tMax,
-    ndvi: 0.75,
-    coords: [[9.2470+offset, -75.4030],[9.2475+offset, -75.3990],[9.2430+offset, -75.3995],[9.2435+offset, -75.4035]],
-    center: [9.2451+offset, -75.4012]
+    ndvi: 0.77,
+    coords: polyCoords,
+    center: [+lat.toFixed(5), +lng.toFixed(5)]
   };
+
   LOTES.push(newLote);
+  if(pinTempMarker && mapInstance){ mapInstance.removeLayer(pinTempMarker); pinTempMarker = null; }
+  
+  // Guardar también en Firebase
+  db.ref('lotes/' + newLote.id).set(newLote);
+
   $('nl-name').value = '';
   changeActiveLote(newLote.id);
-  toast('Lote "' + nombre + '" creado y calibrado (FAO-56)');
+  location.hash = '#mapa';
+  toast('🌾 Lote "' + nombre + '" georreferenciado en [' + lat.toFixed(4) + ', ' + lng.toFixed(4) + ']');
 }
 
 // CÁLCULO DE KPIs AGRONÓMICOS (NDVI + VPD FAO-56)
@@ -1025,7 +1076,6 @@ function cards(){
   checkAutoIrrigationRule();
 }
 
-// REGLA IOT DE RIEGO AUTOMÁTICO INTELIGENTE
 function toggleAutoRiego(enabled){
   autoRiegoActive = enabled;
   toast(enabled ? '🤖 Riego Automático Inteligente ACTIVADO' : 'Riego Automático DESACTIVADO');
@@ -1101,7 +1151,7 @@ function rec(){
   $('rec').innerHTML='<div class="rb"><h5>RIEGO Y BALANCE HÍDRICO</h5>'+s+'</div><div class="rb"><h5>CLIMA Y EVAPOTRANSPIRACIÓN</h5>'+c+'</div>';
 }
 
-// MAPA SATELITAL CON POLÍGONO DINÁMICO POR COLOR DE ESTRÉS
+// MAPA SATELITAL CON CAPTURA DE COORDENADAS AL HACER CLIC
 function getPolygonStyle(){
   if(V.suelo < ST.sMin - 8) return { color: '#ef4444', fillColor: '#dc2626', fillOpacity: 0.42 };
   if(V.suelo < ST.sMin) return { color: '#f59e0b', fillColor: '#d97706', fillOpacity: 0.38 };
@@ -1115,9 +1165,10 @@ function updateMapPolygon(){
 
   lotePolygon = L.polygon(activeLote.coords, getPolygonStyle()).addTo(mapInstance);
   loteMarker = L.marker(activeLote.center).addTo(mapInstance)
-    .bindPopup('<b>'+activeLote.nombre+'</b><br>Cultivo: '+activeLote.cultivo+' ('+activeLote.etapa+')<br>Humedad: <b>'+V.suelo+'%</b> · NDVI: <b>'+$('kpi-ndvi').textContent+'</b>')
+    .bindPopup('<b>'+activeLote.nombre+'</b><br>Cultivo: '+activeLote.cultivo+' ('+activeLote.etapa+')<br>Coord: '+activeLote.center[0]+', '+activeLote.center[1]+'<br>Humedad: <b>'+V.suelo+'%</b> · NDVI: <b>'+$('kpi-ndvi').textContent+'</b>')
     .openPopup();
   mapInstance.setView(activeLote.center, 15);
+  $('map-coord-hud').textContent = '📍 Lote activo: ' + activeLote.center[0] + ', ' + activeLote.center[1] + ' (Clic en el mapa para fijar nueva coordenada)';
 }
 
 function initSatelliteMap(){
@@ -1127,6 +1178,23 @@ function initSatelliteMap(){
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Esri World Imagery'
       }).addTo(mapInstance);
+
+      // Evento clic en el mapa para capturar coordenadas y precargarlas en el formulario
+      mapInstance.on('click', function(e){
+        var cLat = e.latlng.lat.toFixed(5);
+        var cLng = e.latlng.lng.toFixed(5);
+        $('nl-lat').value = cLat;
+        $('nl-lng').value = cLng;
+        $('map-coord-hud').textContent = '🎯 Punto capturado: ' + cLat + ', ' + cLng + ' (Listo en Configuración)';
+
+        if(pinTempMarker) mapInstance.removeLayer(pinTempMarker);
+        var actionBtn = currentUser.rol === 'admin'
+          ? '<br><a href="#configuracion" style="color:#0284c7;font-weight:700;text-decoration:none">➕ Registrar cultivo aquí →</a>'
+          : '<br><small>Vista de solo lectura (Operador)</small>';
+        pinTempMarker = L.marker([cLat, cLng]).addTo(mapInstance)
+          .bindPopup('<b>Punto Seleccionado</b><br>Lat: ' + cLat + '<br>Lng: ' + cLng + actionBtn)
+          .openPopup();
+      });
     }
     updateMapPolygon();
     setTimeout(function(){ if(mapInstance) mapInstance.invalidateSize(); }, 200);
@@ -1229,6 +1297,7 @@ function refreshTelemetry(){
   db.ref('telemetria_actual').set({
     lote: activeLote.nombre,
     cultivo: activeLote.cultivo,
+    coordenadas: activeLote.center,
     suelo: V.suelo,
     temp: V.temp,
     aire: V.aire,
@@ -1278,8 +1347,8 @@ function restoreNormalScenario(){
 }
 
 function exportCSV(){
-  var csv = 'Lote,Cultivo,Etapa,Operador,Rol,Fecha/Hora,Humedad Suelo (%),Temperatura (C),Humedad Aire (%),Viento (km/h),NDVI\n';
-  csv += activeLote.nombre + ',' + activeLote.cultivo + ',' + activeLote.etapa + ',' + currentUser.nombre + ',' + currentUser.rol + ',' + new Date().toLocaleString('es-CO') + ',' + V.suelo + ',' + V.temp + ',' + V.aire + ',' + V.viento + ',' + $('kpi-ndvi').textContent + '\n';
+  var csv = 'Lote,Cultivo,Etapa,Latitud,Longitud,Operador,Rol,Fecha/Hora,Humedad Suelo (%),Temperatura (C),Humedad Aire (%),Viento (km/h),NDVI\n';
+  csv += activeLote.nombre + ',' + activeLote.cultivo + ',' + activeLote.etapa + ',' + activeLote.center[0] + ',' + activeLote.center[1] + ',' + currentUser.nombre + ',' + currentUser.rol + ',' + new Date().toLocaleString('es-CO') + ',' + V.suelo + ',' + V.temp + ',' + V.aire + ',' + V.viento + ',' + $('kpi-ndvi').textContent + '\n';
   var blob = new Blob([csv], { type: 'text/csv;' }), url = URL.createObjectURL(blob), link = document.createElement('a');
   link.href = url; link.download = 'Reporte_AgroStream_' + activeLote.id + '_' + new Date().toISOString().slice(0,10) + '.csv'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
   toast('Reporte CSV descargado');
@@ -1294,7 +1363,7 @@ function generatePDFReport(){
   win.document.write('<html><head><title>Informe Técnico AgroStream</title><style>body{font-family:Arial,sans-serif;padding:30px;color:#0f172a}h1{color:#0284c7;border-bottom:2px solid #0284c7;padding-bottom:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.box{background:#f1f5f9;padding:12px;border-radius:8px}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #cbd5e1;padding:10px;text-align:left}</style></head><body>');
   win.document.write('<h1>AgroStream – Informe Técnico de Monitoreo Agrosatelital</h1>');
   win.document.write('<p><b>Fecha de emisión:</b> '+new Date().toLocaleString('es-CO')+' | <b>Generado por:</b> '+currentUser.nombre+' ('+currentUser.rol.toUpperCase()+')</p>');
-  win.document.write('<div class="grid"><div class="box"><b>Lote Evaluado:</b> '+activeLote.nombre+' ('+activeLote.area+' ha)</div><div class="box"><b>Cultivo y Etapa:</b> '+activeLote.cultivo+' – '+activeLote.etapa+' (Kc '+activeLote.kc+')</div></div>');
+  win.document.write('<div class="grid"><div class="box"><b>Lote Evaluado:</b> '+activeLote.nombre+' ('+activeLote.area+' ha)<br><b>Coordenadas:</b> '+activeLote.center[0]+', '+activeLote.center[1]+'</div><div class="box"><b>Cultivo y Etapa:</b> '+activeLote.cultivo+' – '+activeLote.etapa+' (Kc '+activeLote.kc+')</div></div>');
   win.document.write('<h3>1. Indicadores Clave de Desempeño (KPIs) y Telemetría</h3>');
   win.document.write('<table><tr><th>Variable / Indicador</th><th>Valor Registrado</th><th>Referencia / Estado</th></tr>');
   win.document.write('<tr><td>Humedad del Suelo</td><td>'+V.suelo+' %</td><td>Umbral mínimo: '+ST.sMin+'%</td></tr>');
