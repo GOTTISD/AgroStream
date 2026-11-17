@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AgroStream – Monitoreo Agrosatelital</title>
+<title>AgroStream – Monitoreo Agrosatelital y Trazabilidad</title>
 
 <!-- FAVICON -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%231e293b'/%3E%3Cpath d='M 50 14 A 36 36 0 0 1 86 50 C 72 50 60 40 50 14 Z' fill='%23ffffff'/%3E%3Cpath d='M 50 86 A 36 36 0 0 1 14 50 C 28 50 40 60 50 86 Z' fill='%2338bdf8'/%3E%3C/svg%3E">
@@ -95,7 +95,7 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-/* OCULTAR APP HASTA INICIAR SESIÓN (EVITA PARPADEO AL RECARGAR) */
+/* OCULTAR APP HASTA INICIAR SESIÓN */
 body:not(.authenticated) .navbar-top,
 body:not(.authenticated) #main-content {
   display: none !important;
@@ -176,7 +176,6 @@ body:not(.authenticated) #main-content {
 .brand b { font-size: 19px; color: #f8fafc; letter-spacing: -0.01em; }
 .brand small { font-size: 10px; letter-spacing: .14em; color: #38bdf8; font-weight: 700; display: block; }
 
-/* CÁPSULA DE NAVEGACIÓN CON SEPARADORES DE GRUPO */
 nav.top-nav-links {
   display: flex; align-items: center; gap: 4px;
   background: rgba(255, 255, 255, 0.04);
@@ -217,10 +216,7 @@ nav.top-nav-links a::after {
 }
 nav.top-nav-links a:hover::after { opacity: 1; transform: translateX(-50%) translateY(14px); }
 
-/* BLOQUE DERECHO: ESTADO + PERFIL */
-.nav-right-actions {
-  display: flex; align-items: center; gap: 10px;
-}
+.nav-right-actions { display: flex; align-items: center; gap: 10px; }
 
 .net-pill {
   font-size: 11px; font-weight: 700; padding: 7px 13px; border-radius: 99px;
@@ -325,6 +321,11 @@ header.sub-bar {
   box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
 }
 .btn.p:hover:not(:disabled) { box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35); }
+.btn.eco {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #fff; border-color: transparent;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
 .btn.danger { background: #dc2626; color: #fff; border-color: #b91c1c; }
 .btn.warn { background: #d97706; color: #fff; border-color: #b45309; }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
@@ -355,7 +356,47 @@ header.sub-bar {
 .bar { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; }
 .bar i { display: block; height: 100%; border-radius: 99px; transition: width .45s cubic-bezier(0.16, 1, 0.3, 1); }
 
-/* TARJETAS DE KPI EXPERIMENTALES */
+/* LÍNEA DE TIEMPO FENOLÓGICA Y PROYECCIÓN DE COSECHA (ESTILO SIEMBRACO) */
+.harvest-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(2, 132, 199, 0.06) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  border-radius: 18px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+.harvest-top {
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 16px;
+}
+.harvest-metrics {
+  display: flex; gap: 18px; flex-wrap: wrap;
+}
+.h-stat {
+  background: var(--card); border: 1px solid var(--line); padding: 8px 14px; border-radius: 12px;
+}
+.h-stat small { display: block; font-size: 11px; color: var(--mut); text-transform: uppercase; font-weight: 600; }
+.h-stat b { font: 700 16px 'JetBrains Mono', monospace; color: var(--ink); }
+
+.pheno-track {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; position: relative;
+}
+.pheno-step {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px; text-align: center; position: relative; transition: all 0.2s;
+}
+.pheno-step.done {
+  border-color: #10b981; background: rgba(16, 185, 129, 0.12);
+}
+.pheno-step.active {
+  border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.18);
+  background: var(--card);
+}
+.pheno-step span { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--mut); }
+.pheno-step.done span { color: #059669; }
+.pheno-step.active span { color: #0284c7; }
+.pheno-step b { display: block; font-size: 14px; margin-top: 3px; }
+@media(max-width: 680px){ .pheno-track { grid-template-columns: 1fr 1fr; } }
+
+/* TARJETAS DE KPI */
 .kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; margin-bottom: 24px; }
 .kpi-box {
   background: linear-gradient(145deg, #162033 0%, #0f172a 100%);
@@ -416,6 +457,49 @@ svg.chart { width: 100%; height: auto; display: block; }
 .rb { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 15px 17px; margin-top: 12px; font-size: 14px; line-height: 1.5; }
 .rb h5 { font-size: 11px; letter-spacing: .12em; color: #38bdf8; margin-bottom: 5px; }
 
+/* BITÁCORA CON EVIDENCIA FOTOGRÁFICA */
+.note-item { background: var(--soft); border-radius: 12px; padding: 15px 17px; margin-bottom: 14px; border-left: 4px solid var(--brand-primary); }
+.note-photo {
+  margin-top: 10px; max-width: 280px; max-height: 190px; border-radius: 10px;
+  border: 1px solid var(--line); object-fit: cover; display: block;
+}
+.photo-preview-box {
+  display: none; align-items: center; gap: 12px; margin-top: 10px;
+  padding: 10px; background: var(--soft); border-radius: 10px; border: 1px dashed var(--brand-primary);
+}
+.photo-preview-box img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; }
+
+/* MODAL PASAPORTE DE TRAZABILIDAD (ESTILO SIEMBRACO) */
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(7, 11, 20, 0.78); backdrop-filter: blur(6px);
+  display: none; align-items: center; justify-content: center; padding: 18px;
+}
+.modal-backdrop.open { display: flex; animation: fadeInView 0.25s ease-out; }
+.passport-modal {
+  background: var(--card); color: var(--ink); width: 100%; max-width: 620px;
+  border-radius: 22px; border: 1px solid var(--line); box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+  overflow: hidden; max-height: 92vh; overflow-y: auto;
+}
+.passport-header {
+  background: linear-gradient(135deg, #0b1120 0%, #0369a1 60%, #059669 100%);
+  color: #fff; padding: 24px 28px; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+}
+.passport-qr {
+  background: #fff; padding: 8px; border-radius: 12px; width: 88px; height: 88px; flex-shrink: 0;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+.passport-body { padding: 24px 28px; }
+.passport-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+.p-cell { background: var(--soft); padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); }
+.p-cell small { display: block; font-size: 11px; color: var(--mut); text-transform: uppercase; font-weight: 700; }
+.p-cell b { font-size: 15px; color: var(--ink); }
+.eco-seal {
+  background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #059669; padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 600;
+  display: flex; align-items: center; gap: 10px; margin-top: 14px;
+}
+
 /* TABLAS Y FORMULARIOS */
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
 th { text-align: left; color: var(--mut); font-weight: 600; font-size: 11px; letter-spacing: .07em; text-transform: uppercase; padding: 0 12px 12px; }
@@ -447,7 +531,7 @@ input:disabled, select:disabled { opacity: 0.6; cursor: not-allowed; }
 .view { display: none; }
 .view.on { display: block; animation: fadeInView 0.3s ease-out; }
 
-/* LOGIN CON FONDO TOPOGRÁFICO SATELITAL */
+/* LOGIN */
 #lg {
   position: fixed; inset: 0; z-index: 200;
   background-color: #070b14;
@@ -473,7 +557,7 @@ input:disabled, select:disabled { opacity: 0.6; cursor: not-allowed; }
 .forgot-pass:hover { text-decoration: underline; }
 
 /* ELEMENTOS AUXILIARES */
-.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #0f172a; color: #fff; padding: 12px 22px; border-radius: 12px; border: 1px solid rgba(56,189,248,0.3); box-shadow: 0 10px 25px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transition: opacity .3s; z-index: 300; font-size: 14px; font-weight: 500; }
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #0f172a; color: #fff; padding: 12px 22px; border-radius: 12px; border: 1px solid rgba(56,189,248,0.3); box-shadow: 0 10px 25px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transition: opacity .3s; z-index: 450; font-size: 14px; font-weight: 500; }
 .toast.on { opacity: 1; }
 .role-badge { font-size: 11px; padding: 3px 10px; border-radius: 6px; background: var(--brand-primary); color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
 .role-badge.op { background: var(--agro-green); }
@@ -491,7 +575,6 @@ input:checked+.slider:before { transform: translateX(22px); }
 .pr { background: var(--soft); border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.45; margin: 12px 0 6px; }
 .pr.w { background: var(--wb); color: var(--wt); border: 1px solid var(--wl); }
 .sp { width: 100%; height: auto; display: block; margin-top: 8px; }
-.note-item { background: var(--soft); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; border-left: 4px solid var(--brand-primary); }
 .perm-banner { background: var(--ib); border: 1px solid var(--il); color: var(--ink); padding: 13px 16px; border-radius: 12px; font-size: 13px; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
 </style>
 </head>
@@ -507,7 +590,7 @@ input:checked+.slider:before { transform: translateX(22px); }
     </svg>
   </div>
   <div class="splash-title">AgroStream</div>
-  <div class="splash-subtitle">MONITOREO AGROSATELITAL</div>
+  <div class="splash-subtitle">MONITOREO AGROSATELITAL & TRAZABILIDAD</div>
 </div>
 
 <!-- BARRA SUPERIOR ORGANIZADA POR BLOQUES -->
@@ -531,7 +614,7 @@ input:checked+.slider:before { transform: translateX(22px); }
     <nav class="top-nav-links" id="nav-links">
       <!-- BLOQUE 1: MONITOREO Y TELEMETRÍA -->
       <a href="#mapa" data-v="mapa" data-title="Mapa Satelital" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></a>
-      <a href="#resumen" data-v="resumen" data-title="Resumen y KPIs" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></a>
+      <a href="#resumen" data-v="resumen" data-title="Resumen y Cosecha" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></a>
       <a href="#sensores" data-v="sensores" data-title="Sensores IoT" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></a>
       <a href="#historial" data-v="historial" data-title="Historial y Tendencias" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M9 20v-6M14 20V9M19 20v-9"/></svg></a>
 
@@ -539,7 +622,7 @@ input:checked+.slider:before { transform: translateX(22px); }
 
       <!-- BLOQUE 2: OPERACIÓN EN CAMPO -->
       <a href="#actuadores" data-v="actuadores" data-title="Control de Riego" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></a>
-      <a href="#bitacora" data-v="bitacora" data-title="Bitácora de Campo" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></a>
+      <a href="#bitacora" data-v="bitacora" data-title="Bitácora Visual de Campo" onclick="closeMobileMenu()"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></a>
 
       <span class="nav-divider"></span>
 
@@ -580,6 +663,7 @@ input:checked+.slider:before { transform: translateX(22px); }
       <p id="lote-crop-subtitle">Cultivo: Maíz (Floración · Kc 1.15) · Última lectura: <span id="t"></span></p>
     </div>
     <div class="btns">
+      <button class="btn eco" onclick="openPassportModal()">🪪 Pasaporte QR</button>
       <button class="btn" onclick="exportCSV()">📥 CSV</button>
       <button class="btn" onclick="generatePDFReport()">📄 Informe PDF</button>
       <button class="btn p" onclick="refreshTelemetry()">↻ Sincronizar</button>
@@ -604,8 +688,37 @@ input:checked+.slider:before { transform: translateX(22px); }
       </div>
     </section>
 
-    <!-- RESUMEN Y KPIS -->
+    <!-- RESUMEN, CICLO DE COSECHA Y KPIS -->
     <section class="view" id="resumen">
+      <!-- LÍNEA DE TIEMPO FENOLÓGICA Y PROYECCIÓN DE COSECHA (ESTILO SIEMBRACO) -->
+      <div class="harvest-card">
+        <div class="harvest-top">
+          <div>
+            <h3 style="display:flex;align-items:center;gap:8px">🌱 Ciclo Productivo y Ventana Estimada de Cosecha</h3>
+            <p class="sub" id="harvest-origin-line">Origen trazable: <b>Finca La Esperanza</b> · Productor: <b>Samuel Salgado</b></p>
+          </div>
+          <div class="harvest-metrics">
+            <div class="h-stat">
+              <small>Ventana de Cosecha</small>
+              <b id="harvest-date-est">18 Dic 2026</b>
+            </div>
+            <div class="h-stat">
+              <small>Días Restantes</small>
+              <b id="harvest-days-left" style="color:#0284c7">31 días</b>
+            </div>
+            <div class="h-stat">
+              <small>Cosecha Estimada</small>
+              <b id="harvest-yield-est" style="color:#059669">14.4 Ton</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="pheno-track" id="pheno-track-container">
+          <!-- Renderizado dinámicamente según etapa del cultivo -->
+        </div>
+      </div>
+
+      <!-- KPIs -->
       <div class="kpi-strip">
         <div class="kpi-box">
           <small>KPI 1 · Índice Satelital NDVI</small>
@@ -663,29 +776,42 @@ input:checked+.slider:before { transform: translateX(22px); }
       </div>
     </section>
 
-    <!-- BITÁCORA DE CAMPO -->
+    <!-- BITÁCORA VISUAL DE CAMPO (CON EVIDENCIA FOTOGRÁFICA) -->
     <section class="view" id="bitacora">
       <div class="card">
         <div class="row">
           <div>
-            <h3>Añadir Nota de Campo</h3>
-            <p class="sub">Registra eventos diarios, labores agrícolas o incidencias (con soporte de cola offline).</p>
+            <h3>Añadir Novedad de Campo (Bitácora Visual)</h3>
+            <p class="sub">Registra labores agrícolas y adjunta fotografías del cultivo para el Pasaporte de Trazabilidad.</p>
           </div>
           <span class="pill" id="offline-queue-pill" style="background:#e0f2fe;color:#0369a1">0 pendientes offline</span>
         </div>
         <div class="form">
-          <label style="grid-column:1/-1">Observaciones / Detalles del Lote Activo
-            <textarea id="note-text" rows="3" placeholder="Ej. Mantenimiento realizado al sensor SOIL-01..."></textarea>
+          <label style="grid-column:1/-1">Observaciones / Avance Fenológico del Lote Activo
+            <textarea id="note-text" rows="3" placeholder="Ej. Floración uniforme en el 85% del lote, sin presencia de plagas..."></textarea>
+          </label>
+          <label style="grid-column:1/-1">📸 Evidencia Fotográfica del Cultivo (Opcional)
+            <input type="file" id="note-photo-input" accept="image/*" capture="environment" onchange="handlePhotoSelect(event)">
           </label>
         </div>
-        <div class="btns">
+
+        <div class="photo-preview-box" id="photo-preview-box">
+          <img id="photo-preview-img" src="" alt="Vista previa">
+          <div style="flex:1">
+            <b style="font-size:13px">Imagen lista para adjuntar</b>
+            <p class="sub" style="font-size:12px;margin:0">Se incluirá en la bitácora y en el pasaporte QR del lote.</p>
+          </div>
+          <button class="btn danger" style="padding:5px 10px;font-size:12px" onclick="clearSelectedPhoto()">Quitar</button>
+        </div>
+
+        <div class="btns" style="margin-top:14px">
           <button class="btn p" onclick="saveFieldNote()">📝 Guardar Registro</button>
           <button class="btn" id="btn-sync-offline" style="display:none" onclick="syncOfflineQueue()">☁️ Sincronizar Cola Offline</button>
         </div>
       </div>
 
       <div class="card" style="margin-top:24px">
-        <h3>Historial de Bitácora de Campo</h3>
+        <h3>Historial de Novedades y Evidencias en Campo</h3>
         <div id="notes-list-container" style="margin-top:14px"></div>
       </div>
     </section>
@@ -815,12 +941,13 @@ input:checked+.slider:before { transform: translateX(22px); }
         <div class="row">
           <div>
             <h3>🌾 Registrar Nuevo Lote / Cultivo por Coordenadas (FAO-56)</h3>
-            <p class="sub">Ingresa las coordenadas geográficas (Latitud, Longitud) o usa tu ubicación GPS actual para georreferenciar el polígono del cultivo.</p>
+            <p class="sub">Define coordenadas, productor responsable y proyección de cosecha para trazabilidad completa.</p>
           </div>
           <button class="btn" type="button" onclick="getDeviceGPS()">📡 Usar mi GPS Actual</button>
         </div>
         <div class="form">
           <label>Nombre del Lote<input id="nl-name" placeholder="Ej. Lote Norte - Yuca"></label>
+          <label>Productor / Agricultor Asignado<input id="nl-farmer" placeholder="Ej. Juan Vides"></label>
           <label>Especie Cultivada
             <select id="nl-crop">
               <option value="Maíz">🌽 Maíz</option>
@@ -839,6 +966,7 @@ input:checked+.slider:before { transform: translateX(22px); }
             </select>
           </label>
           <label>Área (Hectáreas)<input id="nl-area" type="number" step="0.1" value="2.5"></label>
+          <label>Fecha Estimada Cosecha<input id="nl-harvest-date" type="date" value="2026-12-28"></label>
           <label>Latitud (Centroide)<input id="nl-lat" type="number" step="0.0001" value="9.2540" placeholder="Ej. 9.2540"></label>
           <label>Longitud (Centroide)<input id="nl-lng" type="number" step="0.0001" value="-75.4080" placeholder="Ej. -75.4080"></label>
         </div>
@@ -884,7 +1012,47 @@ input:checked+.slider:before { transform: translateX(22px); }
   </div>
 </main>
 
-<!-- LOGIN OVERLAY (VISIBLE DETRÁS DEL SPLASH SCREEN PARA EVITAR PARPADEO) -->
+<!-- MODAL PASAPORTE DIGITAL DE TRAZABILIDAD Y ORIGEN (ESTILO SIEMBRACO) -->
+<div class="modal-backdrop" id="passport-modal" onclick="if(event.target===this) closePassportModal()">
+  <div class="passport-modal">
+    <div class="passport-header">
+      <div>
+        <small style="letter-spacing:0.16em;text-transform:uppercase;color:#38bdf8;font-weight:700">Pasaporte de Origen Verificado</small>
+        <h2 id="pp-lote-name" style="margin:4px 0;font-size:22px">Lote La Esperanza</h2>
+        <p id="pp-crop-info" style="font-size:13px;opacity:0.9">Cultivo: Maíz · Etapa: Floración</p>
+      </div>
+      <div class="passport-qr" id="pp-qr-box" title="Código QR de Trazabilidad"></div>
+    </div>
+    <div class="passport-body">
+      <div class="passport-grid">
+        <div class="p-cell"><small>Productor Responsable</small><b id="pp-farmer">Samuel Salgado</b></div>
+        <div class="p-cell"><small>Ubicación Satelital</small><b id="pp-coords">9.2451, -75.4012</b></div>
+        <div class="p-cell"><small>Ventana Estimada Cosecha</small><b id="pp-harvest">18 Dic 2026</b></div>
+        <div class="p-cell"><small>Producción Proyectada</small><b id="pp-yield">14.4 Toneladas</b></div>
+      </div>
+
+      <div class="eco-seal">
+        <span style="font-size:22px">🌿</span>
+        <div>
+          <b>Sello de Agricultura Sostenible y Suelo Vivo</b>
+          <p style="font-size:12px;font-weight:400;margin-top:2px" id="pp-eco-text">Ahorro hídrico del +24.5% mediante telemetría IoT y balance FAO-56. Índice NDVI saludable.</p>
+        </div>
+      </div>
+
+      <div id="pp-latest-photo-wrap" style="margin-top:16px;display:none">
+        <small style="text-transform:uppercase;font-weight:700;color:var(--mut);font-size:11px">Última Evidencia Fotográfica en Campo</small>
+        <img id="pp-latest-photo" src="" style="width:100%;max-height:180px;object-fit:cover;border-radius:12px;margin-top:6px;border:1px solid var(--line)">
+      </div>
+
+      <div class="btns" style="margin-top:20px;justify-content:flex-end">
+        <button class="btn" onclick="closePassportModal()">Cerrar</button>
+        <button class="btn p" onclick="window.print()">🖨️ Imprimir Etiqueta QR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN OVERLAY -->
 <div id="lg">
   <form class="lc animate-login" id="login-card" onsubmit="loginFirebase(event)">
     <div class="logo-container">
@@ -938,13 +1106,13 @@ var A=[{t:'Humedad del suelo por debajo del 45% en zona norte',k:'adv',l:'Advert
 var V={suelo:48.5,temp:28.1,aire:76,viento:4.2},filt='todas',hm='suelo',hr=7;
 var currentUser = { nombre: '', email: '', rol: 'user' };
 var mapInstance = null, lotePolygon = null, loteMarker = null, pinTempMarker = null;
-var isOfflineMode = false, autoRiegoActive = false;
+var isOfflineMode = false, autoRiegoActive = false, pendingPhotoBase64 = '';
 
-// CATÁLOGO MULTI-LOTE CON PARÁMETROS FAO-56
+// CATÁLOGO MULTI-LOTE CON TRAZABILIDAD DE ORIGEN Y PROYECCIÓN DE COSECHA
 var LOTES = [
-  { id: 'lote1', nombre: 'Lote La Esperanza', cultivo: 'Maíz', etapa: 'Floración', kc: 1.15, area: 3.2, sMin: 45, tMax: 32, ndvi: 0.78, coords: [[9.2470, -75.4030],[9.2475, -75.3990],[9.2430, -75.3995],[9.2435, -75.4035]], center: [9.2451, -75.4012] },
-  { id: 'lote2', nombre: 'Lote El Carmen', cultivo: 'Plátano', etapa: 'Desarrollo', kc: 1.10, area: 4.5, sMin: 55, tMax: 33, ndvi: 0.82, coords: [[9.2510, -75.4060],[9.2515, -75.4020],[9.2480, -75.4025],[9.2485, -75.4065]], center: [9.2497, -75.4042] },
-  { id: 'lote3', nombre: 'Lote San José', cultivo: 'Ají dulce', etapa: 'Cosecha', kc: 0.90, area: 1.8, sMin: 40, tMax: 31, ndvi: 0.69, coords: [[9.2420, -75.3980],[9.2425, -75.3945],[9.2390, -75.3950],[9.2395, -75.3985]], center: [9.2407, -75.3965] }
+  { id: 'lote1', nombre: 'Lote La Esperanza', productor: 'Samuel Salgado', cultivo: 'Maíz', etapa: 'Floración', kc: 1.15, area: 3.2, rendHa: 4.5, cosechaEst: '18 Dic 2026', diasRestantes: 31, sMin: 45, tMax: 32, ndvi: 0.78, coords: [[9.2470, -75.4030],[9.2475, -75.3990],[9.2430, -75.3995],[9.2435, -75.4035]], center: [9.2451, -75.4012] },
+  { id: 'lote2', nombre: 'Lote El Carmen', productor: 'Duván Hernández', cultivo: 'Plátano', etapa: 'Desarrollo', kc: 1.10, area: 4.5, rendHa: 18.0, cosechaEst: '14 Feb 2027', diasRestantes: 89, sMin: 55, tMax: 33, ndvi: 0.82, coords: [[9.2510, -75.4060],[9.2515, -75.4020],[9.2480, -75.4025],[9.2485, -75.4065]], center: [9.2497, -75.4042] },
+  { id: 'lote3', nombre: 'Lote San José', productor: 'Juan Vides', cultivo: 'Ají dulce', etapa: 'Cosecha', kc: 0.90, area: 1.8, rendHa: 8.2, cosechaEst: '25 Nov 2026', diasRestantes: 8, sMin: 40, tMax: 31, ndvi: 0.69, coords: [[9.2420, -75.3980],[9.2425, -75.3945],[9.2390, -75.3950],[9.2395, -75.3985]], center: [9.2407, -75.3965] }
 ];
 var activeLote = LOTES[0];
 
@@ -969,6 +1137,25 @@ function un(k){return k=='temp'?'°'+ST.u:M[k].u}
 function pc(v){return Math.max(0,Math.min(100,v))}
 function icon(k){return {suelo:['#e0f2fe','#0284c7','<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="#0284c7"/>'],temp:['#fef3c7','#d97706','<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'],aire:['#d1fae5','#10b981','<path d="M4 8h9a3 3 0 1 0-3-3M4 12h13a3 3 0 1 1-3 3M4 16h6"/>'],viento:['#ede9fe','#7c3aed','<path d="M3 8h11a3 3 0 1 0-3-3M3 16h7"/>']}[k]}
 
+// RENDER LÍNEA DE TIEMPO FENOLÓGICA Y COSECHA (ESTILO SIEMBRACO)
+function renderPhenologyTracker(){
+  var stages = ['Siembra', 'Desarrollo', 'Floración', 'Cosecha'];
+  var activeIdx = stages.indexOf(activeLote.etapa);
+  if(activeIdx < 0) activeIdx = 1;
+
+  $('harvest-origin-line').innerHTML = 'Origen trazable: <b>'+activeLote.nombre+'</b> · Productor: <b>'+activeLote.productor+'</b> · Área: <b>'+activeLote.area+' ha</b>';
+  $('harvest-date-est').textContent = activeLote.cosechaEst;
+  $('harvest-days-left').textContent = activeLote.diasRestantes + ' días';
+  $('harvest-yield-est').textContent = +(activeLote.area * activeLote.rendHa).toFixed(1) + ' Ton';
+
+  var trackHtml = stages.map(function(st, idx){
+    var cls = idx < activeIdx ? 'done' : (idx === activeIdx ? 'active' : '');
+    var statusTxt = idx < activeIdx ? '✓ Completada' : (idx === activeIdx ? '● Etapa Actual' : 'Pendiente');
+    return '<div class="pheno-step '+cls+'"><span>'+statusTxt+'</span><b>'+(idx+1)+'. '+st+'</b></div>';
+  }).join('');
+  $('pheno-track-container').innerHTML = trackHtml;
+}
+
 // RENDER SELECTOR DE LOTES
 function renderLoteSelector(){
   var sel = $('active-lote-selector');
@@ -976,6 +1163,7 @@ function renderLoteSelector(){
     return '<option value="'+l.id+'"'+(l.id===activeLote.id?' selected':'')+'>'+l.nombre+' ('+l.cultivo+')</option>';
   }).join('');
   $('lote-crop-subtitle').innerHTML = 'Cultivo: <b>'+activeLote.cultivo+'</b> ('+activeLote.etapa+' · Kc '+activeLote.kc+' · '+activeLote.area+' ha · ['+activeLote.center[0]+', '+activeLote.center[1]+']) · Lectura: <span id="t">'+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'})+'</span>';
+  renderPhenologyTracker();
 }
 
 function changeActiveLote(id){
@@ -989,7 +1177,47 @@ function changeActiveLote(id){
   cfgFill();
   cards(); sg(); rec();
   updateMapPolygon();
-  toast('Cambiado a ' + found.nombre + ' (Umbral humedad: ' + found.sMin + '%)');
+  toast('Cambiado a ' + found.nombre + ' (Productor: ' + found.productor + ')');
+}
+
+// MODAL PASAPORTE DIGITAL DE TRAZABILIDAD (QR)
+function openPassportModal(){
+  $('pp-lote-name').textContent = activeLote.nombre;
+  $('pp-crop-info').textContent = 'Cultivo: ' + activeLote.cultivo + ' · Etapa: ' + activeLote.etapa + ' (' + activeLote.area + ' ha)';
+  $('pp-farmer').textContent = activeLote.productor;
+  $('pp-coords').textContent = activeLote.center[0] + ', ' + activeLote.center[1];
+  $('pp-harvest').textContent = activeLote.cosechaEst + ' (' + activeLote.diasRestantes + ' d)';
+  $('pp-yield').textContent = +(activeLote.area * activeLote.rendHa).toFixed(1) + ' Toneladas';
+  $('pp-eco-text').textContent = 'Ahorro hídrico del +24.5% mediante telemetría IoT y balance FAO-56. Índice satelital NDVI: ' + $('kpi-ndvi').textContent + '.';
+
+  // Generar patrón QR vectorial único basado en el ID del lote
+  var seed = activeLote.id.charCodeAt(activeLote.id.length - 1) || 1;
+  var cells = '';
+  for(var r=0; r<7; r++){
+    for(var c=0; c<7; c++){
+      var isFinder = (r<2 && c<2) || (r<2 && c>4) || (r>4 && c<2);
+      if(isFinder || ((r*7 + c + seed) % 2 === 0)){
+        cells += '<rect x="'+(c*10+4)+'" y="'+(r*10+4)+'" width="8" height="8" rx="1.5" fill="#0f172a"/>';
+      }
+    }
+  }
+  $('pp-qr-box').innerHTML = '<svg viewBox="0 0 78 78" width="100%" height="100%">'+cells+'</svg>';
+
+  // Buscar última foto en bitácora del lote
+  var notes = []; try{ notes = JSON.parse(localStorage.getItem('agro_field_notes') || '[]'); }catch(e){}
+  var withPhoto = notes.find(function(n){ return n.photo && n.lote === activeLote.nombre; }) || notes.find(function(n){ return n.photo; });
+  if(withPhoto){
+    $('pp-latest-photo').src = withPhoto.photo;
+    $('pp-latest-photo-wrap').style.display = 'block';
+  } else {
+    $('pp-latest-photo-wrap').style.display = 'none';
+  }
+
+  $('passport-modal').classList.add('open');
+}
+
+function closePassportModal(){
+  $('passport-modal').classList.remove('open');
 }
 
 // OBTENER COORDENADAS GPS DEL DISPOSITIVO
@@ -1012,9 +1240,11 @@ function getDeviceGPS(){
 function addNewLote(){
   if(currentUser.rol !== 'admin'){ toast('Solo administradores pueden registrar lotes'); return; }
   var nombre = $('nl-name').value.trim();
+  var productor = $('nl-farmer').value.trim() || currentUser.nombre || 'Productor Local';
   var cultivo = $('nl-crop').value;
   var etapa = $('nl-stage').value;
   var area = parseFloat($('nl-area').value) || 2.5;
+  var harvestRaw = $('nl-harvest-date').value;
   var lat = parseFloat($('nl-lat').value);
   var lng = parseFloat($('nl-lng').value);
 
@@ -1025,13 +1255,13 @@ function addNewLote(){
   }
 
   var tablaFAO = {
-    'Maíz': { sMin: 45, tMax: 32, kc: 1.15 },
-    'Plátano': { sMin: 55, tMax: 33, kc: 1.10 },
-    'Ají dulce': { sMin: 42, tMax: 31, kc: 0.95 },
-    'Yuca': { sMin: 35, tMax: 35, kc: 0.85 },
-    'Frijol': { sMin: 48, tMax: 30, kc: 1.05 }
+    'Maíz': { sMin: 45, tMax: 32, kc: 1.15, rend: 4.5 },
+    'Plátano': { sMin: 55, tMax: 33, kc: 1.10, rend: 18.0 },
+    'Ají dulce': { sMin: 42, tMax: 31, kc: 0.95, rend: 8.2 },
+    'Yuca': { sMin: 35, tMax: 35, kc: 0.85, rend: 14.0 },
+    'Frijol': { sMin: 48, tMax: 30, kc: 1.05, rend: 2.1 }
   };
-  var ref = tablaFAO[cultivo] || { sMin: 45, tMax: 32, kc: 1.0 };
+  var ref = tablaFAO[cultivo] || { sMin: 45, tMax: 32, kc: 1.0, rend: 5.0 };
   if(etapa === 'Floración') ref.sMin += 5;
 
   var halfSideDeg = (Math.sqrt(area * 10000) / 2) / 111320;
@@ -1042,13 +1272,20 @@ function addNewLote(){
     [+(lat - halfSideDeg).toFixed(5), +(lng - halfSideDeg).toFixed(5)]
   ];
 
+  var estStr = harvestRaw ? new Date(harvestRaw + 'T12:00:00').toLocaleDateString('es-CO', {day:'2-digit', month:'short', year:'numeric'}) : '28 Dic 2026';
+  var diffDays = harvestRaw ? Math.max(1, Math.round((new Date(harvestRaw) - new Date()) / 86400000)) : 41;
+
   var newLote = {
     id: 'lote' + (LOTES.length + 1),
     nombre: nombre,
+    productor: productor,
     cultivo: cultivo,
     etapa: etapa,
     kc: ref.kc,
     area: area,
+    rendHa: ref.rend,
+    cosechaEst: estStr,
+    diasRestantes: diffDays,
     sMin: ref.sMin,
     tMax: ref.tMax,
     ndvi: 0.77,
@@ -1058,10 +1295,10 @@ function addNewLote(){
 
   LOTES.push(newLote);
   if(pinTempMarker && mapInstance){ mapInstance.removeLayer(pinTempMarker); pinTempMarker = null; }
-  
   db.ref('lotes/' + newLote.id).set(newLote);
 
   $('nl-name').value = '';
+  $('nl-farmer').value = '';
   changeActiveLote(newLote.id);
   location.hash = '#mapa';
   toast('🌾 Lote "' + nombre + '" georreferenciado en [' + lat.toFixed(4) + ', ' + lng.toFixed(4) + ']');
@@ -1123,7 +1360,7 @@ function checkAutoIrrigationRule(){
   if(autoRiegoActive && V.suelo < ST.sMin && !$('sw-bomba').checked){
     $('sw-bomba').checked = true;
     togglePump(true);
-    pushNoteToStorage('🤖 AUTOMATIZACIÓN IOT', 'ACTIVACIÓN AUTÓNOMA: Humedad ('+V.suelo+'%) cayó bajo umbral de '+activeLote.cultivo+' ('+ST.sMin+'%).');
+    pushNoteToStorage('🤖 AUTOMATIZACIÓN IOT', 'ACTIVACIÓN AUTÓNOMA: Humedad ('+V.suelo+'%) cayó bajo umbral de '+activeLote.cultivo+' ('+ST.sMin+'%).', '');
     toast('🤖 Riego activado automáticamente por déficit hídrico');
   }
 }
@@ -1202,7 +1439,7 @@ function updateMapPolygon(){
 
   lotePolygon = L.polygon(activeLote.coords, getPolygonStyle()).addTo(mapInstance);
   loteMarker = L.marker(activeLote.center).addTo(mapInstance)
-    .bindPopup('<b>'+activeLote.nombre+'</b><br>Cultivo: '+activeLote.cultivo+' ('+activeLote.etapa+')<br>Coord: '+activeLote.center[0]+', '+activeLote.center[1]+'<br>Humedad: <b>'+V.suelo+'%</b> · NDVI: <b>'+$('kpi-ndvi').textContent+'</b>')
+    .bindPopup('<b>'+activeLote.nombre+'</b><br>Productor: '+activeLote.productor+'<br>Cultivo: '+activeLote.cultivo+' ('+activeLote.etapa+')<br>Humedad: <b>'+V.suelo+'%</b> · NDVI: <b>'+$('kpi-ndvi').textContent+'</b>')
     .openPopup();
   mapInstance.setView(activeLote.center, 15);
   $('map-coord-hud').textContent = '📍 Lote activo: ' + activeLote.center[0] + ', ' + activeLote.center[1] + ' (Clic en el mapa para fijar nueva coordenada)';
@@ -1237,14 +1474,45 @@ function initSatelliteMap(){
   } catch(e) { console.log('Error map:', e); }
 }
 
-// BITÁCORA CON SOPORTE OFFLINE Y SINCRONIZACIÓN
-function pushNoteToStorage(author, text){
+// MANEJO DE FOTOS EN BITÁCORA (COMPRESIÓN LIGERA EN CANVAS)
+function handlePhotoSelect(event){
+  var file = event.target.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var img = new Image();
+    img.onload = function(){
+      var canvas = document.createElement('canvas');
+      var maxW = 480;
+      var scale = Math.min(1, maxW / img.width);
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      pendingPhotoBase64 = canvas.toDataURL('image/jpeg', 0.72);
+      $('photo-preview-img').src = pendingPhotoBase64;
+      $('photo-preview-box').style.display = 'flex';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearSelectedPhoto(){
+  pendingPhotoBase64 = '';
+  $('note-photo-input').value = '';
+  $('photo-preview-box').style.display = 'none';
+}
+
+// BITÁCORA CON SOPORTE OFFLINE Y EVIDENCIA FOTOGRÁFICA
+function pushNoteToStorage(author, text, photoData){
   var notes = []; try{ notes = JSON.parse(localStorage.getItem('agro_field_notes') || '[]'); }catch(e){}
   var item = {
     lote: activeLote.nombre,
     author: author,
     role: currentUser.rol || 'user',
     text: text,
+    photo: photoData || '',
     date: new Date().toLocaleString('es-CO'),
     synced: !isOfflineMode
   };
@@ -1258,10 +1526,12 @@ function pushNoteToStorage(author, text){
 }
 
 function saveFieldNote(){
-  var text = $('note-text').value.trim(); if(!text){ toast('Escribe alguna observación'); return; }
-  pushNoteToStorage(currentUser.nombre || 'Operador', text);
+  var text = $('note-text').value.trim();
+  if(!text && !pendingPhotoBase64){ toast('Escribe una observación o adjunta una foto'); return; }
+  pushNoteToStorage(currentUser.nombre || 'Operador', text || 'Registro fotográfico de estado fenológico.', pendingPhotoBase64);
   $('note-text').value = '';
-  toast(isOfflineMode ? '🟠 Guardado en cola offline (sin red)' : '✅ Nota guardada y sincronizada en Firebase');
+  clearSelectedPhoto();
+  toast(isOfflineMode ? '🟠 Guardado en cola offline (sin red)' : '✅ Novedad y evidencia sincronizadas en Firebase');
 }
 
 function renderFieldNotes(){
@@ -1274,7 +1544,8 @@ function renderFieldNotes(){
   if(notes.length === 0){ c.innerHTML = '<p class="sub">Sin notas registradas en la bitácora.</p>'; return; }
   c.innerHTML = notes.map(function(n){
     var syncTag = n.synced ? '<span style="color:#10b981;font-size:11px;font-weight:700">☁️ NUBE</span>' : '<span style="color:#d97706;font-size:11px;font-weight:700">⏳ COLA OFFLINE</span>';
-    return '<div class="note-item"><div style="display:flex;justify-content:space-between"><div><b>'+n.author+'</b> <small style="color:var(--mut)">('+(n.role||'user').toUpperCase()+') · '+(n.lote||activeLote.nombre)+' · '+n.date+'</small></div>'+syncTag+'</div><p style="margin-top:6px;font-size:14px;color:var(--ink)">'+n.text+'</p></div>';
+    var imgHtml = n.photo ? '<img class="note-photo" src="'+n.photo+'" alt="Evidencia en campo">' : '';
+    return '<div class="note-item"><div style="display:flex;justify-content:space-between"><div><b>'+n.author+'</b> <small style="color:var(--mut)">('+(n.role||'user').toUpperCase()+') · '+(n.lote||activeLote.nombre)+' · '+n.date+'</small></div>'+syncTag+'</div><p style="margin-top:6px;font-size:14px;color:var(--ink)">'+n.text+'</p>'+imgHtml+'</div>';
   }).join('');
 }
 
@@ -1318,7 +1589,7 @@ function startTimerRiego(){
   var reason = $('irrigation-reason').value.trim() || 'Riego temporizado';
   $('sw-bomba').checked = true;
   togglePump(true);
-  pushNoteToStorage(currentUser.nombre || 'Sistema', '💧 RIEGO TEMPORIZADO ('+mins+' min): '+reason);
+  pushNoteToStorage(currentUser.nombre || 'Sistema', '💧 RIEGO TEMPORIZADO ('+mins+' min): '+reason, '');
   toast('Riego iniciado por ' + mins + ' min');
 }
 
@@ -1383,23 +1654,22 @@ function restoreNormalScenario(){
 }
 
 function exportCSV(){
-  var csv = 'Lote,Cultivo,Etapa,Latitud,Longitud,Operador,Rol,Fecha/Hora,Humedad Suelo (%),Temperatura (C),Humedad Aire (%),Viento (km/h),NDVI\n';
-  csv += activeLote.nombre + ',' + activeLote.cultivo + ',' + activeLote.etapa + ',' + activeLote.center[0] + ',' + activeLote.center[1] + ',' + currentUser.nombre + ',' + currentUser.rol + ',' + new Date().toLocaleString('es-CO') + ',' + V.suelo + ',' + V.temp + ',' + V.aire + ',' + V.viento + ',' + $('kpi-ndvi').textContent + '\n';
+  var csv = 'Lote,Productor,Cultivo,Etapa,Cosecha_Estimada,Toneladas_Proyectadas,Latitud,Longitud,Fecha/Hora,Humedad_Suelo(%),Temperatura(C),Humedad_Aire(%),Viento(km/h),NDVI\n';
+  csv += activeLote.nombre + ',' + activeLote.productor + ',' + activeLote.cultivo + ',' + activeLote.etapa + ',' + activeLote.cosechaEst + ',' + (activeLote.area*activeLote.rendHa).toFixed(1) + ',' + activeLote.center[0] + ',' + activeLote.center[1] + ',' + new Date().toLocaleString('es-CO') + ',' + V.suelo + ',' + V.temp + ',' + V.aire + ',' + V.viento + ',' + $('kpi-ndvi').textContent + '\n';
   var blob = new Blob([csv], { type: 'text/csv;' }), url = URL.createObjectURL(blob), link = document.createElement('a');
-  link.href = url; link.download = 'Reporte_AgroStream_' + activeLote.id + '_' + new Date().toISOString().slice(0,10) + '.csv'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  link.href = url; link.download = 'Trazabilidad_AgroStream_' + activeLote.id + '_' + new Date().toISOString().slice(0,10) + '.csv'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
   toast('Reporte CSV descargado');
 }
 
-// GENERADOR DE INFORME EJECUTIVO IMPRIMIBLE / PDF
 function generatePDFReport(){
   var win = window.open('', '_blank');
   var notes = []; try{ notes = JSON.parse(localStorage.getItem('agro_field_notes') || '[]').slice(0,5); }catch(e){}
   var notesHtml = notes.map(function(n){ return '<li><b>'+n.date+' ('+n.author+'):</b> '+n.text+'</li>'; }).join('') || '<li>Sin observaciones recientes.</li>';
 
   win.document.write('<html><head><title>Informe Técnico AgroStream</title><style>body{font-family:Arial,sans-serif;padding:30px;color:#0f172a}h1{color:#0284c7;border-bottom:2px solid #0284c7;padding-bottom:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.box{background:#f1f5f9;padding:12px;border-radius:8px}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #cbd5e1;padding:10px;text-align:left}</style></head><body>');
-  win.document.write('<h1>AgroStream – Informe Técnico de Monitoreo Agrosatelital</h1>');
-  win.document.write('<p><b>Fecha de emisión:</b> '+new Date().toLocaleString('es-CO')+' | <b>Generado por:</b> '+currentUser.nombre+' ('+currentUser.rol.toUpperCase()+')</p>');
-  win.document.write('<div class="grid"><div class="box"><b>Lote Evaluado:</b> '+activeLote.nombre+' ('+activeLote.area+' ha)<br><b>Coordenadas:</b> '+activeLote.center[0]+', '+activeLote.center[1]+'</div><div class="box"><b>Cultivo y Etapa:</b> '+activeLote.cultivo+' – '+activeLote.etapa+' (Kc '+activeLote.kc+')</div></div>');
+  win.document.write('<h1>AgroStream – Informe Técnico y Trazabilidad de Origen</h1>');
+  win.document.write('<p><b>Fecha de emisión:</b> '+new Date().toLocaleString('es-CO')+' | <b>Productor:</b> '+activeLote.productor+'</p>');
+  win.document.write('<div class="grid"><div class="box"><b>Lote Evaluado:</b> '+activeLote.nombre+' ('+activeLote.area+' ha)<br><b>Coordenadas:</b> '+activeLote.center[0]+', '+activeLote.center[1]+'</div><div class="box"><b>Cultivo y Etapa:</b> '+activeLote.cultivo+' – '+activeLote.etapa+'<br><b>Cosecha Estimada:</b> '+activeLote.cosechaEst+' ('+(activeLote.area*activeLote.rendHa).toFixed(1)+' Ton)</div></div>');
   win.document.write('<h3>1. Indicadores Clave de Desempeño (KPIs) y Telemetría</h3>');
   win.document.write('<table><tr><th>Variable / Indicador</th><th>Valor Registrado</th><th>Referencia / Estado</th></tr>');
   win.document.write('<tr><td>Humedad del Suelo</td><td>'+V.suelo+' %</td><td>Umbral mínimo: '+ST.sMin+'%</td></tr>');
